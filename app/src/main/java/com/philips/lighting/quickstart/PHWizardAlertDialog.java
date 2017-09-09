@@ -10,8 +10,6 @@ import android.view.WindowManager;
 
 /**
  * Generic class for Alert and Progress dialogs wizard
- * 
- * 
  */
 
 public final class PHWizardAlertDialog {
@@ -31,20 +29,29 @@ public final class PHWizardAlertDialog {
     }
 
     /**
-     * 
-     * @param activityContext
-     * @param msg
-     * @param btnNameResId  String resource id for button name
+     * @param btnNameResId String resource id for button name
      */
-    public static void showErrorDialog(Context activityContext, String msg, int btnNameResId) {
+    static void showErrorDialog(Context activityContext, String msg, int btnNameResId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activityContext);
         builder.setTitle(R.string.title_error).setMessage(msg).setPositiveButton(btnNameResId, null);
         AlertDialog alert = builder.create();
-        alert.getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        if (! ((Activity) activityContext).isFinishing()) {
+        alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        if (!((Activity) activityContext).isFinishing()) {
             alert.show();
         }
-       
+
+    }
+
+    static void showErrorAndDemoDialog(Context activityContext, String msg, int btnNameResId, OnClickListener demoListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activityContext);
+        builder.setTitle(R.string.title_error).setMessage(msg).setPositiveButton(btnNameResId, null)
+                .setNeutralButton(R.string.btn_demo, demoListener);
+        AlertDialog alert = builder.create();
+        alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        if (!((Activity) activityContext).isFinishing()) {
+            alert.show();
+        }
+
     }
 
     /**
@@ -60,7 +67,7 @@ public final class PHWizardAlertDialog {
 
     /**
      * Shows progress-bar
-     * 
+     *
      * @param resID
      * @param ctx
      */
@@ -72,7 +79,6 @@ public final class PHWizardAlertDialog {
     }
 
     /**
-     * 
      * @param activityContext
      * @param msg
      * @param btnNameResId

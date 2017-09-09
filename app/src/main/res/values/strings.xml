@@ -6,7 +6,6 @@
     <string name="no_bridge">No Bridge Found.   Start Bridge Search</string>
     <string name="btn_refresh">Refresh</string>
     <string name="btn_find_bridge">Find new bridge</string>
-    <string name="btn_random">Random Lights</string>
     <string name="search_progress">Searching ...</string>
     <string name="connecting">Connecting ...</string>
     <string name="btn_ok">Ok</string>
@@ -27,6 +26,7 @@
     <string name="txt_select_smartbridge">Please select a bridge to use for this app</string>
     <string name="title_error">Error</string>
     <string name="txt_last_heartbeat">Last Heartbeat : </string>
+    <string name="btn_demo">Demo</string>
 
     <string name="txt_set_wake_in_time">Set the time (in HH[:MM[:SS]] Format) from now till the wakeup schedule.</string>
     <string name="txt_set_wake_end_in_time">Set the time from wakeup schedule till wakeup end schedule.</string>
@@ -34,6 +34,7 @@
     <string name="btn_set_alarm">Set alarm</string>
     <string name="txt_status">Status</string>
     <string name="txt_status_updating">Updating…</string>
+    <string name="txt_status_updated_nothing">Updated nothing :-/</string>
     <string name="txt_status_no_time_format">The time must be in this format: "HH[:MM[:SS]]".</string>
 
 </resources>

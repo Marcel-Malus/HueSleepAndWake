@@ -65,8 +65,9 @@ public class MyApplicationActivity extends Activity {
         setContentView(R.layout.activity_main);
         phHueSDK = PHHueSDK.create();
         prefs = HueSharedPreferences.getInstance(getApplicationContext());
+        boolean isConnected = getIntent().getBooleanExtra("isConnected", true);
         // TODO: rePopulate onResume?
-        populateAvailableSchedules();
+        populateAvailableSchedules(isConnected);
 
         // WIDGETS
         initWakeUpWidgets();
@@ -85,13 +86,19 @@ public class MyApplicationActivity extends Activity {
         statusText = (TextView) findViewById(R.id.statusText);
     }
 
-    private void populateAvailableSchedules() {
-        PHBridge bridge = phHueSDK.getSelectedBridge();
-        Map<String, PHSchedule> scheduleMap = bridge.getResourceCache().getSchedules();
-        for (Map.Entry<String, PHSchedule> scheduleEntry : scheduleMap.entrySet()) {
-            PHScheduleFix scheduleFix = new PHScheduleFix(scheduleEntry.getValue(),
-                    bridge.getResourceCache().getBridgeConfiguration());
-            idToScheduleMap.put(scheduleEntry.getKey(), scheduleFix);
+    private void populateAvailableSchedules(boolean isConnected) {
+        if (isConnected) {
+            PHBridge bridge = phHueSDK.getSelectedBridge();
+            Map<String, PHSchedule> scheduleMap = bridge.getResourceCache().getSchedules();
+            for (Map.Entry<String, PHSchedule> scheduleEntry : scheduleMap.entrySet()) {
+                PHScheduleFix scheduleFix = new PHScheduleFix(scheduleEntry.getValue(),
+                        bridge.getResourceCache().getBridgeConfiguration());
+                idToScheduleMap.put(scheduleEntry.getKey(), scheduleFix);
+            }
+        } else {
+            idToScheduleMap.put("-2", new PHScheduleFix("-2", "Aufwachen"));
+            idToScheduleMap.put("-3", new PHScheduleFix("-3", "Wecker aus"));
+            idToScheduleMap.put("-4", new PHScheduleFix("-4", "Schlafen"));
         }
     }
 
@@ -137,11 +144,13 @@ public class MyApplicationActivity extends Activity {
 
     private void updateAlarm() {
         statusText.setText(R.string.txt_status_updating);
+        boolean updatedNothing = true;
         PHBridge bridge = phHueSDK.getSelectedBridge();
 
         PHScheduleFix wakeUpSchedule = getSelectedValidSchedule(wakeUpScheduleSpinner);
         if (wakeUpSchedule != null) {
             Date wakeUpDate = updateWakeUpSchedule(bridge, wakeUpSchedule);
+            updatedNothing = false;
             PHScheduleFix wakeEndSchedule = getSelectedValidSchedule(wakeEndScheduleSpinner);
             if (wakeUpDate != null && wakeEndSchedule != null) {
                 updateWakeUpEndSchedule(bridge, wakeEndSchedule, wakeUpDate);
@@ -151,12 +160,17 @@ public class MyApplicationActivity extends Activity {
         PHScheduleFix sleepSchedule = getSelectedValidSchedule(sleepScheduleSpinner);
         if (sleepSchedule != null && sleepSwitch.isChecked()) {
             updateSleepSchedule(bridge, sleepSchedule);
+            updatedNothing = false;
+        }
+
+        if (updatedNothing) {
+            statusText.setText(R.string.txt_status_updated_nothing);
         }
     }
 
     private PHScheduleFix getSelectedValidSchedule(Spinner scheduleSpinner) {
         PHScheduleFix schedule = (PHScheduleFix) scheduleSpinner.getSelectedItem();
-        return schedule != null && !schedule.getId().equals("-1") ? schedule : null;
+        return schedule != null && !schedule.getId().startsWith("-") ? schedule : null;
     }
 
     private Date updateWakeUpSchedule(PHBridge bridge, PHScheduleFix schedule) {

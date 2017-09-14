@@ -1,7 +1,6 @@
 package com.philips.lighting.quickstart;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +9,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.philips.lighting.data.PHScheduleFix;
-import com.philips.lighting.hue.listener.PHHTTPListener;
 import com.philips.lighting.model.PHBridge;
 
 import java.util.Calendar;
-
-import static com.philips.lighting.quickstart.PHHomeActivity.TAG;
 
 /**
  * @since 2017-09-14.
@@ -45,7 +41,12 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
         sleepSwitch.setChecked(getPrefs().isSleepActive());
 
         statusTxt = (TextView) getActivity().findViewById(R.id.sleepStatusTxt);
-        setInitialStatus(sleepScheduleId, statusTxt);
+        setInitialStatus(sleepScheduleId);
+    }
+
+    @Override
+    protected TextView getStatusView() {
+        return statusTxt;
     }
 
     public boolean updateSleepSchedule(PHBridge bridge) {
@@ -58,18 +59,9 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
             // TODO: disable schedule.
         }
 
-        updateSchedule(bridge, schedule, ONE_MINUTE, Calendar.getInstance(), putListenerSlim);
+        updateSchedule(bridge, schedule, ONE_MINUTE, Calendar.getInstance(), getPutListener());
         getPrefs().setSleepActive(sleepSwitch.isChecked());
         getPrefs().setSleepScheduleId(schedule.getId());
         return true;
     }
-
-
-    PHHTTPListener putListenerSlim = new PHHTTPListener() {
-
-        @Override
-        public void onHTTPResponse(String jsonResponse) {
-            Log.i(TAG, "RESPONSE-END : " + jsonResponse);
-        }
-    };
 }

@@ -1,7 +1,6 @@
 package com.philips.lighting.quickstart;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +9,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.philips.lighting.data.PHScheduleFix;
-import com.philips.lighting.hue.listener.PHHTTPListener;
 import com.philips.lighting.model.PHBridge;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Date;
-
-import static com.philips.lighting.quickstart.PHHomeActivity.TAG;
 
 /**
  * @since 2017-09-14.
@@ -48,7 +40,12 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         inputTimeTxt.setText(getPrefs().getWakeTime());
 
         statusTxt = (TextView) getActivity().findViewById(R.id.wakeUpStatusTxt);
-        setInitialStatus(wakeUpScheduleId, statusTxt);
+        setInitialStatus(wakeUpScheduleId);
+    }
+
+    @Override
+    protected TextView getStatusView() {
+        return statusTxt;
     }
 
     public Date updateWakeUpSchedule(PHBridge bridge) {
@@ -59,32 +56,11 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         String wakeTimeStr = inputTimeTxt.getText().toString();
         Calendar cal = Calendar.getInstance();
 
-        Date wakeUpDate = updateSchedule(bridge, schedule, wakeTimeStr, cal, putListenerWakeUp);
+        Date wakeUpDate = updateSchedule(bridge, schedule, wakeTimeStr, cal, getPutListener());
         if (wakeUpDate != null) {
             getPrefs().setWakeTime(wakeTimeStr);
             getPrefs().setWakeScheduleId(schedule.getId());
         }
         return wakeUpDate;
     }
-
-    PHHTTPListener putListenerWakeUp = new PHHTTPListener() {
-
-        @Override
-        public void onHTTPResponse(String jsonResponse) {
-            Log.i(TAG, "RESPONSE: " + jsonResponse);
-            try {
-                JSONArray jsonArray = new JSONArray(jsonResponse);
-                // TODO: Evaluate all array items.
-                if (jsonArray.length() != 0) {
-                    JSONObject firstResponseObj = jsonArray.getJSONObject(0);
-//                    String firstStatus = firstResponseObj.keys().next();
-//                    notifyUserWithUiThread(firstResponseObj.toString());
-                }
-            } catch (JSONException e) {
-                Log.e(TAG, "Could not read JSON response. Error: " + e.getMessage());
-            }
-        }
-    };
-
-
 }

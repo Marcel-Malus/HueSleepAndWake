@@ -14,7 +14,9 @@ import com.philips.lighting.hue.listener.PHHTTPListener;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHSchedule;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
 
     private HueSharedPreferences prefs;
     private Map<String, PHScheduleFix> idToScheduleMap;
+    private PHHTTPListener putListener;
 
 
     @Override
@@ -48,10 +51,17 @@ public abstract class AbstractScheduleFragment extends Fragment {
         MyApplicationActivity activity = (MyApplicationActivity) getActivity();
         prefs = activity.getPrefs();
         idToScheduleMap = activity.getIdToScheduleMap();
+        putListener = createPutListener();
     }
+
+    protected abstract TextView getStatusView();
 
     protected HueSharedPreferences getPrefs() {
         return prefs;
+    }
+
+    protected PHHTTPListener getPutListener() {
+        return putListener;
     }
 
     protected void buildAndAddAdapter(Spinner scheduleSpinner, String selectedScheduleId) {
@@ -74,17 +84,17 @@ public abstract class AbstractScheduleFragment extends Fragment {
     }
 
 
-    protected void setInitialStatus(String wakeUpScheduleId, TextView statusTxt) {
+    protected void setInitialStatus(String wakeUpScheduleId) {
         PHScheduleFix scheduleFix = idToScheduleMap.get(wakeUpScheduleId);
         if (scheduleFix != null) {
             PHSchedule schedule = scheduleFix.getSchedule();
             Date date = schedule.getDate();
             if (date != null && schedule.getStatus().equals(PHSchedule.PHScheduleStatus.ENABLED)) {
-                statusTxt.setText(getResources().getString(R.string.txt_status_current_setting, SDF_TIME.format(date)));
+                getStatusView().setText(getResources().getString(R.string.txt_status_current_setting, SDF_TIME.format(date)));
                 return;
             }
         }
-        statusTxt.setText(R.string.txt_status_not_set);
+        getStatusView().setText(R.string.txt_status_not_set);
     }
 
     protected Date updateSchedule(PHBridge bridge, PHScheduleFix scheduleFix, String timeStr,
@@ -132,21 +142,47 @@ public abstract class AbstractScheduleFragment extends Fragment {
 
 
     private void notifyUser(final String msg) {
-//        statusText.setText(msg);
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+        getStatusView().setText(msg);
+//        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     private void notifyUser(final int msgId) {
-//        statusText.setText(msgId);
-        Toast.makeText(getActivity(), msgId, Toast.LENGTH_SHORT).show();
+        getStatusView().setText(msgId);
+//        Toast.makeText(getActivity(), msgId, Toast.LENGTH_SHORT).show();
     }
 
-    private void notifyUserWithUiThread(final String msg) {
+    protected void notifyUserWithUiThread(final String msg) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 notifyUser(msg);
             }
         });
+    }
+
+    private PHHTTPListener createPutListener() {
+        return new PHHTTPListener() {
+
+            @Override
+            public void onHTTPResponse(String jsonResponse) {
+                Log.i(TAG, "RESPONSE: " + jsonResponse);
+                try {
+                    JSONArray jsonArray = new JSONArray(jsonResponse);
+                    // TODO: Evaluate all array items.
+                    if (jsonArray.length() != 0) {
+                        JSONObject firstResponseObj = jsonArray.getJSONObject(0);
+                        String firstStatus = firstResponseObj.keys().next();
+                        // TODO: Better status
+                        if (firstStatus.contains("success")) {
+                            notifyUserWithUiThread("Success");
+                        } else {
+                            notifyUserWithUiThread("Error");
+                        }
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "Could not read JSON response. Error: " + e.getMessage());
+                }
+            }
+        };
     }
 }

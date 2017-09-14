@@ -25,4 +25,16 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="22dp" />
 
+
+    <TextView
+        android:id="@+id/sleepStatusTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_alignBottom="@+id/sleepSwitch"
+        android:layout_toRightOf="@+id/sleepSwitch"
+        android:layout_toEndOf="@+id/sleepSwitch"
+        android:text="@string/txt_status" />
+
 </RelativeLayout>

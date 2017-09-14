@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.philips.lighting.data.PHScheduleFix;
 import com.philips.lighting.hue.listener.PHHTTPListener;
@@ -28,6 +29,7 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
 
     private Spinner scheduleSpinner;
     private EditText inputTimeTxt;
+    private TextView statusTxt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,8 +46,10 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
 
         inputTimeTxt = (EditText) getActivity().findViewById(R.id.wakeTime);
         inputTimeTxt.setText(getPrefs().getWakeTime());
-    }
 
+        statusTxt = (TextView) getActivity().findViewById(R.id.wakeUpStatusTxt);
+        setInitialStatus(wakeUpScheduleId, statusTxt);
+    }
 
     public Date updateWakeUpSchedule(PHBridge bridge) {
         PHScheduleFix schedule = getSelectedValidSchedule(scheduleSpinner);

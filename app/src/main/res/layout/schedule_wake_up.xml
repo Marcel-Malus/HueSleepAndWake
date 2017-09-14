@@ -29,4 +29,15 @@
         android:inputType="time"
         android:maxLength="8" />
 
+    <TextView
+        android:id="@+id/wakeUpStatusTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_alignBottom="@+id/wakeTime"
+        android:layout_toRightOf="@+id/wakeTime"
+        android:layout_toEndOf="@+id/wakeTime"
+        android:text="@string/txt_status" />
+
 </RelativeLayout>

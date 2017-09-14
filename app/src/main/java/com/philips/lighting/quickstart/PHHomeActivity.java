@@ -40,7 +40,7 @@ import java.util.List;
 public class PHHomeActivity extends Activity implements OnItemClickListener {
 
     private PHHueSDK phHueSDK;
-    public static final String TAG = "QuickStart";
+    public static final String TAG = "HueSleepAndWakeApp";
     private HueSharedPreferences prefs;
     private AccessPointListAdapter adapter;
 

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.philips.lighting.data.PHScheduleFix;
 import com.philips.lighting.hue.listener.PHHTTPListener;
@@ -24,6 +25,7 @@ public class WakeEndScheduleFragment extends AbstractScheduleFragment {
 
     private Spinner scheduleSpinner;
     private EditText inputTimeTxt;
+    private TextView statusTxt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +42,9 @@ public class WakeEndScheduleFragment extends AbstractScheduleFragment {
 
         inputTimeTxt = (EditText) getActivity().findViewById(R.id.wakeEndTime);
         inputTimeTxt.setText(getPrefs().getWakeEndTime());
+
+        statusTxt = (TextView) getActivity().findViewById(R.id.wakeEndStatusTxt);
+        setInitialStatus(wakeEndScheduleId, statusTxt);
     }
 
 

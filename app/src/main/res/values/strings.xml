@@ -32,10 +32,13 @@
     <string name="txt_set_wake_end_in_time">Set the time from wakeup schedule till wakeup end schedule.</string>
     <string name="txt_start_sleep_schedule">Start sleep schedule with setting the alarm.</string>
     <string name="btn_set_alarm">Set alarm</string>
+
     <string name="txt_status">Status</string>
     <string name="txt_status_updating">Updating…</string>
     <string name="txt_status_update_finished">Update finished</string>
     <string name="txt_status_updated_nothing">Updated nothing :-/</string>
     <string name="txt_status_no_time_format">The time must be in this format: "HH[:MM[:SS]]".</string>
+    <string name="txt_status_current_setting">Current: %s</string>
+    <string name="txt_status_not_set">Not set or disabled</string>
 
 </resources>

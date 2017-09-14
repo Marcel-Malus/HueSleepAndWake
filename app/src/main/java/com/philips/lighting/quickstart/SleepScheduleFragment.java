@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.philips.lighting.data.PHScheduleFix;
 import com.philips.lighting.hue.listener.PHHTTPListener;
@@ -25,6 +26,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
 
     private Spinner scheduleSpinner;
     private Switch sleepSwitch;
+    private TextView statusTxt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +43,9 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
 
         sleepSwitch = (Switch) getActivity().findViewById(R.id.sleepSwitch);
         sleepSwitch.setChecked(getPrefs().isSleepActive());
+
+        statusTxt = (TextView) getActivity().findViewById(R.id.sleepStatusTxt);
+        setInitialStatus(sleepScheduleId, statusTxt);
     }
 
     public boolean updateSleepSchedule(PHBridge bridge) {

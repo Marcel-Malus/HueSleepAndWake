@@ -5,19 +5,23 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.data.PHScheduleFix;
 import com.philips.lighting.hue.listener.PHHTTPListener;
 import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHSchedule;
 
 import org.json.JSONException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.philips.lighting.quickstart.PHHomeActivity.TAG;
@@ -26,6 +30,9 @@ import static com.philips.lighting.quickstart.PHHomeActivity.TAG;
  * @since 2017-09-14.
  */
 public abstract class AbstractScheduleFragment extends Fragment {
+
+    // TODO: locale
+    protected static final SimpleDateFormat SDF_TIME = new SimpleDateFormat("HH:mm:ss", Locale.GERMANY);
 
     private static final PHScheduleFix NONE_SCHEDULE = new PHScheduleFix("-1", "NONE");
     private static final String TIME_FORMAT = "^((2[0-3]|1[0-9]|0[0-9]|[0-9])(:([0-5][0-9]|[0-9])){0,2})$";
@@ -64,6 +71,20 @@ public abstract class AbstractScheduleFragment extends Fragment {
     protected PHScheduleFix getSelectedValidSchedule(Spinner scheduleSpinner) {
         PHScheduleFix schedule = (PHScheduleFix) scheduleSpinner.getSelectedItem();
         return schedule != null && !schedule.getId().startsWith("-") ? schedule : null;
+    }
+
+
+    protected void setInitialStatus(String wakeUpScheduleId, TextView statusTxt) {
+        PHScheduleFix scheduleFix = idToScheduleMap.get(wakeUpScheduleId);
+        if (scheduleFix != null) {
+            PHSchedule schedule = scheduleFix.getSchedule();
+            Date date = schedule.getDate();
+            if (date != null && schedule.getStatus().equals(PHSchedule.PHScheduleStatus.ENABLED)) {
+                statusTxt.setText(getResources().getString(R.string.txt_status_current_setting, SDF_TIME.format(date)));
+                return;
+            }
+        }
+        statusTxt.setText(R.string.txt_status_not_set);
     }
 
     protected Date updateSchedule(PHBridge bridge, PHScheduleFix scheduleFix, String timeStr,

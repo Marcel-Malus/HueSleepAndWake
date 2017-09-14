@@ -55,6 +55,10 @@ public class PHScheduleFix {
                 id;
     }
 
+    public PHSchedule getSchedule() {
+        return schedule;
+    }
+
     public String getId() {
         return id;
     }

@@ -34,6 +34,7 @@
     <string name="btn_set_alarm">Set alarm</string>
     <string name="txt_status">Status</string>
     <string name="txt_status_updating">Updating…</string>
+    <string name="txt_status_update_finished">Update finished</string>
     <string name="txt_status_updated_nothing">Updated nothing :-/</string>
     <string name="txt_status_no_time_format">The time must be in this format: "HH[:MM[:SS]]".</string>
 

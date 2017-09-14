@@ -6,87 +6,32 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MyApplicationActivity" >
+    tools:context=".MyApplicationActivity">
 
-    <!-- WAKE UP -->
+    <!-- SCHEDULE FRAGMENTS -->
 
-    <TextView
-        android:id="@+id/wakeTimeTxt"
-        android:layout_width="wrap_content"
+    <fragment
+        android:id="@+id/wakeUpFragment"
+        android:name="com.philips.lighting.quickstart.WakeUpScheduleFragment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:text="@string/txt_set_wake_in_time" />
+        tools:layout="@layout/schedule_wake_up" />
 
-    <Spinner
-        android:id="@+id/wakeUpSpinner"
-        android:layout_width="100dp"
+    <fragment
+        android:id="@+id/wakeEndFragment"
+        android:name="com.philips.lighting.quickstart.WakeEndScheduleFragment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/wakeTimeTxt"
-        android:layout_marginTop="20dp"/>
+        android:layout_below="@id/wakeUpFragment"
+        tools:layout="@layout/schedule_wake_end" />
 
-    <EditText
-        android:id="@+id/wakeTime"
-        android:layout_width="wrap_content"
+    <fragment
+        android:id="@+id/sleepFragment"
+        android:name="com.philips.lighting.quickstart.SleepScheduleFragment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/wakeTimeTxt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
-        android:ems="4"
-        android:inputType="time"
-        android:maxLength="8"/>
-
-    <!-- WAKE END -->
-
-    <TextView
-        android:id="@+id/wakeEndTimeTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/wakeTime"
-        android:layout_marginTop="20dp"
-        android:text="@string/txt_set_wake_end_in_time"/>
-
-    <Spinner
-        android:id="@+id/wakeEndSpinner"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/wakeEndTimeTxt"
-        android:layout_marginTop="20dp"/>
-
-    <EditText
-        android:id="@+id/wakeEndTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/wakeEndTimeTxt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
-        android:ems="4"
-        android:inputType="time"
-        android:maxLength="8"/>
-
-    <!-- SLEEP -->
-
-    <TextView
-        android:id="@+id/goingSleepTimeTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/wakeEndTime"
-        android:layout_marginTop="20dp"
-        android:text="@string/txt_start_sleep_schedule"/>
-
-    <Spinner
-        android:id="@+id/sleepSpinner"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/goingSleepTimeTxt"
-        android:layout_marginTop="20dp"/>
-
-    <Switch
-        android:id="@+id/sleepSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/goingSleepTimeTxt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="22dp"/>
+        android:layout_below="@id/wakeEndFragment"
+        tools:layout="@layout/schedule_sleep" />
 
 
     <!-- UPDATE AND STATUS -->
@@ -98,9 +43,9 @@
         android:layout_above="@+id/statusText"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
-        android:text="@string/btn_set_alarm"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"/>
+        android:paddingRight="10dp"
+        android:text="@string/btn_set_alarm" />
 
     <TextView
         android:id="@+id/statusText"

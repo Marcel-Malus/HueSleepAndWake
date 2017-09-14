@@ -56,11 +56,12 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
         }
 
         if (!sleepSwitch.isChecked()) {
-            // TODO: disable schedule.
+            getPrefs().setSleepActive(false);
+            return disableSchedule(bridge, schedule, getPutListener());
         }
 
         updateSchedule(bridge, schedule, ONE_MINUTE, Calendar.getInstance(), getPutListener());
-        getPrefs().setSleepActive(sleepSwitch.isChecked());
+        getPrefs().setSleepActive(true);
         getPrefs().setSleepScheduleId(schedule.getId());
         return true;
     }

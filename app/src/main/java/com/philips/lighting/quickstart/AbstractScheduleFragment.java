@@ -122,6 +122,29 @@ public abstract class AbstractScheduleFragment extends Fragment {
         return wakeTime;
     }
 
+    protected boolean disableSchedule(PHBridge bridge, PHScheduleFix scheduleFix, PHHTTPListener putListener) {
+        String id = scheduleFix.getId();
+        Log.i(TAG, "Found alarm by name and id: " + scheduleFix.getName() + " / " + id);
+
+        scheduleFix.disable();
+        final String json;
+        try {
+            json = scheduleFix.buildJson();
+        } catch (JSONException e) {
+            Log.e(TAG, "Could not build JSON. Error: " + e.getMessage());
+            Toast.makeText(getActivity(), "Error building request JSON", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (json != null) {
+            Log.i(TAG, "Sending PUT to " + id + " with " + json);
+            bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
+            return true;
+        }
+
+        return false;
+    }
+
 
     private Date calculateRelativeTimeTo(Calendar cal, String timeStr) {
         if (!timeStr.matches(TIME_FORMAT)) {

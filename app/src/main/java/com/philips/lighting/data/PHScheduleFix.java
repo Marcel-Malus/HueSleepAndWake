@@ -87,15 +87,19 @@ public class PHScheduleFix {
 
     public String buildJson() throws JSONException {
         JSONObject json = new JSONObject();
+        boolean isDirty = false;
         if (localTime != null) {
             // TODO: Read W... from current schedule
             String lt = "W120/T" + SDF.format(localTime);
             json.put("localtime", lt);
+            isDirty = true;
         }
         if (status != null) {
             json.put("status", status);
+            isDirty = true;
         }
-        return json.toString();
+
+        return isDirty ? json.toString() : null;
     }
 
     @Override

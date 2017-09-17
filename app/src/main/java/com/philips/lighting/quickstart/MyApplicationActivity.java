@@ -34,6 +34,7 @@ public class MyApplicationActivity extends Activity {
     private WakeUpScheduleFragment wakeUpFragment;
     private WakeEndScheduleFragment wakeEndFragment;
     private SleepScheduleFragment sleepFragment;
+    private AlarmScheduleFragment alarmFragment;
     private TextView statusText;
 
     public HueSharedPreferences getPrefs() {
@@ -61,12 +62,13 @@ public class MyApplicationActivity extends Activity {
         wakeUpFragment = (WakeUpScheduleFragment) fragmentManager.findFragmentById(R.id.wakeUpFragment);
         wakeEndFragment = (WakeEndScheduleFragment) fragmentManager.findFragmentById(R.id.wakeEndFragment);
         sleepFragment = (SleepScheduleFragment) fragmentManager.findFragmentById(R.id.sleepFragment);
+        alarmFragment = (AlarmScheduleFragment) fragmentManager.findFragmentById(R.id.alarmFragment);
 
-        final Button alarmBtn = (Button) findViewById(R.id.setAlarmBtn);
-        alarmBtn.setOnClickListener(new OnClickListener() {
+        final Button updateSchedulesBtn = (Button) findViewById(R.id.updateSchedulesBtn);
+        updateSchedulesBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateAlarm();
+                updateSchedules();
             }
         });
 
@@ -89,7 +91,7 @@ public class MyApplicationActivity extends Activity {
         }
     }
 
-    private void updateAlarm() {
+    private void updateSchedules() {
         statusText.setText(R.string.txt_status_updating);
         boolean updatedNothing = true;
         PHBridge bridge = phHueSDK.getSelectedBridge();
@@ -101,6 +103,10 @@ public class MyApplicationActivity extends Activity {
         }
 
         if (sleepFragment.updateSleepSchedule(bridge)) {
+            updatedNothing = false;
+        }
+
+        if (alarmFragment.updateAlarmSchedule()) {
             updatedNothing = false;
         }
 

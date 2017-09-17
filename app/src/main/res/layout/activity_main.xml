@@ -33,19 +33,26 @@
         android:layout_below="@id/wakeEndFragment"
         tools:layout="@layout/schedule_sleep" />
 
+    <fragment
+        android:id="@+id/alarmFragment"
+        android:name="com.philips.lighting.quickstart.AlarmScheduleFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sleepFragment"
+        tools:layout="@layout/schedule_alarm" />
 
     <!-- UPDATE AND STATUS -->
 
     <Button
-        android:id="@+id/setAlarmBtn"
+        android:id="@+id/updateSchedulesBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/statusText"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="@string/btn_set_alarm" />
+        android:text="@string/btn_updated_schedules" />
 
     <TextView
         android:id="@+id/statusText"

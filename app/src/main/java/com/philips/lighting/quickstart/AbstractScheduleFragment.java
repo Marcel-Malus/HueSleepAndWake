@@ -146,7 +146,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
     }
 
 
-    private Date calculateRelativeTimeTo(Calendar cal, String timeStr) {
+    protected Date calculateRelativeTimeTo(Calendar cal, String timeStr) {
         if (!timeStr.matches(TIME_FORMAT)) {
             notifyUser(R.string.txt_status_no_time_format);
             return null;

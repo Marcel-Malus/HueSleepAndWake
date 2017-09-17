@@ -3,25 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
     <TextView
-        android:id="@+id/wakeEndTimeTxt"
+        android:id="@+id/alarmTimeTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/txt_set_wake_end_in_time" />
+        android:text="@string/txt_set_alarm_schedule" />
 
-    <Spinner
-        android:id="@+id/wakeEndSpinner"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/wakeEndTimeTxt"
-        android:layout_marginTop="20dp" />
-
-    <EditText
-        android:id="@+id/wakeEndTime"
+    <Switch
+        android:id="@+id/alarmSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/wakeEndTimeTxt"
+        android:layout_below="@id/alarmTimeTxt"
+        android:layout_marginTop="22dp" />
+
+    <EditText
+        android:id="@+id/alarmTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alarmTimeTxt"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
         android:ems="4"
@@ -29,14 +30,14 @@
         android:maxLength="8" />
 
     <TextView
-        android:id="@+id/wakeEndStatusTxt"
+        android:id="@+id/alarmStatusTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
-        android:layout_alignBottom="@+id/wakeEndTime"
-        android:layout_toRightOf="@+id/wakeEndTime"
-        android:layout_toEndOf="@+id/wakeEndTime"
+        android:layout_alignBottom="@+id/alarmTime"
+        android:layout_toRightOf="@+id/alarmTime"
+        android:layout_toEndOf="@+id/alarmTime"
         android:text="@string/txt_status" />
 
 </RelativeLayout>

@@ -22,11 +22,14 @@ public class HueSharedPreferences {
     private static final String SLEEP_SCHEDULE_ID = "SleepScheduleId";
     private static final String SLEEP_IS_ACTIVE = "SleepIsActive";
 
+    private static final String ALARM_TIME = "AlarmTime";
+    private static final String DEFAULT_ALARM_TIME = "8:00";
+    private static final String ALARM_IS_ACTIVE = "AlarmIsActive";
+
     private static HueSharedPreferences instance = null;
     private SharedPreferences mSharedPreferences = null;
 
     private Editor mSharedPreferencesEditor = null;
-    private String sleepScheduleId;
 
 
     public void create() {
@@ -115,6 +118,24 @@ public class HueSharedPreferences {
 
     public boolean setSleepActive(boolean isSleepActive) {
         mSharedPreferencesEditor.putBoolean(SLEEP_IS_ACTIVE, isSleepActive);
+        return (mSharedPreferencesEditor.commit());
+    }
+
+    public String getAlarmTime() {
+        return mSharedPreferences.getString(ALARM_TIME, DEFAULT_ALARM_TIME);
+    }
+
+    public boolean setAlarmTime(String time) {
+        mSharedPreferencesEditor.putString(ALARM_TIME, time);
+        return (mSharedPreferencesEditor.commit());
+    }
+
+    public boolean isAlarmActive() {
+        return mSharedPreferences.getBoolean(ALARM_IS_ACTIVE, false);
+    }
+
+    public boolean setAlarmActive(boolean isActive) {
+        mSharedPreferencesEditor.putBoolean(ALARM_IS_ACTIVE, isActive);
         return (mSharedPreferencesEditor.commit());
     }
 }

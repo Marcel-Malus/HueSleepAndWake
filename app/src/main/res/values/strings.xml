@@ -46,7 +46,7 @@
     <string name="txt_status_alarm_on">ON</string>
     <string name="txt_status_alarm_off">OFF</string>
 
-    <!--Notification-->
-    <string name="notification_alarm_txt">Wake Up! Wake Up! Alarm started!!</string>
+    <!--Alarm activity-->
+    <string name="btn_stop_alarm">Stop alarm!</string>
 
 </resources>

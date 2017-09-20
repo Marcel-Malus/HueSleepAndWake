@@ -9,7 +9,9 @@ public class AlarmStartReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         //Start sound service to play sound for alarm
-        context.startService(new Intent(context, AlarmSoundService.class));
+        Intent startSoundIntent = new Intent(context, AlarmSoundService.class);
+        startSoundIntent.putExtras(intent);
+        context.startService(startSoundIntent);
 
         // Start alarm activity to enable user interaction
         Intent startActivityIntent = new Intent(context, AlarmActivity.class);

@@ -34,6 +34,7 @@
     <string name="txt_start_sleep_schedule">Start sleep schedule with updating the schedules.</string>
     <string name="txt_set_alarm_schedule">Set the time from now till the sound alarm start.</string>
     <string name="btn_updated_schedules">Update schedules</string>
+    <string name="btn_pick_alarm_sound">Pick</string>
 
     <!--Status-->
     <string name="txt_status">Status</string>

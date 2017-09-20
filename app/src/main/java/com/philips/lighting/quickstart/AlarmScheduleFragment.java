@@ -3,32 +3,41 @@ package com.philips.lighting.quickstart;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.philips.lighting.alarm.AlarmSoundService;
 import com.philips.lighting.alarm.AlarmStartReceiver;
+import com.philips.lighting.data.MyConst;
 
 import java.util.Calendar;
 import java.util.Date;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.ALARM_SERVICE;
+import static com.philips.lighting.quickstart.PHHomeActivity.TAG;
 
 /**
  * @since 2017-09-14.
  */
 public class AlarmScheduleFragment extends AbstractScheduleFragment {
 
+    private static final int PICK_AUDIO_REQUEST = 0;
+
     private Switch alarmSwitch;
     private EditText inputTimeTxt;
     private TextView statusTxt;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
+    private Uri alarmSoundUri;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +48,9 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        final Button pickAlarmBtn = (Button) getActivity().findViewById(R.id.pickAlarmSoundBtn);
+        pickAlarmBtn.setOnClickListener(createPickAlarmListener());
+
         alarmSwitch = (Switch) getActivity().findViewById(R.id.alarmSwitch);
         alarmSwitch.setChecked(getPrefs().isAlarmActive());
 
@@ -48,6 +60,31 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
         statusTxt = (TextView) getActivity().findViewById(R.id.alarmStatusTxt);
 
         alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
+    }
+
+    private View.OnClickListener createPickAlarmListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent audioIntent = new Intent();
+                audioIntent.setType("audio/*");
+                audioIntent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(audioIntent, PICK_AUDIO_REQUEST);
+            }
+        };
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK || data == null || data.getData() == null) {
+            // error
+            return;
+        }
+        if (requestCode == PICK_AUDIO_REQUEST) {
+            alarmSoundUri = data.getData();
+            Log.i(TAG, "Got alarmSoundUri: " + alarmSoundUri.getPath());
+        }
     }
 
     @Override
@@ -72,6 +109,9 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
         getPrefs().setAlarmTime(alarmTimeStr);
 
         Intent intent = new Intent(getActivity(), AlarmStartReceiver.class);
+        if (alarmSoundUri != null) {
+            intent.putExtra(MyConst.ALARM_SOUND_URI, alarmSoundUri);
+        }
         pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), pendingIntent);

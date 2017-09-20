@@ -11,20 +11,29 @@
         android:layout_marginTop="10dp"
         android:text="@string/txt_set_alarm_schedule" />
 
+    <Button
+        android:id="@+id/pickAlarmSoundBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/alarmTimeTxt"
+        android:layout_marginTop="5dp"
+        android:text="@string/btn_pick_alarm_sound" />
+
     <Switch
         android:id="@+id/alarmSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/alarmTimeTxt"
-        android:layout_marginTop="22dp" />
+        android:layout_alignBaseline="@id/pickAlarmSoundBtn"
+        android:layout_toRightOf="@id/pickAlarmSoundBtn"
+        android:layout_marginLeft="15dp" />
 
     <EditText
         android:id="@+id/alarmTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/alarmTimeTxt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
+        android:layout_alignBaseline="@id/pickAlarmSoundBtn"
+        android:layout_toRightOf="@id/alarmSwitch"
+        android:layout_marginLeft="15dp"
         android:ems="4"
         android:inputType="time"
         android:maxLength="8" />
@@ -33,8 +42,8 @@
         android:id="@+id/alarmStatusTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_alignBottom="@+id/alarmTime"
         android:layout_toRightOf="@+id/alarmTime"
         android:layout_toEndOf="@+id/alarmTime"

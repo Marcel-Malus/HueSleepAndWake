@@ -25,6 +25,8 @@ public class HueSharedPreferences {
     private static final String ALARM_TIME = "AlarmTime";
     private static final String DEFAULT_ALARM_TIME = "8:00";
     private static final String ALARM_IS_ACTIVE = "AlarmIsActive";
+    private static final String ALARM_SOUND = "AlarmSound";
+
 
     private static HueSharedPreferences instance = null;
     private SharedPreferences mSharedPreferences = null;
@@ -136,6 +138,15 @@ public class HueSharedPreferences {
 
     public boolean setAlarmActive(boolean isActive) {
         mSharedPreferencesEditor.putBoolean(ALARM_IS_ACTIVE, isActive);
+        return (mSharedPreferencesEditor.commit());
+    }
+
+    public String getAlarmSoundUri() {
+        return mSharedPreferences.getString(ALARM_SOUND, null);
+    }
+
+    public boolean setAlarmSoundUri(String uri) {
+        mSharedPreferencesEditor.putString(ALARM_SOUND, uri);
         return (mSharedPreferencesEditor.commit());
     }
 }

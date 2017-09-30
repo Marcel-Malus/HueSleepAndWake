@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.philips.lighting.quickstart"
-        minSdkVersion 14
+        minSdkVersion 19
         targetSdkVersion 23
     }
 

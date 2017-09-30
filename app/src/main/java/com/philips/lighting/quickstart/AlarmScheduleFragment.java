@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.philips.lighting.alarm.AlarmSoundService;
 import com.philips.lighting.alarm.AlarmStartReceiver;
-import com.philips.lighting.data.MyConst;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -37,7 +36,6 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
     private TextView statusTxt;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
-    private Uri alarmSoundUri;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,7 +66,8 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
             public void onClick(View v) {
                 Intent audioIntent = new Intent();
                 audioIntent.setType("audio/*");
-                audioIntent.setAction(Intent.ACTION_GET_CONTENT);
+                audioIntent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                audioIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 startActivityForResult(audioIntent, PICK_AUDIO_REQUEST);
             }
         };
@@ -78,12 +77,21 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK || data == null || data.getData() == null) {
-            // error
+            statusTxt.setText(R.string.txt_status_error_pick);
             return;
         }
         if (requestCode == PICK_AUDIO_REQUEST) {
-            alarmSoundUri = data.getData();
+            Uri alarmSoundUri = data.getData();
             Log.i(TAG, "Got alarmSoundUri: " + alarmSoundUri.getPath());
+
+            getActivity().grantUriPermission(getActivity().getPackageName(), alarmSoundUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            final int takeFlags = data.getFlags() & Intent.FLAG_GRANT_READ_URI_PERMISSION;
+            // Check for the freshest data.
+            //noinspection WrongConstant
+            getActivity().getContentResolver().takePersistableUriPermission(alarmSoundUri, takeFlags);
+            getPrefs().setAlarmSoundUri(alarmSoundUri.toString());
+
+            statusTxt.setText(R.string.txt_status_sound_picked);
         }
     }
 
@@ -109,9 +117,6 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
         getPrefs().setAlarmTime(alarmTimeStr);
 
         Intent intent = new Intent(getActivity(), AlarmStartReceiver.class);
-        if (alarmSoundUri != null) {
-            intent.putExtra(MyConst.ALARM_SOUND_URI, alarmSoundUri);
-        }
         pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), pendingIntent);

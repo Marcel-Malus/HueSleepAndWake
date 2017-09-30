@@ -49,5 +49,7 @@
 
     <!--Alarm activity-->
     <string name="btn_stop_alarm">Stop alarm!</string>
+    <string name="txt_status_error_pick">Error on pick.</string>
+    <string name="txt_status_sound_picked">Sound picked</string>
 
 </resources>

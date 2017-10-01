@@ -6,20 +6,20 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MyApplicationActivity">
+    tools:context="com.recek.huewakeup.app.MainActivity">
 
     <!-- SCHEDULE FRAGMENTS -->
 
     <fragment
         android:id="@+id/wakeUpFragment"
-        android:name="com.philips.lighting.quickstart.WakeUpScheduleFragment"
+        android:name="com.recek.huewakeup.app.WakeUpScheduleFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/schedule_wake_up" />
 
     <fragment
         android:id="@+id/wakeEndFragment"
-        android:name="com.philips.lighting.quickstart.WakeEndScheduleFragment"
+        android:name="com.recek.huewakeup.app.WakeEndScheduleFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/wakeUpFragment"
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/sleepFragment"
-        android:name="com.philips.lighting.quickstart.SleepScheduleFragment"
+        android:name="com.recek.huewakeup.app.SleepScheduleFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/wakeEndFragment"
@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/alarmFragment"
-        android:name="com.philips.lighting.quickstart.AlarmScheduleFragment"
+        android:name="com.recek.huewakeup.app.AlarmScheduleFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/sleepFragment"

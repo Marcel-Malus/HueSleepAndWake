@@ -1,4 +1,4 @@
-package com.philips.lighting.quickstart;
+package com.recek.huewakeup.app;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.philips.lighting.data.PHScheduleFix;
 import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.quickstart.R;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.philips.lighting.alarm;
+package com.recek.huewakeup.alarm;
 
 import android.app.Service;
 import android.content.Intent;

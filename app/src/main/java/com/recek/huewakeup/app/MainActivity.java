@@ -1,4 +1,4 @@
-package com.philips.lighting.quickstart;
+package com.recek.huewakeup.app;
 
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -13,18 +13,19 @@ import com.philips.lighting.data.PHScheduleFix;
 import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHSchedule;
+import com.philips.lighting.quickstart.R;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * MyApplicationActivity - The starting point for creating your own Hue App.
+ * MainActivity - The starting point for creating your own Hue App.
  * Currently contains a simple view with a button to change your lights to random colours.  Remove this and add your own app implementation here! Have fun!
  *
  * @author SteveyO
  */
-public class MyApplicationActivity extends Activity {
+public class MainActivity extends Activity {
 
     private PHHueSDK phHueSDK;
     private HueSharedPreferences prefs;

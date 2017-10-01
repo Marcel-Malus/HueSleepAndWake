@@ -1,4 +1,4 @@
-package com.philips.lighting.quickstart;
+package com.recek.huewakeup.app;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import com.philips.lighting.data.PHScheduleFix;
 import com.philips.lighting.hue.listener.PHHTTPListener;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHSchedule;
+import com.philips.lighting.quickstart.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,7 +49,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        MyApplicationActivity activity = (MyApplicationActivity) getActivity();
+        MainActivity activity = (MainActivity) getActivity();
         prefs = activity.getPrefs();
         idToScheduleMap = activity.getIdToScheduleMap();
         putListener = createPutListener();

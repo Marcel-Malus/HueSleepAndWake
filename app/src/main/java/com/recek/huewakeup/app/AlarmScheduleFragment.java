@@ -1,4 +1,4 @@
-package com.philips.lighting.quickstart;
+package com.recek.huewakeup.app;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -13,8 +13,9 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.philips.lighting.alarm.AlarmSoundService;
-import com.philips.lighting.alarm.AlarmStartReceiver;
+import com.philips.lighting.quickstart.R;
+import com.recek.huewakeup.alarm.AlarmSoundService;
+import com.recek.huewakeup.alarm.AlarmStartReceiver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

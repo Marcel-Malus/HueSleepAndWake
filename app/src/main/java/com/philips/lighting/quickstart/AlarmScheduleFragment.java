@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +16,21 @@ import android.widget.TextView;
 import com.philips.lighting.alarm.AlarmSoundService;
 import com.philips.lighting.alarm.AlarmStartReceiver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Calendar;
 import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.ALARM_SERVICE;
-import static com.philips.lighting.quickstart.PHHomeActivity.TAG;
 
 /**
  * @since 2017-09-14.
  */
 public class AlarmScheduleFragment extends AbstractScheduleFragment {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AlarmScheduleFragment.class);
 
     private static final int PICK_AUDIO_REQUEST = 0;
 
@@ -82,7 +85,7 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
         }
         if (requestCode == PICK_AUDIO_REQUEST) {
             Uri alarmSoundUri = data.getData();
-            Log.i(TAG, "Got alarmSoundUri: " + alarmSoundUri.getPath());
+            LOG.debug("Got alarmSoundUri: {}", alarmSoundUri.getPath());
 
             getActivity().grantUriPermission(getActivity().getPackageName(), alarmSoundUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             final int takeFlags = data.getFlags() & Intent.FLAG_GRANT_READ_URI_PERMISSION;

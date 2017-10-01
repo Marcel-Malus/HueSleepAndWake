@@ -26,4 +26,5 @@ dependencies {
     compile('com.android.support:support-compat:26.1.0')
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-android
     compile group: 'org.slf4j', name: 'slf4j-android', version: '1.7.25'
+    compile('com.android.support:cardview-v7:26.1.0')
 }

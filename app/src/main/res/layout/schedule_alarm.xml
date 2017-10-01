@@ -1,52 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/alarmTimeTxt"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/txt_set_alarm_schedule" />
+        card_view:cardCornerRadius="4dp"
+        card_view:cardUseCompatPadding="true">
 
-    <Button
-        android:id="@+id/pickAlarmSoundBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/alarmTimeTxt"
-        android:layout_marginTop="5dp"
-        android:text="@string/btn_pick_alarm_sound" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Switch
-        android:id="@+id/alarmSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/pickAlarmSoundBtn"
-        android:layout_toRightOf="@id/pickAlarmSoundBtn"
-        android:layout_marginLeft="10dp" />
 
-    <EditText
-        android:id="@+id/alarmTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/pickAlarmSoundBtn"
-        android:layout_toRightOf="@id/alarmSwitch"
-        android:layout_marginLeft="10dp"
-        android:ems="4"
-        android:inputType="time"
-        android:maxLength="8" />
+            <TextView
+                android:id="@+id/alarmTimeTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/txt_set_alarm_schedule" />
 
-    <TextView
-        android:id="@+id/alarmStatusTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_alignBottom="@+id/alarmTime"
-        android:layout_toRightOf="@+id/alarmTime"
-        android:layout_toEndOf="@+id/alarmTime"
-        android:text="@string/txt_status" />
+            <Button
+                android:id="@+id/pickAlarmSoundBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/alarmTimeTxt"
+                android:layout_marginTop="5dp"
+                android:text="@string/btn_pick_alarm_sound" />
 
-</RelativeLayout>
+            <Switch
+                android:id="@+id/alarmSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/pickAlarmSoundBtn"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/pickAlarmSoundBtn" />
+
+            <EditText
+                android:id="@+id/alarmTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/pickAlarmSoundBtn"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/alarmSwitch"
+                android:ems="4"
+                android:inputType="time"
+                android:maxLength="8" />
+
+            <TextView
+                android:id="@+id/alarmStatusTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/alarmTime"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/alarmTime"
+                android:text="@string/txt_status" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

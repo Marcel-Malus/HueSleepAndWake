@@ -32,9 +32,16 @@
     <string name="txt_set_wake_in_time">Set the time (in HH[:MM[:SS]] Format) from now till the wakeup schedule.</string>
     <string name="txt_set_wake_end_in_time">Set the time from wakeup schedule till wakeup end schedule.</string>
     <string name="txt_start_sleep_schedule">Start sleep schedule with updating the schedules.</string>
-    <string name="txt_set_alarm_schedule">Set the time from now till the sound alarm start.</string>
     <string name="btn_updated_schedules">Update schedules</string>
-    <string name="btn_pick_alarm_sound">Pick</string>
+
+    <!--Sound alarm-->
+    <string name="txt_sound_alarm">Sound alarm</string>
+    <string name="txt_set_alarm_schedule">Set the time from now till the sound alarm start.</string>
+    <string name="txt_alarm_settings">Alarm settings</string>
+    <string name="txt_pick_alarm_sound">Pick alarm sound</string>
+    <string name="btn_stop_alarm">Stop alarm!</string>
+    <string name="txt_status_error_pick">Error on selecting alarm sound.</string>
+    <string name="txt_status_sound_picked">Sound picked</string>
 
     <!--Status-->
     <string name="txt_status">Status</string>
@@ -47,9 +54,8 @@
     <string name="txt_status_alarm_on">ON</string>
     <string name="txt_status_alarm_off">OFF</string>
 
-    <!--Alarm activity-->
-    <string name="btn_stop_alarm">Stop alarm!</string>
-    <string name="txt_status_error_pick">Error on pick.</string>
-    <string name="txt_status_sound_picked">Sound picked</string>
+    <!--Common-->
+    <string name="onByI">I</string>
+    <string name="offByO">O</string>
 
 </resources>

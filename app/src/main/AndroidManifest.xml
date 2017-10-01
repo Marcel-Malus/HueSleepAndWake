@@ -12,10 +12,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--  Permissions required to Waking Lock if device screen is off  -->
+    <!-- Permissions required to Waking Lock if device screen is off -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-    <!--Permissions for playing alarm sound out of uri stored in preferences-->
+    <!-- Permissions for playing alarm sound out of uri stored in preferences -->
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
 
     <application
@@ -43,6 +43,8 @@
         <receiver android:name="com.recek.huewakeup.alarm.AlarmStartReceiver" />
 
         <service android:name="com.recek.huewakeup.alarm.AlarmSoundService" />
+
+        <activity android:name="com.recek.huewakeup.settings.AlarmSettingsActivity"></activity>
     </application>
 
 </manifest>

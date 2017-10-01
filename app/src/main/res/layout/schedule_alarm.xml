@@ -13,37 +13,48 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="2dp">
 
 
             <TextView
                 android:id="@+id/alarmTimeTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/txt_set_alarm_schedule" />
+                android:text="@string/txt_sound_alarm" />
 
-            <Button
-                android:id="@+id/pickAlarmSoundBtn"
+            <ImageButton
+                android:id="@+id/alarmSettingsBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/alarmTimeTxt"
-                android:layout_marginTop="5dp"
-                android:text="@string/btn_pick_alarm_sound" />
+                android:src="@drawable/ic_settings_black_24dp"
+                android:contentDescription="@string/txt_alarm_settings" />
+
+            <!--<Button-->
+            <!--android:id="@+id/pickAlarmSoundBtn"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/alarmTimeTxt"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:text="@string/btn_pick_alarm_sound"/>-->
 
             <Switch
                 android:id="@+id/alarmSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/pickAlarmSoundBtn"
+                android:layout_alignBottom="@id/alarmSettingsBtn"
                 android:layout_marginStart="10dp"
-                android:layout_toEndOf="@id/pickAlarmSoundBtn" />
+                android:layout_toEndOf="@id/alarmSettingsBtn"
+                android:textOn="@string/onByI"
+                android:textOff="@string/offByO"
+                android:switchMinWidth="55dp" />
 
             <EditText
                 android:id="@+id/alarmTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/pickAlarmSoundBtn"
+                android:layout_alignBottom="@id/alarmSettingsBtn"
                 android:layout_marginStart="10dp"
                 android:layout_toEndOf="@id/alarmSwitch"
                 android:ems="4"

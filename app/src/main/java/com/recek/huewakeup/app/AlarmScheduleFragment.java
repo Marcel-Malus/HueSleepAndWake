@@ -3,37 +3,29 @@ package com.recek.huewakeup.app;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.philips.lighting.quickstart.R;
 import com.recek.huewakeup.alarm.AlarmSoundService;
 import com.recek.huewakeup.alarm.AlarmStartReceiver;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.recek.huewakeup.settings.AlarmSettingsActivity;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import static android.app.Activity.RESULT_OK;
 import static android.content.Context.ALARM_SERVICE;
 
 /**
  * @since 2017-09-14.
  */
 public class AlarmScheduleFragment extends AbstractScheduleFragment {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AlarmScheduleFragment.class);
-
-    private static final int PICK_AUDIO_REQUEST = 0;
 
     private Switch alarmSwitch;
     private EditText inputTimeTxt;
@@ -50,8 +42,8 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final Button pickAlarmBtn = (Button) getActivity().findViewById(R.id.pickAlarmSoundBtn);
-        pickAlarmBtn.setOnClickListener(createPickAlarmListener());
+        final ImageButton settingsBtn = (ImageButton) getActivity().findViewById(R.id.alarmSettingsBtn);
+        settingsBtn.setOnClickListener(createSettingsListener());
 
         alarmSwitch = (Switch) getActivity().findViewById(R.id.alarmSwitch);
         alarmSwitch.setChecked(getPrefs().isAlarmActive());
@@ -64,39 +56,14 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
         alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
     }
 
-    private View.OnClickListener createPickAlarmListener() {
+    private View.OnClickListener createSettingsListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent audioIntent = new Intent();
-                audioIntent.setType("audio/*");
-                audioIntent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-                audioIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(audioIntent, PICK_AUDIO_REQUEST);
+                Intent startActivityIntent = new Intent(getActivity(), AlarmSettingsActivity.class);
+                getActivity().startActivity(startActivityIntent);
             }
         };
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK || data == null || data.getData() == null) {
-            statusTxt.setText(R.string.txt_status_error_pick);
-            return;
-        }
-        if (requestCode == PICK_AUDIO_REQUEST) {
-            Uri alarmSoundUri = data.getData();
-            LOG.debug("Got alarmSoundUri: {}", alarmSoundUri.getPath());
-
-            getActivity().grantUriPermission(getActivity().getPackageName(), alarmSoundUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            final int takeFlags = data.getFlags() & Intent.FLAG_GRANT_READ_URI_PERMISSION;
-            // Check for the freshest data.
-            //noinspection WrongConstant
-            getActivity().getContentResolver().takePersistableUriPermission(alarmSoundUri, takeFlags);
-            getPrefs().setAlarmSoundUri(alarmSoundUri.toString());
-
-            statusTxt.setText(R.string.txt_status_sound_picked);
-        }
     }
 
     @Override

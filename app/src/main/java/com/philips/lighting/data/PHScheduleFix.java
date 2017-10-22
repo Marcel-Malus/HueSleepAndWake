@@ -26,6 +26,7 @@ public class PHScheduleFix {
 
     private Date localTime;
     private String status;
+    private String days;
 
     public PHScheduleFix(String id, String name) {
         this.id = id;
@@ -75,6 +76,10 @@ public class PHScheduleFix {
         this.localTime = localTime;
     }
 
+    public void setDays(String days) {
+        this.days = days;
+    }
+
     public void enable() {
         if (!schedule.getStatus().equals(PHSchedule.PHScheduleStatus.ENABLED))
             this.status = "enabled";
@@ -88,10 +93,13 @@ public class PHScheduleFix {
     public String buildJson() throws JSONException {
         JSONObject json = new JSONObject();
         boolean isDirty = false;
-        if (localTime != null) {
-            // TODO: Read W... from current schedule
-            String lt = "W120/T" + SDF.format(localTime);
-            json.put("localtime", lt);
+        if (localTime != null && days != null) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("W");
+            sb.append(days);
+            sb.append("/T");
+            sb.append(SDF.format(localTime));
+            json.put("localtime", sb.toString());
             isDirty = true;
         }
         if (status != null) {

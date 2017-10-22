@@ -104,10 +104,12 @@ public abstract class AbstractScheduleFragment extends Fragment {
         LOG.info("Found alarm by name and id: {} / {}", scheduleFix.getName(), id);
 
         Date wakeTime = calculateRelativeTimeTo(startCal, timeStr);
-        if (wakeTime == null) {
+        String days = calculateWakeUpDays();
+        if (wakeTime == null || days == null) {
             return null;
         }
         scheduleFix.setLocalTime(wakeTime);
+        scheduleFix.setDays(days);
         scheduleFix.enable();
         final String json;
         try {
@@ -164,6 +166,17 @@ public abstract class AbstractScheduleFragment extends Fragment {
         return cal.getTime();
     }
 
+    private String calculateWakeUpDays() {
+        String wakeDays = prefs.getWakeDaysRaw();
+        wakeDays = "0" + wakeDays;
+        try {
+            int wakeDaysHueFormat = Integer.parseInt(wakeDays, 2);
+            return String.valueOf(wakeDaysHueFormat);
+        } catch (NumberFormatException e) {
+            LOG.error("Could not interpret saved days for wake up: {}.", e.getMessage());
+            return null;
+        }
+    }
 
     private void notifyUser(final String msg) {
         getStatusView().setText(msg);

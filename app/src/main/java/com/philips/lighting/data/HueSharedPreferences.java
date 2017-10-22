@@ -165,6 +165,10 @@ public class HueSharedPreferences {
         return (mSharedPreferencesEditor.commit());
     }
 
+    public String getWakeDaysRaw() {
+        return mSharedPreferences.getString(WAKE_DAYS, DEFAULT_WAKE_DAYS);
+    }
+
     public List<Boolean> getWakeDays() {
         String checkedDays = mSharedPreferences.getString(WAKE_DAYS, DEFAULT_WAKE_DAYS);
         final List<Boolean> daysList = new ArrayList<>();

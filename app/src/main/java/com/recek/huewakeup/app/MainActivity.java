@@ -2,6 +2,7 @@ package com.recek.huewakeup.app;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +15,7 @@ import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHSchedule;
 import com.philips.lighting.quickstart.R;
+import com.recek.huewakeup.settings.DaysSettingsActivity;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -73,6 +75,14 @@ public class MainActivity extends Activity {
             }
         });
 
+        final Button daysBtn = (Button) findViewById(R.id.daysBtn);
+        daysBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setWakeUpDays();
+            }
+        });
+
         statusText = (TextView) findViewById(R.id.statusText);
     }
 
@@ -116,7 +126,12 @@ public class MainActivity extends Activity {
         } else {
             statusText.setText(R.string.txt_status_update_finished);
         }
+    }
 
+
+    private void setWakeUpDays() {
+        Intent startActivityIntent = new Intent(this, DaysSettingsActivity.class);
+        startActivity(startActivityIntent);
     }
 
     @Override

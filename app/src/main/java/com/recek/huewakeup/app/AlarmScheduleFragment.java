@@ -94,7 +94,7 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
         // TODO: Change to every 24h:
 //        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), 60000, pendingIntent);
 
-        statusTxt.setText(R.string.txt_status_alarm_on);
+        statusTxt.setText(getString(R.string.txt_status_alarm_on, SDF_TIME.format(alarmDate)));
         return true;
     }
 

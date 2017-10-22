@@ -39,12 +39,12 @@
             android:name=".PHPushlinkActivity"
             android:label="@string/app_name" />
         <activity android:name="com.recek.huewakeup.alarm.AlarmActivity" />
+        <activity android:name="com.recek.huewakeup.settings.AlarmSettingsActivity" />
+        <activity android:name="com.recek.huewakeup.settings.DaysSettingsActivity" />
 
         <receiver android:name="com.recek.huewakeup.alarm.AlarmStartReceiver" />
 
         <service android:name="com.recek.huewakeup.alarm.AlarmSoundService" />
-
-        <activity android:name="com.recek.huewakeup.settings.AlarmSettingsActivity"></activity>
     </application>
 
 </manifest>

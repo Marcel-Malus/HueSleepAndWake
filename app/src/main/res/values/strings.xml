@@ -32,7 +32,8 @@
     <string name="txt_set_wake_in_time">Set the time (in HH[:MM[:SS]] Format) from now till the wakeup schedule.</string>
     <string name="txt_set_wake_end_in_time">Set the time from wakeup schedule till wakeup end schedule.</string>
     <string name="txt_start_sleep_schedule">Start sleep schedule with updating the schedules.</string>
-    <string name="btn_updated_schedules">Update schedules</string>
+    <string name="btn_updated_schedules">Update</string>
+    <string name="btn_days">Days</string>
 
     <!--Sound alarm-->
     <string name="txt_sound_alarm">Sound alarm</string>
@@ -52,11 +53,16 @@
     <string name="txt_status_current_setting">Current: %s</string>
     <string name="txt_status_not_set">Not set or disabled</string>
     <string name="txt_no_alarm_sound_picked">No alarm sound picked yet</string>
-    <string name="txt_status_alarm_on">ON</string>
+    <string name="txt_status_alarm_on">ON: %s</string>
     <string name="txt_status_alarm_off">OFF</string>
+
+    <!--Days Settings-->
+    <string name="txt_wake_up_on_days">Wakeup on days:</string>
+    <string name="monday">Monday</string>
 
     <!--Common-->
     <string name="onByI">I</string>
     <string name="offByO">O</string>
+    <string name="ok">OK</string>
 
 </resources>

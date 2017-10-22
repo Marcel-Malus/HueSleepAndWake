@@ -2,7 +2,6 @@ package com.recek.huewakeup.app;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,6 +17,8 @@ import com.philips.lighting.quickstart.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,13 +28,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.philips.lighting.quickstart.PHHomeActivity.TAG;
-
 /**
  * @since 2017-09-14.
  */
 public abstract class AbstractScheduleFragment extends Fragment {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractScheduleFragment.class);
     // TODO: locale
     protected static final SimpleDateFormat SDF_TIME = new SimpleDateFormat("HH:mm:ss", Locale.GERMANY);
 
@@ -101,7 +101,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
     protected Date updateSchedule(PHBridge bridge, PHScheduleFix scheduleFix, String timeStr,
                                   Calendar startCal, PHHTTPListener putListener) {
         String id = scheduleFix.getId();
-        Log.i(TAG, "Found alarm by name and id: " + scheduleFix.getName() + " / " + id);
+        LOG.info("Found alarm by name and id: {} / {}", scheduleFix.getName(), id);
 
         Date wakeTime = calculateRelativeTimeTo(startCal, timeStr);
         if (wakeTime == null) {
@@ -113,32 +113,32 @@ public abstract class AbstractScheduleFragment extends Fragment {
         try {
             json = scheduleFix.buildJson();
         } catch (JSONException e) {
-            Log.e(TAG, "Could not build JSON. Error: " + e.getMessage());
+            LOG.error("Could not build JSON. Error: {}", e.getMessage());
             Toast.makeText(getActivity(), "Error building request JSON", Toast.LENGTH_SHORT).show();
             return null;
         }
 
-        Log.i(TAG, "Sending PUT to " + id + " with " + json);
+        LOG.info("Sending PUT to {} with {}", id, json);
         bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
         return wakeTime;
     }
 
     protected boolean disableSchedule(PHBridge bridge, PHScheduleFix scheduleFix, PHHTTPListener putListener) {
         String id = scheduleFix.getId();
-        Log.i(TAG, "Found alarm by name and id: " + scheduleFix.getName() + " / " + id);
+        LOG.info("Found alarm by name and id: {} / {}", scheduleFix.getName(), id);
 
         scheduleFix.disable();
         final String json;
         try {
             json = scheduleFix.buildJson();
         } catch (JSONException e) {
-            Log.e(TAG, "Could not build JSON. Error: " + e.getMessage());
+            LOG.error("Could not build JSON. Error: {}", e.getMessage());
             Toast.makeText(getActivity(), "Error building request JSON", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (json != null) {
-            Log.i(TAG, "Sending PUT to " + id + " with " + json);
+            LOG.info("Sending PUT to {} with {}", id, json);
             bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
             return true;
         }
@@ -189,7 +189,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
 
             @Override
             public void onHTTPResponse(String jsonResponse) {
-                Log.i(TAG, "RESPONSE: " + jsonResponse);
+                LOG.info("RESPONSE: {}", jsonResponse);
                 try {
                     JSONArray jsonArray = new JSONArray(jsonResponse);
                     // TODO: Evaluate all array items.
@@ -204,7 +204,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
                         }
                     }
                 } catch (JSONException e) {
-                    Log.e(TAG, "Could not read JSON response. Error: " + e.getMessage());
+                    LOG.error("Could not read JSON response. Error: {}", e.getMessage());
                 }
             }
         };

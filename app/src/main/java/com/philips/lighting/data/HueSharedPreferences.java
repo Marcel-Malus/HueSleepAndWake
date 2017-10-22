@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HueSharedPreferences {
     private static final String HUE_SHARED_PREFERENCES_STORE = "HueSharedPrefs";
     private static final String LAST_CONNECTED_USERNAME = "LastConnectedUsername";
@@ -26,6 +29,18 @@ public class HueSharedPreferences {
     private static final String DEFAULT_ALARM_TIME = "8:00";
     private static final String ALARM_IS_ACTIVE = "AlarmIsActive";
     private static final String ALARM_SOUND = "AlarmSound";
+
+    private static final String WAKE_DAYS = "WakeDays";
+    private static final String DEFAULT_WAKE_DAYS = "0000000";
+    public static final String[] DAYS = {
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+    };
 
 
     private static HueSharedPreferences instance = null;
@@ -147,6 +162,25 @@ public class HueSharedPreferences {
 
     public boolean setAlarmSoundUri(String uri) {
         mSharedPreferencesEditor.putString(ALARM_SOUND, uri);
+        return (mSharedPreferencesEditor.commit());
+    }
+
+    public List<Boolean> getWakeDays() {
+        String checkedDays = mSharedPreferences.getString(WAKE_DAYS, DEFAULT_WAKE_DAYS);
+        final List<Boolean> daysList = new ArrayList<>();
+        for (int i = 0; i < checkedDays.length(); i++) {
+            char checked = checkedDays.charAt(i);
+            daysList.add(checked == '1');
+        }
+        return daysList;
+    }
+
+    public boolean setWakeDays(final List<Boolean> daysList) {
+        StringBuilder sb = new StringBuilder();
+        for (Boolean checked : daysList) {
+            sb.append(checked ? "1" : "0");
+        }
+        mSharedPreferencesEditor.putString(WAKE_DAYS, sb.toString());
         return (mSharedPreferencesEditor.commit());
     }
 }

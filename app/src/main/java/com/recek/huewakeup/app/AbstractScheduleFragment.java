@@ -39,6 +39,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
 
     private static final PHScheduleFix NONE_SCHEDULE = new PHScheduleFix("-1", "NONE");
     private static final String TIME_FORMAT = "^((2[0-3]|1[0-9]|0[0-9]|[0-9])(:([0-5][0-9]|[0-9])){0,2})$";
+    private static final String BLANK_WAKE_DAYS = "00000000";
 
     private HueSharedPreferences prefs;
     private Map<String, PHScheduleFix> idToScheduleMap;
@@ -99,15 +100,20 @@ public abstract class AbstractScheduleFragment extends Fragment {
     }
 
     protected Date updateSchedule(PHBridge bridge, PHScheduleFix scheduleFix, String timeStr,
-                                  Calendar startCal, PHHTTPListener putListener) {
+                                  Calendar startCal, boolean useDayOfSchedule, PHHTTPListener putListener) {
         String id = scheduleFix.getId();
         LOG.info("Found alarm by name and id: {} / {}", scheduleFix.getName(), id);
 
         Date wakeTime = calculateRelativeTimeTo(startCal, timeStr);
-        String days = calculateWakeUpDays();
-        if (wakeTime == null || days == null) {
+        if (wakeTime == null) {
             return null;
         }
+
+        String days = calculateWakeUpDays(wakeTime, useDayOfSchedule);
+        if (days == null) {
+            return null;
+        }
+
         scheduleFix.setLocalTime(wakeTime);
         scheduleFix.setDays(days);
         scheduleFix.enable();
@@ -166,9 +172,23 @@ public abstract class AbstractScheduleFragment extends Fragment {
         return cal.getTime();
     }
 
-    private String calculateWakeUpDays() {
-        String wakeDays = prefs.getWakeDaysRaw();
-        wakeDays = "0" + wakeDays;
+    private String calculateWakeUpDays(Date wakeTime, boolean useDayOfSchedule) {
+        String wakeDays;
+        if (useDayOfSchedule) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(wakeTime);
+            // Converting SUN-SAT (1-7) to MON-SUN (1-7)
+            int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - 1;
+            if (dayOfWeek == 0) {
+                dayOfWeek = 7;
+            }
+            StringBuilder sb = new StringBuilder(BLANK_WAKE_DAYS);
+            sb.setCharAt(dayOfWeek, '1');
+            wakeDays = sb.toString();
+        } else {
+            wakeDays = prefs.getWakeDaysRaw();
+            wakeDays = "0" + wakeDays;
+        }
         try {
             int wakeDaysHueFormat = Integer.parseInt(wakeDays, 2);
             return String.valueOf(wakeDaysHueFormat);

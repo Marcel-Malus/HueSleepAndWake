@@ -60,7 +60,7 @@ public class WakeEndScheduleFragment extends AbstractScheduleFragment {
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeDate);
 
-        Date wakeEndDate = updateSchedule(bridge, schedule, wakeTimeStr, cal, getPutListener());
+        Date wakeEndDate = updateSchedule(bridge, schedule, wakeTimeStr, cal, false, getPutListener());
         if (wakeEndDate != null) {
             getPrefs().setWakeEndTime(wakeTimeStr);
             getPrefs().setWakeEndScheduleId(schedule.getId());

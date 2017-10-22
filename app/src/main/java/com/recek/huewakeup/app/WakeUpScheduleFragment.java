@@ -57,7 +57,7 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         String wakeTimeStr = inputTimeTxt.getText().toString();
         Calendar cal = Calendar.getInstance();
 
-        Date wakeUpDate = updateSchedule(bridge, schedule, wakeTimeStr, cal, getPutListener());
+        Date wakeUpDate = updateSchedule(bridge, schedule, wakeTimeStr, cal, false, getPutListener());
         if (wakeUpDate != null) {
             getPrefs().setWakeTime(wakeTimeStr);
             getPrefs().setWakeScheduleId(schedule.getId());

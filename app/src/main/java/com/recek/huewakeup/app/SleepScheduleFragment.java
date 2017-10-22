@@ -61,7 +61,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
             return disableSchedule(bridge, schedule, getPutListener());
         }
 
-        updateSchedule(bridge, schedule, ONE_MINUTE, Calendar.getInstance(), getPutListener());
+        updateSchedule(bridge, schedule, ONE_MINUTE, Calendar.getInstance(), true, getPutListener());
         getPrefs().setSleepActive(true);
         getPrefs().setSleepScheduleId(schedule.getId());
         return true;

@@ -99,6 +99,10 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
     }
 
     private boolean turnOffAlarm() {
+        if (pendingIntent == null) {
+            Intent intent = new Intent(getActivity(), AlarmStartReceiver.class);
+            pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
+        }
         alarmManager.cancel(pendingIntent);
         //Stop the Media Player Service to stop sound
         getActivity().stopService(new Intent(getActivity(), AlarmSoundService.class));

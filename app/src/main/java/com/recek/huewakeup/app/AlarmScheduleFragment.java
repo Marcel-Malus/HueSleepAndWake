@@ -16,11 +16,13 @@ import com.philips.lighting.quickstart.R;
 import com.recek.huewakeup.alarm.AlarmSoundService;
 import com.recek.huewakeup.alarm.AlarmStartReceiver;
 import com.recek.huewakeup.settings.AlarmSettingsActivity;
+import com.recek.huewakeup.util.MyDateUtils;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import static android.content.Context.ALARM_SERVICE;
+import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME;
 
 /**
  * @since 2017-09-14.
@@ -71,8 +73,7 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
         return statusTxt;
     }
 
-    public boolean updateAlarmSchedule() {
-
+    public boolean updateAlarmSchedule(Date wakeTime) {
         getPrefs().setAlarmActive(alarmSwitch.isChecked());
         if (!alarmSwitch.isChecked()) {
             return turnOffAlarm();
@@ -80,9 +81,11 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
 
         String alarmTimeStr = inputTimeTxt.getText().toString();
         Calendar cal = Calendar.getInstance();
+        cal.setTime(wakeTime);
 
-        Date alarmDate = calculateRelativeTimeTo(cal, alarmTimeStr);
+        Date alarmDate = MyDateUtils.calculateRelativeTimeTo(cal, alarmTimeStr, false);
         if (alarmDate == null) {
+            statusTxt.setText(R.string.txt_status_wrong_format);
             return false;
         }
         getPrefs().setAlarmTime(alarmTimeStr);

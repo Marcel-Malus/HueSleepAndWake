@@ -14,9 +14,12 @@ public class HueSharedPreferences {
 
     private static final String DEFAULT_SCHEDULE_ID = "-1";
 
-    private static final String WAKE_SCHEDULE_ID = "WakeScheduleId";
     private static final String WAKE_TIME = "WakeTime";
     private static final String DEFAULT_WAKE_TIME = "8:00";
+
+    private static final String WAKE_SCHEDULE_ID = "WakeScheduleId";
+    private static final String WAKE_LIGHT_TIME = "WakeLightTime";
+    private static final String DEFAULT_WAKE_LIGHT_TIME = "0:5";
 
     private static final String WAKE_END_SCHEDULE_ID = "WakeEndScheduleId";
     private static final String WAKE_END_TIME = "WakeEndTime";
@@ -84,6 +87,15 @@ public class HueSharedPreferences {
         return (mSharedPreferencesEditor.commit());
     }
 
+    public String getWakeTime() {
+        return mSharedPreferences.getString(WAKE_TIME, DEFAULT_WAKE_TIME);
+    }
+
+    public boolean setWakeTime(String wakeTime) {
+        mSharedPreferencesEditor.putString(WAKE_TIME, wakeTime);
+        return (mSharedPreferencesEditor.commit());
+    }
+
     public String getWakeScheduleId() {
         return mSharedPreferences.getString(WAKE_SCHEDULE_ID, DEFAULT_SCHEDULE_ID);
     }
@@ -93,12 +105,12 @@ public class HueSharedPreferences {
         return (mSharedPreferencesEditor.commit());
     }
 
-    public String getWakeTime() {
-        return mSharedPreferences.getString(WAKE_TIME, DEFAULT_WAKE_TIME);
+    public String getWakeLightTime() {
+        return mSharedPreferences.getString(WAKE_LIGHT_TIME, DEFAULT_WAKE_LIGHT_TIME);
     }
 
-    public boolean setWakeTime(String wakeTime) {
-        mSharedPreferencesEditor.putString(WAKE_TIME, wakeTime);
+    public boolean setWakeLightTime(String wakeTime) {
+        mSharedPreferencesEditor.putString(WAKE_LIGHT_TIME, wakeTime);
         return (mSharedPreferencesEditor.commit());
     }
 

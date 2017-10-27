@@ -7,11 +7,19 @@
     <!-- SCHEDULE FRAGMENTS -->
 
     <fragment
+        android:id="@+id/wakeTimeFragment"
+        android:name="com.recek.huewakeup.app.WakeTimeFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        tools:layout="@layout/fragment_wake_time" />
+
+    <fragment
         android:id="@+id/alarmFragment"
         android:name="com.recek.huewakeup.app.AlarmScheduleFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/wakeTimeFragment"
         tools:layout="@layout/schedule_alarm" />
 
     <fragment

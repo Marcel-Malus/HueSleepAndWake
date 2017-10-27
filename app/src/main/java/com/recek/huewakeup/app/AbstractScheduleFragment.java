@@ -13,6 +13,7 @@ import com.philips.lighting.hue.listener.PHHTTPListener;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHSchedule;
 import com.philips.lighting.quickstart.R;
+import com.recek.huewakeup.util.MyDateUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,13 +21,13 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+
+import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME;
 
 /**
  * @since 2017-09-14.
@@ -34,12 +35,8 @@ import java.util.Map;
 public abstract class AbstractScheduleFragment extends Fragment {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractScheduleFragment.class);
-    // TODO: locale
-    protected static final SimpleDateFormat SDF_TIME = new SimpleDateFormat("HH:mm:ss", Locale.GERMANY);
 
     private static final PHScheduleFix NONE_SCHEDULE = new PHScheduleFix("-1", "NONE");
-    private static final String TIME_FORMAT = "^((2[0-3]|1[0-9]|0[0-9]|[0-9])(:([0-5][0-9]|[0-9])){0,2})$";
-    private static final String BLANK_WAKE_DAYS = "00000000";
 
     private HueSharedPreferences prefs;
     private Map<String, PHScheduleFix> idToScheduleMap;
@@ -100,16 +97,17 @@ public abstract class AbstractScheduleFragment extends Fragment {
     }
 
     protected Date updateSchedule(PHBridge bridge, PHScheduleFix scheduleFix, String timeStr,
-                                  Calendar startCal, boolean useDayOfSchedule, PHHTTPListener putListener) {
+                                  Calendar startCal, boolean useDayOfSchedule, boolean before) {
         String id = scheduleFix.getId();
         LOG.info("Found alarm by name and id: {} / {}", scheduleFix.getName(), id);
 
-        Date wakeTime = calculateRelativeTimeTo(startCal, timeStr);
+        Date wakeTime = MyDateUtils.calculateRelativeTimeTo(startCal, timeStr, before);
         if (wakeTime == null) {
+            notifyUser(R.string.txt_status_wrong_format);
             return null;
         }
 
-        String days = calculateWakeUpDays(wakeTime, useDayOfSchedule);
+        String days = MyDateUtils.calculateWakeUpDays(wakeTime, useDayOfSchedule, prefs.getWakeDaysRaw());
         if (days == null) {
             return null;
         }
@@ -131,7 +129,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
         return wakeTime;
     }
 
-    protected boolean disableSchedule(PHBridge bridge, PHScheduleFix scheduleFix, PHHTTPListener putListener) {
+    protected boolean disableSchedule(PHBridge bridge, PHScheduleFix scheduleFix) {
         String id = scheduleFix.getId();
         LOG.info("Found alarm by name and id: {} / {}", scheduleFix.getName(), id);
 
@@ -152,50 +150,6 @@ public abstract class AbstractScheduleFragment extends Fragment {
         }
 
         return false;
-    }
-
-
-    protected Date calculateRelativeTimeTo(Calendar cal, String timeStr) {
-        if (!timeStr.matches(TIME_FORMAT)) {
-            notifyUser(R.string.txt_status_no_time_format);
-            return null;
-        }
-
-        String[] timeParts = timeStr.split(":");
-        int hours = Integer.valueOf(timeParts[0]);
-        int minutes = timeParts.length == 2 ? Integer.valueOf(timeParts[1]) : 0;
-        int seconds = timeParts.length == 3 ? Integer.valueOf(timeParts[2]) : 0;
-
-        cal.add(Calendar.SECOND, seconds);
-        cal.add(Calendar.MINUTE, minutes);
-        cal.add(Calendar.HOUR_OF_DAY, hours);
-        return cal.getTime();
-    }
-
-    private String calculateWakeUpDays(Date wakeTime, boolean useDayOfSchedule) {
-        String wakeDays;
-        if (useDayOfSchedule) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(wakeTime);
-            // Converting SUN-SAT (1-7) to MON-SUN (1-7)
-            int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - 1;
-            if (dayOfWeek == 0) {
-                dayOfWeek = 7;
-            }
-            StringBuilder sb = new StringBuilder(BLANK_WAKE_DAYS);
-            sb.setCharAt(dayOfWeek, '1');
-            wakeDays = sb.toString();
-        } else {
-            wakeDays = prefs.getWakeDaysRaw();
-            wakeDays = "0" + wakeDays;
-        }
-        try {
-            int wakeDaysHueFormat = Integer.parseInt(wakeDays, 2);
-            return String.valueOf(wakeDaysHueFormat);
-        } catch (NumberFormatException e) {
-            LOG.error("Could not interpret saved days for wake up: {}.", e.getMessage());
-            return null;
-        }
     }
 
     private void notifyUser(final String msg) {

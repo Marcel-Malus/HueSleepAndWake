@@ -34,6 +34,7 @@ public class MainActivity extends Activity {
 
     private final Map<String, PHScheduleFix> idToScheduleMap = new HashMap<>();
 
+    private WakeTimeFragment wakeTimeFragment;
     private WakeUpScheduleFragment wakeUpFragment;
     private WakeEndScheduleFragment wakeEndFragment;
     private SleepScheduleFragment sleepFragment;
@@ -62,6 +63,7 @@ public class MainActivity extends Activity {
 
         // WIDGETS
         FragmentManager fragmentManager = getFragmentManager();
+        wakeTimeFragment = (WakeTimeFragment) fragmentManager.findFragmentById(R.id.wakeTimeFragment);
         wakeUpFragment = (WakeUpScheduleFragment) fragmentManager.findFragmentById(R.id.wakeUpFragment);
         wakeEndFragment = (WakeEndScheduleFragment) fragmentManager.findFragmentById(R.id.wakeEndFragment);
         sleepFragment = (SleepScheduleFragment) fragmentManager.findFragmentById(R.id.sleepFragment);
@@ -107,18 +109,21 @@ public class MainActivity extends Activity {
         boolean updatedNothing = true;
         PHBridge bridge = phHueSDK.getSelectedBridge();
 
-        Date wakeUpDate = wakeUpFragment.updateWakeUpSchedule(bridge);
-        if (wakeUpDate != null) {
-            updatedNothing = false;
-            wakeEndFragment.updateWakeUpEndSchedule(bridge, wakeUpDate);
-        }
+        Date wakeTime = wakeTimeFragment.onUpdate();
+        if (wakeTime != null) {
+            Date wakeUpDate = wakeUpFragment.updateWakeUpSchedule(bridge, wakeTime);
+            if (wakeUpDate != null) {
+                updatedNothing = false;
+                wakeEndFragment.updateWakeUpEndSchedule(bridge, wakeTime);
+            }
 
-        if (sleepFragment.updateSleepSchedule(bridge)) {
-            updatedNothing = false;
-        }
+            if (sleepFragment.updateSleepSchedule(bridge)) {
+                updatedNothing = false;
+            }
 
-        if (alarmFragment.updateAlarmSchedule()) {
-            updatedNothing = false;
+            if (alarmFragment.updateAlarmSchedule(wakeTime)) {
+                updatedNothing = false;
+            }
         }
 
         if (updatedNothing) {

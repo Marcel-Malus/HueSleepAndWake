@@ -2,20 +2,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/morningOrange"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.recek.huewakeup.alarm.AlarmActivity">
 
+    <TextClock
+        android:id="@+id/alarmTxtClk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textSize="64sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/stopAlarmBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="@string/btn_stop_alarm" />
+        android:text="@string/btn_stop_alarm"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

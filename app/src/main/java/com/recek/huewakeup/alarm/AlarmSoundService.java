@@ -8,18 +8,20 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.philips.lighting.data.HueSharedPreferences;
 
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static com.philips.lighting.quickstart.PHHomeActivity.TAG;
+import java.io.IOException;
 
 /**
  * @since 2017-09-17.
  */
 public class AlarmSoundService extends Service {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AlarmSoundService.class);
 
     private Ringtone ringtone;
     private MediaPlayer mediaPlayer;
@@ -45,7 +47,7 @@ public class AlarmSoundService extends Service {
         if (mediaPlayer == null || !mediaPlayer.isPlaying()) {
             Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             if (alarmUri == null) {
-                Log.i("AlarmReceiver", "Setting ringtone from notification");
+                LOG.warn("Setting ringtone from notification");
                 alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             }
             ringtone = RingtoneManager.getRingtone(getApplicationContext(), alarmUri);
@@ -61,12 +63,12 @@ public class AlarmSoundService extends Service {
         if (alarmSoundUri != null) {
             Uri parsedUri = Uri.parse(alarmSoundUri);
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
             try {
                 mediaPlayer.setDataSource(getApplicationContext(), parsedUri);
                 mediaPlayer.prepare();
             } catch (IOException e) {
-                Log.w(TAG, "Saved alarm sound not found.");
+                LOG.warn("Saved alarm sound not found.");
                 return;
             }
 

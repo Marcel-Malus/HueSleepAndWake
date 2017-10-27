@@ -16,18 +16,20 @@
             android:layout_height="wrap_content"
             android:padding="2dp">
 
-
             <TextView
                 android:id="@+id/alarmTimeTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_sound_alarm" />
+                android:layout_alignParentTop="true"
+                android:text="@string/txt_sound_alarm"
+                android:textStyle="bold" />
 
             <ImageButton
                 android:id="@+id/alarmSettingsBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/alarmTimeTxt"
+                android:layout_marginTop="5dp"
                 android:src="@drawable/ic_settings_black_24dp"
                 android:contentDescription="@string/txt_alarm_settings" />
 
@@ -36,30 +38,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/alarmSettingsBtn"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="20dp"
                 android:layout_toEndOf="@id/alarmSettingsBtn"
                 android:textOn="@string/onByI"
                 android:textOff="@string/offByO"
                 android:switchMinWidth="55dp" />
 
-            <EditText
-                android:id="@+id/alarmTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/alarmSettingsBtn"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@id/alarmSwitch"
-                android:ems="4"
-                android:inputType="time"
-                android:maxLength="8" />
-
             <TextView
                 android:id="@+id/alarmStatusTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/alarmTime"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/alarmTime"
+                android:layout_alignBottom="@+id/alarmSettingsBtn"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@+id/alarmSwitch"
                 android:text="@string/txt_status" />
 
         </RelativeLayout>

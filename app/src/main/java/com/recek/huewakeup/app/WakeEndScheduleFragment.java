@@ -4,12 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.philips.lighting.data.PHScheduleFix;
-import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.quickstart.R;
 
 import java.util.Calendar;
@@ -20,8 +17,6 @@ import java.util.Date;
  */
 public class WakeEndScheduleFragment extends AbstractScheduleFragment {
 
-    private Spinner scheduleSpinner;
-    private EditText inputTimeTxt;
     private TextView statusTxt;
 
     @Override
@@ -33,14 +28,8 @@ public class WakeEndScheduleFragment extends AbstractScheduleFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        scheduleSpinner = (Spinner) getActivity().findViewById(R.id.wakeEndSpinner);
-        String wakeEndScheduleId = getPrefs().getWakeEndScheduleId();
-        buildAndAddAdapter(scheduleSpinner, wakeEndScheduleId);
-
-        inputTimeTxt = (EditText) getActivity().findViewById(R.id.wakeEndTime);
-        inputTimeTxt.setText(getPrefs().getWakeEndTime());
-
         statusTxt = (TextView) getActivity().findViewById(R.id.wakeEndStatusTxt);
+        String wakeEndScheduleId = getPrefs().getWakeEndScheduleId();
         setInitialStatus(wakeEndScheduleId);
     }
 
@@ -51,21 +40,16 @@ public class WakeEndScheduleFragment extends AbstractScheduleFragment {
     }
 
 
-    public boolean updateWakeUpEndSchedule(PHBridge bridge, Date wakeDate) {
-        PHScheduleFix schedule = getSelectedValidSchedule(scheduleSpinner);
+    public boolean updateWakeUpEndSchedule(Date wakeDate) {
+        PHScheduleFix schedule = findScheduleById(getPrefs().getWakeEndScheduleId());
         if (schedule == null) {
             return false;
         }
-        String wakeTimeStr = inputTimeTxt.getText().toString();
+        String wakeTimeStr = getPrefs().getWakeEndTime();
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeDate);
 
-        Date wakeEndDate = updateSchedule(bridge, schedule, wakeTimeStr, cal, false, false);
-        if (wakeEndDate != null) {
-            getPrefs().setWakeEndTime(wakeTimeStr);
-            getPrefs().setWakeEndScheduleId(schedule.getId());
-            return true;
-        }
-        return false;
+        Date wakeEndDate = updateSchedule(schedule, wakeTimeStr, cal, false, false);
+        return wakeEndDate != null;
     }
 }

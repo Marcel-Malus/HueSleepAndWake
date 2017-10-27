@@ -1,16 +1,16 @@
 package com.recek.huewakeup.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.philips.lighting.data.PHScheduleFix;
-import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.quickstart.R;
+import com.recek.huewakeup.settings.WakeLightSettingsActivity;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -20,8 +20,6 @@ import java.util.Date;
  */
 public class WakeUpScheduleFragment extends AbstractScheduleFragment {
 
-    private Spinner scheduleSpinner;
-    private EditText inputTimeTxt;
     private TextView statusTxt;
 
     @Override
@@ -33,15 +31,18 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        scheduleSpinner = (Spinner) getActivity().findViewById(R.id.wakeUpSpinner);
-        String wakeUpScheduleId = getPrefs().getWakeScheduleId();
-        buildAndAddAdapter(scheduleSpinner, wakeUpScheduleId);
-
-        inputTimeTxt = (EditText) getActivity().findViewById(R.id.wakeLightTime);
-        inputTimeTxt.setText(getPrefs().getWakeLightTime());
-
         statusTxt = (TextView) getActivity().findViewById(R.id.wakeLightStatusTxt);
+        String wakeUpScheduleId = getPrefs().getWakeScheduleId();
         setInitialStatus(wakeUpScheduleId);
+
+        final ImageButton settingsBtn = (ImageButton) getActivity().findViewById(R.id.lightSettingsBtn);
+        settingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startActivityIntent = new Intent(getActivity(), WakeLightSettingsActivity.class);
+                getActivity().startActivity(startActivityIntent);
+            }
+        });
     }
 
     @Override
@@ -49,20 +50,36 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         return statusTxt;
     }
 
-    public Date updateWakeUpSchedule(PHBridge bridge, Date wakeTime) {
-        PHScheduleFix schedule = getSelectedValidSchedule(scheduleSpinner);
+    public boolean updateWakeUpSchedule(Date wakeTime) {
+        PHScheduleFix schedule = findScheduleById(getPrefs().getWakeScheduleId());
         if (schedule == null) {
-            return null;
+            return false;
         }
-        String wakeTimeStr = inputTimeTxt.getText().toString();
+        String wakeTimeStr = getPrefs().getWakeLightTime();
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 
-        Date wakeUpDate = updateSchedule(bridge, schedule, wakeTimeStr, cal, false, true);
+        Date wakeUpDate = updateSchedule(schedule, wakeTimeStr, cal, false, true);
+
         if (wakeUpDate != null) {
-            getPrefs().setWakeLightTime(wakeTimeStr);
-            getPrefs().setWakeScheduleId(schedule.getId());
+            // TODO: evaluate wakeEnd update.
+            updateWakeEndSchedule(wakeTime);
+            return true;
         }
-        return wakeUpDate;
+
+        return false;
+    }
+
+    private boolean updateWakeEndSchedule(Date wakeDate) {
+        PHScheduleFix schedule = findScheduleById(getPrefs().getWakeEndScheduleId());
+        if (schedule == null) {
+            return false;
+        }
+        String wakeTimeStr = getPrefs().getWakeEndTime();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(wakeDate);
+
+        Date wakeEndDate = updateSchedule(schedule, wakeTimeStr, cal, false, false);
+        return wakeEndDate != null;
     }
 }

@@ -2,7 +2,6 @@ package com.recek.huewakeup.app;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,11 +20,10 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME;
 
@@ -36,20 +34,17 @@ public abstract class AbstractScheduleFragment extends Fragment {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractScheduleFragment.class);
 
-    private static final PHScheduleFix NONE_SCHEDULE = new PHScheduleFix("-1", "NONE");
-
     private HueSharedPreferences prefs;
-    private Map<String, PHScheduleFix> idToScheduleMap;
     private PHHTTPListener putListener;
+    private MainActivity mainActivity;
 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        MainActivity activity = (MainActivity) getActivity();
-        prefs = activity.getPrefs();
-        idToScheduleMap = activity.getIdToScheduleMap();
+        mainActivity = (MainActivity) getActivity();
+        prefs = mainActivity.getPrefs();
         putListener = createPutListener();
     }
 
@@ -59,32 +54,30 @@ public abstract class AbstractScheduleFragment extends Fragment {
         return prefs;
     }
 
-    protected PHHTTPListener getPutListener() {
-        return putListener;
-    }
-
-    protected void buildAndAddAdapter(Spinner scheduleSpinner, String selectedScheduleId) {
-        List<PHScheduleFix> schedules = new ArrayList<>();
-        schedules.add(NONE_SCHEDULE);
-        schedules.addAll(idToScheduleMap.values());
-        ArrayAdapter<PHScheduleFix> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, schedules);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        scheduleSpinner.setAdapter(adapter);
-        int selectedIdx = schedules.indexOf(idToScheduleMap.get(selectedScheduleId));
-        if (selectedIdx != -1) {
-            scheduleSpinner.setSelection(selectedIdx);
-        }
-    }
-
 
     protected PHScheduleFix getSelectedValidSchedule(Spinner scheduleSpinner) {
         PHScheduleFix schedule = (PHScheduleFix) scheduleSpinner.getSelectedItem();
         return schedule != null && !schedule.getId().startsWith("-") ? schedule : null;
     }
 
+    protected PHScheduleFix findScheduleById(String scheduleId) {
+        PHBridge bridge = mainActivity.getBridge();
+        if (bridge == null) {
+            return null;
+        }
+        Map<String, PHSchedule> scheduleMap = bridge.getResourceCache().getSchedules();
+        for (Map.Entry<String, PHSchedule> scheduleEntry : scheduleMap.entrySet()) {
+            if (Objects.equals(scheduleEntry.getKey(), (scheduleId))) {
+                return new PHScheduleFix(scheduleEntry.getValue(),
+                        bridge.getResourceCache().getBridgeConfiguration());
+            }
+        }
+        return null;
+    }
 
-    protected void setInitialStatus(String wakeUpScheduleId) {
-        PHScheduleFix scheduleFix = idToScheduleMap.get(wakeUpScheduleId);
+
+    protected void setInitialStatus(String scheduleId) {
+        PHScheduleFix scheduleFix = findScheduleById(scheduleId);
         if (scheduleFix != null) {
             PHSchedule schedule = scheduleFix.getSchedule();
             Date date = schedule.getDate();
@@ -96,7 +89,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
         getStatusView().setText(R.string.txt_status_not_set);
     }
 
-    protected Date updateSchedule(PHBridge bridge, PHScheduleFix scheduleFix, String timeStr,
+    protected Date updateSchedule(PHScheduleFix scheduleFix, String timeStr,
                                   Calendar startCal, boolean useDayOfSchedule, boolean before) {
         String id = scheduleFix.getId();
         LOG.info("Found alarm by name and id: {} / {}", scheduleFix.getName(), id);
@@ -125,7 +118,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
         }
 
         LOG.info("Sending PUT to {} with {}", id, json);
-        bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
+        mainActivity.getBridge().doHTTPPut(scheduleFix.getUrl(), json, putListener);
         return wakeTime;
     }
 

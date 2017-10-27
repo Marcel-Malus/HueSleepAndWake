@@ -20,7 +20,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:text="@string/txt_set_wake_in_time" />
+                android:text="@string/txt_set_wake_in_time"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/wakeTime"

@@ -34,15 +34,16 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // TODO: see WakeLightSettings
         scheduleSpinner = (Spinner) getActivity().findViewById(R.id.sleepSpinner);
-        String sleepScheduleId = getPrefs().getSleepScheduleId();
-        buildAndAddAdapter(scheduleSpinner, sleepScheduleId);
+//        String sleepScheduleId = getPrefs().getSleepScheduleId();
+//        buildAndAddAdapter(scheduleSpinner, sleepScheduleId);
 
         sleepSwitch = (Switch) getActivity().findViewById(R.id.sleepSwitch);
         sleepSwitch.setChecked(getPrefs().isSleepActive());
 
         statusTxt = (TextView) getActivity().findViewById(R.id.sleepStatusTxt);
-        setInitialStatus(sleepScheduleId);
+//        setInitialStatus(sleepScheduleId);
     }
 
     @Override
@@ -61,7 +62,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
             return disableSchedule(bridge, schedule);
         }
 
-        updateSchedule(bridge, schedule, ONE_MINUTE, Calendar.getInstance(), true, false);
+        updateSchedule(schedule, ONE_MINUTE, Calendar.getInstance(), true, false);
         getPrefs().setSleepActive(true);
         getPrefs().setSleepScheduleId(schedule.getId());
         return true;

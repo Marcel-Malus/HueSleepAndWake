@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--WAKE LIGHT TIME-->
+    <android.support.v7.widget.CardView
+        android:id="@+id/wakeLightTimeCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <TextView
+                android:id="@+id/wakeLightTimeTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="@string/txt_set_light_time" />
+
+            <EditText
+                android:id="@+id/wakeLightTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wakeLightTimeTxt"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="5dp"
+                android:ems="5"
+                android:inputType="time"
+                android:maxLength="8" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <!--WAKE LIGHT SCHEDULE-->
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/wakeLightScheduleCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <TextView
+                android:id="@+id/wakeLightScheduleTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="@string/txt_select_light_schedule" />
+
+            <Spinner
+                android:id="@+id/wakeLightSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wakeLightScheduleTxt"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <!--WAKE LIGHT END TIME-->
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/wakeLightEndTimeCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <TextView
+                android:id="@+id/wakeLightEndTimeTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="@string/txt_set_light_end_time" />
+
+            <EditText
+                android:id="@+id/wakeLightEndTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wakeLightEndTimeTxt"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="5dp"
+                android:ems="5"
+                android:inputType="time"
+                android:maxLength="8" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <!--WAKE LIGHT END SCHEDULE-->
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/wakeLightEndScheduleCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <TextView
+                android:id="@+id/wakeLightEndScheduleTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:labelFor="@id/wakeLightSpinner"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="@string/txt_select_light_end_schedule" />
+
+            <Spinner
+                android:id="@+id/wakeLightEndSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wakeLightEndScheduleTxt"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp">
+
+        <Button
+            android:id="@+id/lightSettingsOkBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:background="@android:color/holo_green_light"
+            android:text="@string/btn_ok" />
+
+        <Button
+            android:id="@+id/lightSettingsCancelBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/lightSettingsOkBtn"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:background="@android:color/holo_orange_light"
+            android:text="@string/btn_cancel" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -30,7 +29,6 @@ import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME;
 public class AlarmScheduleFragment extends AbstractScheduleFragment {
 
     private Switch alarmSwitch;
-    private EditText inputTimeTxt;
     private TextView statusTxt;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
@@ -49,9 +47,6 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
 
         alarmSwitch = (Switch) getActivity().findViewById(R.id.alarmSwitch);
         alarmSwitch.setChecked(getPrefs().isAlarmActive());
-
-        inputTimeTxt = (EditText) getActivity().findViewById(R.id.alarmTime);
-        inputTimeTxt.setText(getPrefs().getAlarmTime());
 
         statusTxt = (TextView) getActivity().findViewById(R.id.alarmStatusTxt);
 
@@ -79,7 +74,7 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
             return turnOffAlarm();
         }
 
-        String alarmTimeStr = inputTimeTxt.getText().toString();
+        String alarmTimeStr = getPrefs().getAlarmTime();
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 

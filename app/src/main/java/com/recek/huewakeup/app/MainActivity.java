@@ -10,16 +10,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.philips.lighting.data.HueSharedPreferences;
-import com.philips.lighting.data.PHScheduleFix;
 import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.model.PHBridge;
-import com.philips.lighting.model.PHSchedule;
 import com.philips.lighting.quickstart.R;
 import com.recek.huewakeup.settings.DaysSettingsActivity;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * MainActivity - The starting point for creating your own Hue App.
@@ -32,11 +28,8 @@ public class MainActivity extends Activity {
     private PHHueSDK phHueSDK;
     private HueSharedPreferences prefs;
 
-    private final Map<String, PHScheduleFix> idToScheduleMap = new HashMap<>();
-
     private WakeTimeFragment wakeTimeFragment;
     private WakeUpScheduleFragment wakeUpFragment;
-    private WakeEndScheduleFragment wakeEndFragment;
     private SleepScheduleFragment sleepFragment;
     private AlarmScheduleFragment alarmFragment;
     private TextView statusText;
@@ -45,8 +38,8 @@ public class MainActivity extends Activity {
         return prefs;
     }
 
-    public Map<String, PHScheduleFix> getIdToScheduleMap() {
-        return idToScheduleMap;
+    public PHBridge getBridge() {
+        return phHueSDK.getSelectedBridge();
     }
 
     @Override
@@ -57,15 +50,11 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         phHueSDK = PHHueSDK.create();
         prefs = HueSharedPreferences.getInstance(getApplicationContext());
-        boolean isConnected = getIntent().getBooleanExtra("isConnected", true);
-        // TODO: rePopulate onResume?
-        populateAvailableSchedules(isConnected);
 
         // WIDGETS
         FragmentManager fragmentManager = getFragmentManager();
         wakeTimeFragment = (WakeTimeFragment) fragmentManager.findFragmentById(R.id.wakeTimeFragment);
         wakeUpFragment = (WakeUpScheduleFragment) fragmentManager.findFragmentById(R.id.wakeUpFragment);
-        wakeEndFragment = (WakeEndScheduleFragment) fragmentManager.findFragmentById(R.id.wakeEndFragment);
         sleepFragment = (SleepScheduleFragment) fragmentManager.findFragmentById(R.id.sleepFragment);
         alarmFragment = (AlarmScheduleFragment) fragmentManager.findFragmentById(R.id.alarmFragment);
 
@@ -88,48 +77,22 @@ public class MainActivity extends Activity {
         statusText = (TextView) findViewById(R.id.statusText);
     }
 
-    private void populateAvailableSchedules(boolean isConnected) {
-        if (isConnected) {
-            PHBridge bridge = phHueSDK.getSelectedBridge();
-            Map<String, PHSchedule> scheduleMap = bridge.getResourceCache().getSchedules();
-            for (Map.Entry<String, PHSchedule> scheduleEntry : scheduleMap.entrySet()) {
-                PHScheduleFix scheduleFix = new PHScheduleFix(scheduleEntry.getValue(),
-                        bridge.getResourceCache().getBridgeConfiguration());
-                idToScheduleMap.put(scheduleEntry.getKey(), scheduleFix);
-            }
-        } else {
-            idToScheduleMap.put("-2", new PHScheduleFix("-2", "Aufwachen"));
-            idToScheduleMap.put("-3", new PHScheduleFix("-3", "Wecker aus"));
-            idToScheduleMap.put("-4", new PHScheduleFix("-4", "Schlafen"));
-        }
-    }
-
     private void updateSchedules() {
         statusText.setText(R.string.txt_status_updating);
-        boolean updatedNothing = true;
+        boolean updated = false;
         PHBridge bridge = phHueSDK.getSelectedBridge();
 
         Date wakeTime = wakeTimeFragment.onUpdate();
         if (wakeTime != null) {
-            Date wakeUpDate = wakeUpFragment.updateWakeUpSchedule(bridge, wakeTime);
-            if (wakeUpDate != null) {
-                updatedNothing = false;
-                wakeEndFragment.updateWakeUpEndSchedule(bridge, wakeTime);
-            }
-
-            if (sleepFragment.updateSleepSchedule(bridge)) {
-                updatedNothing = false;
-            }
-
-            if (alarmFragment.updateAlarmSchedule(wakeTime)) {
-                updatedNothing = false;
-            }
+            updated = wakeUpFragment.updateWakeUpSchedule(wakeTime);
+            updated = sleepFragment.updateSleepSchedule(bridge) || updated;
+            updated = alarmFragment.updateAlarmSchedule(wakeTime) || updated;
         }
 
-        if (updatedNothing) {
-            statusText.setText(R.string.txt_status_updated_nothing);
-        } else {
+        if (updated) {
             statusText.setText(R.string.txt_status_update_finished);
+        } else {
+            statusText.setText(R.string.txt_status_updated_nothing);
         }
     }
 

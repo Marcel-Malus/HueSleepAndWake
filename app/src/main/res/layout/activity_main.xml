@@ -31,19 +31,11 @@
         tools:layout="@layout/schedule_wake_up" />
 
     <fragment
-        android:id="@+id/wakeEndFragment"
-        android:name="com.recek.huewakeup.app.WakeEndScheduleFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wakeUpFragment"
-        tools:layout="@layout/schedule_wake_end" />
-
-    <fragment
         android:id="@+id/sleepFragment"
         android:name="com.recek.huewakeup.app.SleepScheduleFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/wakeEndFragment"
+        android:layout_below="@id/wakeUpFragment"
         tools:layout="@layout/schedule_sleep" />
 
     <!-- DAY, UPDATE AND STATUS -->

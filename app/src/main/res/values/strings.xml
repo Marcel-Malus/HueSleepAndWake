@@ -8,8 +8,6 @@
     <string name="btn_find_bridge">Find new bridge</string>
     <string name="search_progress">Searching ...</string>
     <string name="connecting">Connecting ...</string>
-    <string name="btn_ok">Ok</string>
-    <string name="btn_cancel">Cancel</string>
     <string name="txt_could_not_connect">No connection</string>
     <string name="could_not_find_bridge">Hue cannot find your bridge. Please check that it is connected to the same Wi-Fi router as your app and press</string>
     <string name="btn_more">More</string>
@@ -29,7 +27,7 @@
     <string name="btn_demo">Demo</string>
 
     <!--Main menu-->
-    <string name="txt_set_wake_in_time">Wake me up in:</string>
+    <string name="txt_set_wake_in_time">Wake me up in</string>
     <string name="txt_set_wake_end_in_time">Set the time from wakeup schedule till wakeup end schedule.</string>
     <string name="txt_start_sleep_schedule">Start sleep schedule with updating the schedules.</string>
     <string name="btn_updated_schedules">Update</string>
@@ -37,15 +35,21 @@
 
     <!--Sound alarm-->
     <string name="txt_sound_alarm">Sound alarm</string>
-    <string name="txt_set_alarm_schedule">Set the time from now till the sound alarm start.</string>
+    <string name="txt_offset_sound_alarm">Offset sound alarm</string>
     <string name="txt_alarm_settings">Alarm settings</string>
     <string name="txt_pick_alarm_sound">Pick alarm sound</string>
     <string name="btn_stop_alarm">Stop alarm!</string>
+    <string name="txt_no_alarm_sound_picked">No alarm sound picked yet</string>
     <string name="txt_status_error_pick">Error on selecting alarm sound.</string>
     <string name="txt_status_sound_picked">Sound picked</string>
 
     <!--Light wake-->
-    <string name="txt_set_light_schedule">Offset light schedule:</string>
+    <string name="txt_hue_wake_lights">Hue wake lights</string>
+    <string name="txt_lights_settings">Lights settings</string>
+    <string name="txt_set_light_time">Start lights before wake time</string>
+    <string name="txt_select_light_schedule">Select hue schedule for wake up</string>
+    <string name="txt_set_light_end_time">Shutdown lights after wake time</string>
+    <string name="txt_select_light_end_schedule">Select hue schedule for lights shutdown</string>
 
     <!--Status-->
     <string name="txt_status">Status</string>
@@ -55,7 +59,6 @@
     <string name="txt_status_wrong_format">Wrong format. Use: "HH[:MM[:SS]]".</string>
     <string name="txt_status_current_setting">Current: %s</string>
     <string name="txt_status_not_set">Not set or disabled</string>
-    <string name="txt_no_alarm_sound_picked">No alarm sound picked yet</string>
     <string name="txt_status_alarm_on">ON: %s</string>
     <string name="txt_status_alarm_off">OFF</string>
 
@@ -66,6 +69,7 @@
     <!--Common-->
     <string name="onByI">I</string>
     <string name="offByO">O</string>
-    <string name="ok">OK</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Cancel</string>
 
 </resources>

@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
         Date wakeTime = wakeTimeFragment.onUpdate();
         if (wakeTime != null) {
             updated = wakeUpFragment.updateWakeUpSchedule(wakeTime);
-            updated = sleepFragment.updateSleepSchedule(bridge) || updated;
+            updated = sleepFragment.updateSleepSchedule() || updated;
             updated = alarmFragment.updateAlarmSchedule(wakeTime) || updated;
         }
 

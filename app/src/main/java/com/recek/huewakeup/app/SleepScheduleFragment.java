@@ -1,16 +1,17 @@
 package com.recek.huewakeup.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.philips.lighting.data.PHScheduleFix;
-import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.quickstart.R;
+import com.recek.huewakeup.settings.SleepLightSettingsActivity;
 
 import java.util.Calendar;
 
@@ -21,29 +22,33 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
 
     private static final String ONE_MINUTE = "0:1";
 
-    private Spinner scheduleSpinner;
     private Switch sleepSwitch;
     private TextView statusTxt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.schedule_sleep, container, false);
+        return inflater.inflate(R.layout.fragment_sleep_light, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // TODO: see WakeLightSettings
-        scheduleSpinner = (Spinner) getActivity().findViewById(R.id.sleepSpinner);
-//        String sleepScheduleId = getPrefs().getSleepScheduleId();
-//        buildAndAddAdapter(scheduleSpinner, sleepScheduleId);
+        statusTxt = (TextView) getActivity().findViewById(R.id.sleepStatusTxt);
+        String sleepScheduleId = getPrefs().getSleepScheduleId();
+        setInitialStatus(sleepScheduleId);
 
         sleepSwitch = (Switch) getActivity().findViewById(R.id.sleepSwitch);
         sleepSwitch.setChecked(getPrefs().isSleepActive());
 
-        statusTxt = (TextView) getActivity().findViewById(R.id.sleepStatusTxt);
-//        setInitialStatus(sleepScheduleId);
+        final ImageButton settingsBtn = (ImageButton) getActivity().findViewById(R.id.sleepLightSettingsBtn);
+        settingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startActivityIntent = new Intent(getActivity(), SleepLightSettingsActivity.class);
+                getActivity().startActivity(startActivityIntent);
+            }
+        });
     }
 
     @Override
@@ -51,20 +56,19 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
         return statusTxt;
     }
 
-    public boolean updateSleepSchedule(PHBridge bridge) {
-        PHScheduleFix schedule = getSelectedValidSchedule(scheduleSpinner);
+    public boolean updateSleepSchedule() {
+        PHScheduleFix schedule = findScheduleById(getPrefs().getWakeScheduleId());
         if (schedule == null) {
             return false;
         }
 
         if (!sleepSwitch.isChecked()) {
             getPrefs().setSleepActive(false);
-            return disableSchedule(bridge, schedule);
+            return disableSchedule(schedule);
         }
 
         updateSchedule(schedule, ONE_MINUTE, Calendar.getInstance(), true, false);
         getPrefs().setSleepActive(true);
-        getPrefs().setSleepScheduleId(schedule.getId());
         return true;
     }
 }

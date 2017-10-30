@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.philips.lighting.data.PHScheduleFix;
@@ -15,12 +16,15 @@ import com.recek.huewakeup.settings.WakeLightSettingsActivity;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.philips.lighting.quickstart.R.id.lightSwitch;
+
 /**
  * @since 2017-09-14.
  */
 public class WakeUpScheduleFragment extends AbstractScheduleFragment {
 
     private TextView statusTxt;
+    private Switch wakeLightSwitch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,6 +38,9 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         statusTxt = (TextView) getActivity().findViewById(R.id.wakeLightStatusTxt);
         String wakeUpScheduleId = getPrefs().getWakeScheduleId();
         setInitialStatus(wakeUpScheduleId);
+
+        wakeLightSwitch = (Switch) getActivity().findViewById(lightSwitch);
+        wakeLightSwitch.setChecked(getPrefs().isWakeLightActive());
 
         final ImageButton settingsBtn = (ImageButton) getActivity().findViewById(R.id.lightSettingsBtn);
         settingsBtn.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +62,13 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         if (schedule == null) {
             return false;
         }
+
+        if (!wakeLightSwitch.isChecked()) {
+            getPrefs().setWakeLightActive(false);
+            return disableSchedule(schedule);
+        }
+        getPrefs().setWakeLightActive(true);
+
         String wakeTimeStr = getPrefs().getWakeLightTime();
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);

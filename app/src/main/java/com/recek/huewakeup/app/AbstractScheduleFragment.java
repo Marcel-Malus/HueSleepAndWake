@@ -122,7 +122,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
         return wakeTime;
     }
 
-    protected boolean disableSchedule(PHBridge bridge, PHScheduleFix scheduleFix) {
+    protected boolean disableSchedule(PHScheduleFix scheduleFix) {
         String id = scheduleFix.getId();
         LOG.info("Found alarm by name and id: {} / {}", scheduleFix.getName(), id);
 
@@ -138,7 +138,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
 
         if (json != null) {
             LOG.info("Sending PUT to {} with {}", id, json);
-            bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
+            mainActivity.getBridge().doHTTPPut(scheduleFix.getUrl(), json, putListener);
             return true;
         }
 

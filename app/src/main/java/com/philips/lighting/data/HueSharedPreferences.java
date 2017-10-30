@@ -25,6 +25,8 @@ public class HueSharedPreferences {
     private static final String WAKE_END_TIME = "WakeEndTime";
     private static final String DEFAULT_WAKE_END_TIME = "0:30";
 
+    private static final String WAKE_LIGHT_IS_ACTIVE = "WakeLightIsActive";
+
     private static final String SLEEP_SCHEDULE_ID = "SleepScheduleId";
     private static final String SLEEP_IS_ACTIVE = "SleepIsActive";
 
@@ -129,6 +131,15 @@ public class HueSharedPreferences {
 
     public boolean setWakeEndTime(String wakeTime) {
         mSharedPreferencesEditor.putString(WAKE_END_TIME, wakeTime);
+        return (mSharedPreferencesEditor.commit());
+    }
+
+    public boolean isWakeLightActive() {
+        return mSharedPreferences.getBoolean(WAKE_LIGHT_IS_ACTIVE, false);
+    }
+
+    public boolean setWakeLightActive(boolean isActive) {
+        mSharedPreferencesEditor.putBoolean(WAKE_LIGHT_IS_ACTIVE, isActive);
         return (mSharedPreferencesEditor.commit());
     }
 

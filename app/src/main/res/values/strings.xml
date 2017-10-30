@@ -29,7 +29,6 @@
     <!--Main menu-->
     <string name="txt_set_wake_in_time">Wake me up in</string>
     <string name="txt_set_wake_end_in_time">Set the time from wakeup schedule till wakeup end schedule.</string>
-    <string name="txt_start_sleep_schedule">Start sleep schedule with updating the schedules.</string>
     <string name="btn_updated_schedules">Update</string>
     <string name="btn_days">Days</string>
 
@@ -50,6 +49,12 @@
     <string name="txt_select_light_schedule">Select hue schedule for wake up</string>
     <string name="txt_set_light_end_time">Shutdown lights after wake time</string>
     <string name="txt_select_light_end_schedule">Select hue schedule for lights shutdown</string>
+
+    <!--Light sleep-->
+    <string name="txt_hue_sleep_light">Hue sleep light</string>
+    <string name="txt_sleep_light_schedule">Select hue schedule to turn off lights for sleep</string>
+    <string name="txt_light_sleep_settings">Light sleep settings</string>
+
 
     <!--Status-->
     <string name="txt_status">Status</string>

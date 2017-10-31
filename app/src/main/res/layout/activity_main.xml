@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/wakeTimeFragment"
-        tools:layout="@layout/schedule_alarm" />
+        tools:layout="@layout/fragment_alarm" />
 
     <fragment
         android:id="@+id/wakeUpFragment"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/alarmFragment"
-        tools:layout="@layout/schedule_wake_up" />
+        tools:layout="@layout/fragment_wake_light" />
 
     <fragment
         android:id="@+id/sleepFragment"

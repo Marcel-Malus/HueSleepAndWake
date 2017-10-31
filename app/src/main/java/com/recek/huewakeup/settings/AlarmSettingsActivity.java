@@ -37,7 +37,7 @@ public class AlarmSettingsActivity extends Activity {
         prefs = HueSharedPreferences.getInstance(getApplicationContext());
 
         timeInput = (EditText) findViewById(R.id.alarmTime);
-        timeInput.setText(prefs.getAlarmTime());
+        timeInput.setText(prefs.getAlarmTimeRelative());
 
         final ImageButton pickAlarmBtn = (ImageButton) findViewById(R.id.pickAlarmSoundBtn);
         pickAlarmBtn.setOnClickListener(createPickAlarmListener());
@@ -141,7 +141,7 @@ public class AlarmSettingsActivity extends Activity {
 
         String timeString = timeInput.getText().toString();
         if (MyDateUtils.hasCorrectFormat(timeString)) {
-            prefs.setAlarmTime(timeString);
+            prefs.setAlarmTimeRelative(timeString);
         }
 
         finish();

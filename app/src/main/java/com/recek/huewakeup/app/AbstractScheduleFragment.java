@@ -2,7 +2,6 @@ package com.recek.huewakeup.app;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,11 +53,6 @@ public abstract class AbstractScheduleFragment extends Fragment {
         return prefs;
     }
 
-
-    protected PHScheduleFix getSelectedValidSchedule(Spinner scheduleSpinner) {
-        PHScheduleFix schedule = (PHScheduleFix) scheduleSpinner.getSelectedItem();
-        return schedule != null && !schedule.getId().startsWith("-") ? schedule : null;
-    }
 
     protected PHScheduleFix findScheduleById(String scheduleId) {
         PHBridge bridge = mainActivity.getBridge();

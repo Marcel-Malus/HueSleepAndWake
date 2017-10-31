@@ -15,7 +15,8 @@ public class HueSharedPreferences {
     private static final String DEFAULT_SCHEDULE_ID = "-1";
 
     private static final String WAKE_TIME = "WakeTime";
-    private static final String DEFAULT_WAKE_TIME = "8:00";
+    private static final String WAKE_TIME_RELATIVE = "WakeTimeRelative";
+    private static final String DEFAULT_WAKE_TIME_RELATIVE = "8:00";
 
     private static final String WAKE_SCHEDULE_ID = "WakeScheduleId";
     private static final String WAKE_LIGHT_TIME = "WakeLightTime";
@@ -31,7 +32,8 @@ public class HueSharedPreferences {
     private static final String SLEEP_IS_ACTIVE = "SleepIsActive";
 
     private static final String ALARM_TIME = "AlarmTime";
-    private static final String DEFAULT_ALARM_TIME = "8:00";
+    private static final String ALARM_TIME_RELATIVE = "AlarmTimeRelative";
+    private static final String DEFAULT_ALARM_TIME_RELATIVE = "0:0:0";
     private static final String ALARM_IS_ACTIVE = "AlarmIsActive";
     private static final String ALARM_SOUND = "AlarmSound";
 
@@ -90,11 +92,20 @@ public class HueSharedPreferences {
     }
 
     public String getWakeTime() {
-        return mSharedPreferences.getString(WAKE_TIME, DEFAULT_WAKE_TIME);
+        return mSharedPreferences.getString(WAKE_TIME, null);
     }
 
     public boolean setWakeTime(String wakeTime) {
         mSharedPreferencesEditor.putString(WAKE_TIME, wakeTime);
+        return (mSharedPreferencesEditor.commit());
+    }
+
+    public String getWakeTimeRelative() {
+        return mSharedPreferences.getString(WAKE_TIME_RELATIVE, DEFAULT_WAKE_TIME_RELATIVE);
+    }
+
+    public boolean setWakeTimeRelative(String wakeTime) {
+        mSharedPreferencesEditor.putString(WAKE_TIME_RELATIVE, wakeTime);
         return (mSharedPreferencesEditor.commit());
     }
 
@@ -162,11 +173,20 @@ public class HueSharedPreferences {
     }
 
     public String getAlarmTime() {
-        return mSharedPreferences.getString(ALARM_TIME, DEFAULT_ALARM_TIME);
+        return mSharedPreferences.getString(ALARM_TIME, null);
     }
 
     public boolean setAlarmTime(String time) {
         mSharedPreferencesEditor.putString(ALARM_TIME, time);
+        return (mSharedPreferencesEditor.commit());
+    }
+
+    public String getAlarmTimeRelative() {
+        return mSharedPreferences.getString(ALARM_TIME_RELATIVE, DEFAULT_ALARM_TIME_RELATIVE);
+    }
+
+    public boolean setAlarmTimeRelative(String time) {
+        mSharedPreferencesEditor.putString(ALARM_TIME_RELATIVE, time);
         return (mSharedPreferencesEditor.commit());
     }
 

@@ -35,24 +35,35 @@ public class WakeTimeFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        MainActivity activity = (MainActivity) getActivity();
-        prefs = activity.getPrefs();
+        prefs = HueSharedPreferences.getInstance(getActivity());
 
         inputTimeTxt = (EditText) getActivity().findViewById(R.id.wakeTime);
-        inputTimeTxt.setText(prefs.getWakeTime());
+        inputTimeTxt.setText(prefs.getWakeTimeRelative());
 
         statusTxt = (TextView) getActivity().findViewById(R.id.wakeStatusTxt);
-//        setInitialStatus(prefs.getWakeTime());
+        setInitialStatus();
+    }
+
+
+    private void setInitialStatus() {
+        String wakeTime = prefs.getWakeTime();
+        if (wakeTime != null) {
+            statusTxt.setText(getResources().getString(R.string.txt_status_current_setting, wakeTime));
+        } else {
+            statusTxt.setText(R.string.txt_status_not_set);
+        }
     }
 
     public Date onUpdate() {
-        String wakeTimeStr = inputTimeTxt.getText().toString();
+        String wakeTimeRel = inputTimeTxt.getText().toString();
         Calendar cal = Calendar.getInstance();
 
-        Date wakeUpDate = MyDateUtils.calculateRelativeTimeTo(cal, wakeTimeStr, false);
+        Date wakeUpDate = MyDateUtils.calculateRelativeTimeTo(cal, wakeTimeRel, false);
         if (wakeUpDate != null) {
+            String wakeTimeStr = SDF_TIME.format(wakeUpDate);
+            statusTxt.setText(getString(R.string.txt_status_alarm_on, wakeTimeStr));
+            prefs.setWakeTimeRelative(wakeTimeRel);
             prefs.setWakeTime(wakeTimeStr);
-            statusTxt.setText(getString(R.string.txt_status_alarm_on, SDF_TIME.format(wakeUpDate)));
         } else {
             statusTxt.setText(getString(R.string.txt_status_wrong_format));
         }

@@ -20,8 +20,13 @@ public class MyDateUtils {
     private static final String TEXT_TIME_FORMAT = "^((2[0-3]|1[0-9]|0[0-9]|[0-9])(:([0-5][0-9]|[0-9])){0,2})$";
     private static final String BLANK_WAKE_DAYS = "00000000";
 
+
+    public static boolean hasCorrectFormat(String timeStr) {
+        return timeStr != null && timeStr.matches(TEXT_TIME_FORMAT);
+    }
+
     public static Date calculateRelativeTimeTo(Calendar cal, String timeStr, boolean before) {
-        if (!timeStr.matches(TEXT_TIME_FORMAT)) {
+        if (!hasCorrectFormat(timeStr)) {
             return null;
         }
 

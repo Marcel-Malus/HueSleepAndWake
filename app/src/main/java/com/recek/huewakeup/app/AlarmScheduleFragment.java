@@ -83,7 +83,6 @@ public class AlarmScheduleFragment extends AbstractScheduleFragment {
             statusTxt.setText(R.string.txt_status_wrong_format);
             return false;
         }
-        getPrefs().setAlarmTime(alarmTimeStr);
 
         Intent intent = new Intent(getActivity(), AlarmStartReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);

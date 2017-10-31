@@ -39,7 +39,6 @@ public class SleepLightSettingsActivity extends AbstractHueSettingsActivity {
     }
 
     private void onOkClicked() {
-        //TODO: Validation
         PHScheduleFix sleepSchedule = getSelectedValidSchedule(sleepScheduleSpinner);
         if (sleepSchedule != null) {
             getPrefs().setSleepScheduleId(sleepSchedule.getId());

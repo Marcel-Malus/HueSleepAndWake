@@ -9,6 +9,8 @@ import android.widget.Spinner;
 import com.philips.lighting.data.PHScheduleFix;
 import com.philips.lighting.quickstart.R;
 
+import static com.recek.huewakeup.util.MyDateUtils.hasCorrectFormat;
+
 public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
 
     private EditText wakeInputTimeTxt;
@@ -38,7 +40,6 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         wakeEndInputTimeTxt.setText(getPrefs().getWakeEndTime());
 
         // BUTTONS
-
         Button okButton = (Button) findViewById(R.id.lightSettingsOkBtn);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,14 +58,19 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
     }
 
     private void onOkClicked() {
-        //TODO: Validation
-        getPrefs().setWakeLightTime(wakeInputTimeTxt.getText().toString());
+        String wakeTime = wakeInputTimeTxt.getText().toString();
+        if (hasCorrectFormat(wakeTime)) {
+            getPrefs().setWakeLightTime(wakeTime);
+        }
         PHScheduleFix wakeSchedule = getSelectedValidSchedule(wakeScheduleSpinner);
         if (wakeSchedule != null) {
             getPrefs().setWakeScheduleId(wakeSchedule.getId());
         }
 
-        getPrefs().setWakeEndTime(wakeEndInputTimeTxt.getText().toString());
+        String wakeEndTime = wakeEndInputTimeTxt.getText().toString();
+        if (hasCorrectFormat(wakeEndTime)) {
+            getPrefs().setWakeEndTime(wakeEndTime);
+        }
         PHScheduleFix wakeEndSchedule = getSelectedValidSchedule(wakeEndScheduleSpinner);
         if (wakeEndSchedule != null) {
             getPrefs().setWakeEndScheduleId(wakeEndSchedule.getId());

@@ -63,11 +63,10 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
             return false;
         }
 
+        getPrefs().setWakeLightActive(wakeLightSwitch.isChecked());
         if (!wakeLightSwitch.isChecked()) {
-            getPrefs().setWakeLightActive(false);
             return disableSchedule(schedule);
         }
-        getPrefs().setWakeLightActive(true);
 
         String wakeTimeStr = getPrefs().getWakeLightTime();
         Calendar cal = Calendar.getInstance();

@@ -7,12 +7,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.quickstart.R;
+import com.recek.huewakeup.util.MyDateUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,8 @@ public class AlarmSettingsActivity extends Activity {
 
     private HueSharedPreferences prefs;
     private TextView pickedSoundTxt;
+    private EditText timeInput;
+    private String alarmSoundUriStr = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +36,32 @@ public class AlarmSettingsActivity extends Activity {
         setContentView(R.layout.activity_alarm_settings);
         prefs = HueSharedPreferences.getInstance(getApplicationContext());
 
+        timeInput = (EditText) findViewById(R.id.alarmTime);
+        timeInput.setText(prefs.getAlarmTime());
+
         final ImageButton pickAlarmBtn = (ImageButton) findViewById(R.id.pickAlarmSoundBtn);
         pickAlarmBtn.setOnClickListener(createPickAlarmListener());
 
         pickedSoundTxt = (TextView) findViewById(R.id.pickedAlarmSoundTxt);
         initSavedSound();
+
+
+        // BUTTONS
+        Button okButton = (Button) findViewById(R.id.alarmSettingsOkBtn);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOkClicked();
+            }
+        });
+
+        Button cancelButton = (Button) findViewById(R.id.alarmSettingsCancelBtn);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCancelClicked();
+            }
+        });
     }
 
 
@@ -80,7 +106,7 @@ public class AlarmSettingsActivity extends Activity {
             // Check for the freshest data.
             //noinspection WrongConstant
             getContentResolver().takePersistableUriPermission(alarmSoundUri, takeFlags);
-            prefs.setAlarmSoundUri(alarmSoundUri.toString());
+            alarmSoundUriStr = alarmSoundUri.toString();
 
             if (fileName != null) {
                 pickedSoundTxt.setText(fileName);
@@ -106,5 +132,22 @@ public class AlarmSettingsActivity extends Activity {
         }
 
         return fileName;
+    }
+
+    private void onOkClicked() {
+        if (alarmSoundUriStr != null) {
+            prefs.setAlarmSoundUri(alarmSoundUriStr);
+        }
+
+        String timeString = timeInput.getText().toString();
+        if (MyDateUtils.hasCorrectFormat(timeString)) {
+            prefs.setAlarmTime(timeString);
+        }
+
+        finish();
+    }
+
+    private void onCancelClicked() {
+        finish();
     }
 }

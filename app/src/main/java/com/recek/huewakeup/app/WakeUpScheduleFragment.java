@@ -83,16 +83,16 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         return false;
     }
 
-    private boolean updateWakeEndSchedule(Date wakeDate) {
+    private boolean updateWakeEndSchedule(Date wakeTime) {
         PHScheduleFix schedule = findScheduleById(getPrefs().getWakeEndScheduleId());
         if (schedule == null) {
             return false;
         }
-        String wakeTimeStr = getPrefs().getWakeEndTime();
+        String wakeEndTimeStr = getPrefs().getWakeEndTime();
         Calendar cal = Calendar.getInstance();
-        cal.setTime(wakeDate);
+        cal.setTime(wakeTime);
 
-        Date wakeEndDate = updateSchedule(schedule, wakeTimeStr, cal, false, false);
+        Date wakeEndDate = updateSchedule(schedule, wakeEndTimeStr, cal, false, false);
         return wakeEndDate != null;
     }
 }

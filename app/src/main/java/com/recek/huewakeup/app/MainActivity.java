@@ -80,7 +80,6 @@ public class MainActivity extends Activity {
     private void updateSchedules() {
         statusText.setText(R.string.txt_status_updating);
         boolean updated = false;
-        PHBridge bridge = phHueSDK.getSelectedBridge();
 
         Date wakeTime = wakeTimeFragment.onUpdate();
         if (wakeTime != null) {

@@ -57,7 +57,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
     }
 
     public boolean updateSleepSchedule() {
-        PHScheduleFix schedule = findScheduleById(getPrefs().getWakeScheduleId());
+        PHScheduleFix schedule = findScheduleById(getPrefs().getSleepScheduleId());
         if (schedule == null) {
             return false;
         }

@@ -32,6 +32,7 @@ import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME;
 public abstract class AbstractScheduleFragment extends Fragment {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractScheduleFragment.class);
+    private static final String SUCCESS = "success";
 
     private HueSharedPreferences prefs;
     private PHHTTPListener putListener;
@@ -48,6 +49,8 @@ public abstract class AbstractScheduleFragment extends Fragment {
     }
 
     protected abstract TextView getStatusView();
+
+    protected abstract void onSuccess();
 
     protected HueSharedPreferences getPrefs() {
         return prefs;
@@ -158,6 +161,16 @@ public abstract class AbstractScheduleFragment extends Fragment {
         });
     }
 
+
+    private void onSuccessWithUiThread() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                onSuccess();
+            }
+        });
+    }
+
     private PHHTTPListener createPutListener() {
         return new PHHTTPListener() {
 
@@ -165,17 +178,27 @@ public abstract class AbstractScheduleFragment extends Fragment {
             public void onHTTPResponse(String jsonResponse) {
                 LOG.info("RESPONSE: {}", jsonResponse);
                 try {
+                    int successCnt = 0;
+                    int failCnt = 0;
                     JSONArray jsonArray = new JSONArray(jsonResponse);
-                    // TODO: Evaluate all array items.
-                    if (jsonArray.length() != 0) {
-                        JSONObject firstResponseObj = jsonArray.getJSONObject(0);
-                        String firstStatus = firstResponseObj.keys().next();
-                        // TODO: Better status
-                        if (firstStatus.contains("success")) {
-                            notifyUserWithUiThread("Success");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject responseObj = jsonArray.getJSONObject(0);
+                        String status = responseObj.keys().next();
+                        if (Objects.equals(status, SUCCESS)) {
+                            successCnt++;
                         } else {
-                            notifyUserWithUiThread("Error");
+                            failCnt++;
                         }
+                    }
+
+                    if (failCnt == 0) {
+                        onSuccessWithUiThread();
+                    } else if (successCnt == 0) {
+                        notifyUserWithUiThread("Failed totally :(");
+                        LOG.error("Response indicates errors.");
+                    } else {
+                        notifyUserWithUiThread("Failed partially (" + failCnt + "/" + (failCnt + successCnt) + ")");
+                        LOG.error("Response indicates errors.");
                     }
                 } catch (JSONException e) {
                     LOG.error("Could not read JSON response. Error: {}", e.getMessage());

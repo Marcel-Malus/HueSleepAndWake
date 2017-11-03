@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static com.philips.lighting.quickstart.R.id.lightSwitch;
+import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME;
 
 /**
  * @since 2017-09-14.
@@ -25,6 +26,8 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
 
     private TextView statusTxt;
     private Switch wakeLightSwitch;
+    private PHScheduleFix wakeSchedule;
+    private PHScheduleFix wakeEndSchedule;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,22 +60,54 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         return statusTxt;
     }
 
+    @Override
+    protected void onSuccess() {
+        StringBuilder sb = new StringBuilder();
+        boolean updated = false;
+        if (wakeSchedule != null) {
+            appendStatus(sb, wakeSchedule);
+            updated = true;
+        }
+        if (updated && wakeEndSchedule != null) {
+            appendStatus(sb, wakeEndSchedule);
+        }
+        if (!updated) {
+            sb.append(getString(R.string.txt_status_updated_nothing));
+        }
+        statusTxt.setText(sb.toString());
+    }
+
+    private void appendStatus(StringBuilder sb, PHScheduleFix schedule) {
+        if (schedule.isEnabled()) {
+            String timeStr = SDF_TIME.format(schedule.getLocalTime());
+            if (sb.length() == 0) {
+                sb.append(getString(R.string.txt_status_alarm_on, timeStr));
+            } else {
+                sb.append(" - ");
+                sb.append(timeStr);
+            }
+        } else {
+            sb.append(getString(R.string.txt_status_alarm_off));
+        }
+    }
+
     public boolean updateWakeUpSchedule(Date wakeTime) {
-        PHScheduleFix schedule = findScheduleById(getPrefs().getWakeScheduleId());
-        if (schedule == null) {
+        wakeSchedule = findScheduleById(getPrefs().getWakeScheduleId());
+        if (wakeSchedule == null) {
             return false;
         }
+        statusTxt.setText(getString(R.string.txt_status_updating));
 
         getPrefs().setWakeLightActive(wakeLightSwitch.isChecked());
         if (!wakeLightSwitch.isChecked()) {
-            return disableSchedule(schedule);
+            return disableSchedule(wakeSchedule);
         }
 
         String wakeTimeStr = getPrefs().getWakeLightTime();
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 
-        Date wakeUpDate = updateSchedule(schedule, wakeTimeStr, cal, false, true);
+        Date wakeUpDate = updateSchedule(wakeSchedule, wakeTimeStr, cal, false, true);
 
         if (wakeUpDate != null) {
             // TODO: evaluate wakeEnd update.
@@ -84,15 +119,15 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
     }
 
     private boolean updateWakeEndSchedule(Date wakeTime) {
-        PHScheduleFix schedule = findScheduleById(getPrefs().getWakeEndScheduleId());
-        if (schedule == null) {
+        wakeEndSchedule = findScheduleById(getPrefs().getWakeEndScheduleId());
+        if (wakeEndSchedule == null) {
             return false;
         }
         String wakeEndTimeStr = getPrefs().getWakeEndTime();
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 
-        Date wakeEndDate = updateSchedule(schedule, wakeEndTimeStr, cal, false, false);
+        Date wakeEndDate = updateSchedule(wakeEndSchedule, wakeEndTimeStr, cal, false, false);
         return wakeEndDate != null;
     }
 }

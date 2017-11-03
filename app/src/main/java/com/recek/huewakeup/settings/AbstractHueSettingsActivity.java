@@ -61,9 +61,13 @@ public class AbstractHueSettingsActivity extends Activity {
         ArrayAdapter<PHScheduleFix> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, schedules);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         scheduleSpinner.setAdapter(adapter);
-        int selectedIdx = schedules.indexOf(idToScheduleMap.get(selectedScheduleId));
-        if (selectedIdx != -1) {
-            scheduleSpinner.setSelection(selectedIdx);
+        if (selectedScheduleId == null) {
+            scheduleSpinner.setSelection(schedules.indexOf(NONE_SCHEDULE));
+        } else {
+            int selectedIdx = schedules.indexOf(idToScheduleMap.get(selectedScheduleId));
+            if (selectedIdx != -1) {
+                scheduleSpinner.setSelection(selectedIdx);
+            }
         }
     }
 

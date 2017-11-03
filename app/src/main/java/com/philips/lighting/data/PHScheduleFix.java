@@ -25,6 +25,7 @@ public class PHScheduleFix {
     private final String name;
 
     private Date localTime;
+    private boolean enabled;
     private String status;
     private String days;
 
@@ -72,6 +73,10 @@ public class PHScheduleFix {
         return url;
     }
 
+    public Date getLocalTime() {
+        return localTime;
+    }
+
     public void setLocalTime(Date localTime) {
         this.localTime = localTime;
     }
@@ -80,12 +85,18 @@ public class PHScheduleFix {
         this.days = days;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public void enable() {
+        enabled = true;
         if (!schedule.getStatus().equals(PHSchedule.PHScheduleStatus.ENABLED))
             this.status = "enabled";
     }
 
     public void disable() {
+        enabled = false;
         if (!schedule.getStatus().equals(PHSchedule.PHScheduleStatus.DISABLED))
             this.status = "disabled";
     }

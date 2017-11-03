@@ -59,7 +59,7 @@
     <string name="txt_status">Status</string>
     <string name="txt_status_updating">Updating…</string>
     <string name="txt_status_update_finished">Update finished</string>
-    <string name="txt_status_updated_nothing">Updated nothing :-/</string>
+    <string name="txt_status_updated_nothing">Updated nothing</string>
     <string name="txt_status_wrong_format">Wrong format. Use: "HH[:MM[:SS]]".</string>
     <string name="txt_status_current_setting">Current: %s</string>
     <string name="txt_status_not_set">Not set or disabled</string>

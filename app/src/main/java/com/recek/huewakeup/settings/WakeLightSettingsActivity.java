@@ -65,6 +65,8 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         PHScheduleFix wakeSchedule = getSelectedValidSchedule(wakeScheduleSpinner);
         if (wakeSchedule != null) {
             getPrefs().setWakeScheduleId(wakeSchedule.getId());
+        } else {
+            getPrefs().setWakeScheduleId(null);
         }
 
         String wakeEndTime = wakeEndInputTimeTxt.getText().toString();
@@ -74,6 +76,8 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         PHScheduleFix wakeEndSchedule = getSelectedValidSchedule(wakeEndScheduleSpinner);
         if (wakeEndSchedule != null) {
             getPrefs().setWakeEndScheduleId(wakeEndSchedule.getId());
+        } else {
+            getPrefs().setWakeEndScheduleId(null);
         }
 
         finish();

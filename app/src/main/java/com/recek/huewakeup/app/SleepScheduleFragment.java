@@ -24,6 +24,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
 
     private Switch sleepSwitch;
     private TextView statusTxt;
+    private PHScheduleFix schedule;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,8 +57,23 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
         return statusTxt;
     }
 
+    @Override
+    protected void onSuccess() {
+        StringBuilder sb = new StringBuilder();
+        if (schedule != null) {
+            if (schedule.isEnabled()) {
+                sb.append(getString(R.string.txt_status_alarm_on, "Now"));
+            } else {
+                sb.append(getString(R.string.txt_status_alarm_off));
+            }
+        } else {
+            sb.append(getString(R.string.txt_status_updated_nothing));
+        }
+        statusTxt.setText(sb.toString());
+    }
+
     public boolean updateSleepSchedule() {
-        PHScheduleFix schedule = findScheduleById(getPrefs().getSleepScheduleId());
+        schedule = findScheduleById(getPrefs().getSleepScheduleId());
         if (schedule == null) {
             return false;
         }

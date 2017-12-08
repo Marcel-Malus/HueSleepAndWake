@@ -37,7 +37,8 @@
     <string name="txt_offset_sound_alarm">Offset sound alarm</string>
     <string name="txt_alarm_settings">Alarm settings</string>
     <string name="txt_pick_alarm_sound">Pick alarm sound</string>
-    <string name="btn_stop_alarm">Stop alarm!</string>
+    <string name="btn_stop_alarm">Stop!</string>
+    <string name="btn_snooze_alarm">Snooze</string>
     <string name="txt_no_alarm_sound_picked">No alarm sound picked yet</string>
     <string name="txt_status_error_pick">Error on selecting alarm sound.</string>
     <string name="txt_status_sound_picked">Sound picked</string>

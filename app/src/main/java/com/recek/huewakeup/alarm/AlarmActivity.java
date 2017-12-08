@@ -1,7 +1,9 @@
 package com.recek.huewakeup.alarm;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.KeyguardManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import com.philips.lighting.quickstart.R;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Calendar;
 
 /**
  * Will be displayed, when the sound alarm goes on.
@@ -32,7 +36,16 @@ public class AlarmActivity extends Activity {
         stopAlarmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LOG.debug("Stopping alarm.");
                 stopAlarm();
+            }
+        });
+
+        Button snoozeAlarmBtn = (Button) findViewById(R.id.snoozeAlarmBtn);
+        snoozeAlarmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snoozeAlarm();
             }
         });
 
@@ -51,13 +64,34 @@ public class AlarmActivity extends Activity {
     }
 
     private void stopAlarm() {
-        LOG.debug("Stopping alarm.");
         stopService(new Intent(this, AlarmSoundService.class));
-        Toast.makeText(this, "Alarm stopped.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Alarm stopped", Toast.LENGTH_SHORT).show();
+    }
+
+    private void snoozeAlarm() {
+        LOG.debug("Snoozing alarm.");
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
+        if (alarmManager == null) {
+            LOG.warn("Alarm manager is null. No snooze possible.");
+            Toast.makeText(this, "Snooze failed!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent = new Intent(this, AlarmStartReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        // TODO: Make this choosable by settings.
+        calendar.add(Calendar.MINUTE, 5);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        Toast.makeText(this, "Snoozing 5 Minutes", Toast.LENGTH_SHORT).show();
+
+        stopAlarm();
     }
 
     @Override
     protected void onDestroy() {
+        stopAlarm();
         super.onDestroy();
     }
 }

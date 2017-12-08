@@ -8,10 +8,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.quickstart.PHHomeActivity;
 import com.philips.lighting.quickstart.R;
 import com.recek.huewakeup.settings.DaysSettingsActivity;
 
@@ -52,8 +54,19 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onResume() {
+        LOG.debug("Resuming main activity.");
+        super.onResume();
+        if (getBridge() == null) {
+            LOG.info("Connection to bridge lost. Reconnecting...");
+            reconnect();
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         // INIT
+        LOG.info("Creating main activity.");
         super.onCreate(savedInstanceState);
         setTitle(R.string.app_name);
         setContentView(R.layout.activity_main);
@@ -83,6 +96,15 @@ public class MainActivity extends Activity {
             }
         });
 
+
+        final Button reconnectBtn = (Button) findViewById(R.id.reconnectBtn);
+        reconnectBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reconnect();
+            }
+        });
+
         statusText = (TextView) findViewById(R.id.statusText);
     }
 
@@ -104,10 +126,15 @@ public class MainActivity extends Activity {
         }
     }
 
-
     private void setWakeUpDays() {
         Intent startActivityIntent = new Intent(this, DaysSettingsActivity.class);
         startActivity(startActivityIntent);
+    }
+
+    private void reconnect() {
+        Toast.makeText(this, "Reconnecting...", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, PHHomeActivity.class);
+        startActivity(intent);
     }
 
     @Override

@@ -63,6 +63,18 @@
         android:paddingRight="10dp"
         android:text="@string/btn_updated_schedules" />
 
+    <Button
+        android:id="@+id/reconnectBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/statusText"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/btn_reconnect" />
+
     <TextView
         android:id="@+id/statusText"
         android:layout_width="wrap_content"

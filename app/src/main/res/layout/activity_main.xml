@@ -38,26 +38,14 @@
         android:layout_below="@id/wakeUpFragment"
         tools:layout="@layout/fragment_sleep_light" />
 
-    <!-- DAY, UPDATE AND STATUS -->
-
-    <Button
-        android:id="@+id/daysBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/statusText"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="10dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:text="@string/btn_days" />
-
+    <!-- UPDATE, RECONNECT AND STATUS -->
     <Button
         android:id="@+id/updateSchedulesBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/statusText"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
         android:layout_marginBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"

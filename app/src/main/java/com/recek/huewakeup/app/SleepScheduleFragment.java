@@ -83,7 +83,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
             return disableSchedule(schedule);
         }
 
-        updateSchedule(schedule, ONE_MINUTE, Calendar.getInstance(), true, false);
+        updateSchedule(schedule, ONE_MINUTE, Calendar.getInstance(), false);
         getPrefs().setSleepActive(true);
         return true;
     }

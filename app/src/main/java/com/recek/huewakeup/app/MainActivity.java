@@ -15,7 +15,6 @@ import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.quickstart.PHHomeActivity;
 import com.philips.lighting.quickstart.R;
-import com.recek.huewakeup.settings.DaysSettingsActivity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,15 +87,6 @@ public class MainActivity extends Activity {
             }
         });
 
-        final Button daysBtn = (Button) findViewById(R.id.daysBtn);
-        daysBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setWakeUpDays();
-            }
-        });
-
-
         final Button reconnectBtn = (Button) findViewById(R.id.reconnectBtn);
         reconnectBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -124,11 +114,6 @@ public class MainActivity extends Activity {
         } else {
             statusText.setText(R.string.txt_status_updated_nothing);
         }
-    }
-
-    private void setWakeUpDays() {
-        Intent startActivityIntent = new Intent(this, DaysSettingsActivity.class);
-        startActivity(startActivityIntent);
     }
 
     private void reconnect() {

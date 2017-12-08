@@ -107,7 +107,7 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 
-        Date wakeUpDate = updateSchedule(wakeSchedule, wakeTimeStr, cal, false, true);
+        Date wakeUpDate = updateSchedule(wakeSchedule, wakeTimeStr, cal, true);
 
         if (wakeUpDate != null) {
             // TODO: evaluate wakeEnd update.
@@ -127,7 +127,7 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 
-        Date wakeEndDate = updateSchedule(wakeEndSchedule, wakeEndTimeStr, cal, false, false);
+        Date wakeEndDate = updateSchedule(wakeEndSchedule, wakeEndTimeStr, cal, false);
         return wakeEndDate != null;
     }
 }

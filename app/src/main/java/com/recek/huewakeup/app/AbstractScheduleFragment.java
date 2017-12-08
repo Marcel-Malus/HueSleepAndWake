@@ -88,7 +88,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
     }
 
     protected Date updateSchedule(PHScheduleFix scheduleFix, String timeStr,
-                                  Calendar startCal, boolean useDayOfSchedule, boolean before) {
+                                  Calendar startCal, boolean before) {
         PHBridge bridge = mainActivity.getBridge();
         if (bridge == null) {
             return null;
@@ -103,7 +103,8 @@ public abstract class AbstractScheduleFragment extends Fragment {
             return null;
         }
 
-        String days = MyDateUtils.calculateWakeUpDays(wakeTime, useDayOfSchedule, prefs.getWakeDaysRaw());
+        // Removed pick-a-day feature, so its always the "dayOfSchedule" now. Left the choice for case the feature comes back.
+        String days = MyDateUtils.calculateWakeUpDays(wakeTime, true, prefs.getWakeDaysRaw());
         if (days == null) {
             return null;
         }

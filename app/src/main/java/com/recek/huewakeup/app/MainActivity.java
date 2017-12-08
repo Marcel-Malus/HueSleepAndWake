@@ -15,6 +15,9 @@ import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.quickstart.R;
 import com.recek.huewakeup.settings.DaysSettingsActivity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
 
 /**
@@ -24,6 +27,8 @@ import java.util.Date;
  * @author SteveyO
  */
 public class MainActivity extends Activity {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
     private PHHueSDK phHueSDK;
     private HueSharedPreferences prefs;
@@ -39,7 +44,11 @@ public class MainActivity extends Activity {
     }
 
     public PHBridge getBridge() {
-        return phHueSDK.getSelectedBridge();
+        PHBridge bridge = phHueSDK.getSelectedBridge();
+        if (bridge == null) {
+            LOG.warn("Bridge not found!");
+        }
+        return bridge;
     }
 
     @Override

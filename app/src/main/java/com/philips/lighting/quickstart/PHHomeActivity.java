@@ -3,9 +3,7 @@ package com.philips.lighting.quickstart;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +23,9 @@ import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
 import com.recek.huewakeup.app.MainActivity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
@@ -40,8 +41,9 @@ import java.util.List;
  */
 public class PHHomeActivity extends Activity implements OnItemClickListener {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PHHomeActivity.class);
+
     private PHHueSDK phHueSDK;
-    public static final String TAG = "HueSleepAndWakeApp";
     private HueSharedPreferences prefs;
     private AccessPointListAdapter adapter;
 
@@ -90,7 +92,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.w(TAG, "Inflating home menu");
+        LOG.info("Inflating home menu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
         return true;
@@ -102,7 +104,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
 
         @Override
         public void onAccessPointsFound(List<PHAccessPoint> accessPoint) {
-            Log.w(TAG, "Access Points Found. " + accessPoint.size());
+            LOG.info("Access Points Found: {}", accessPoint != null ? accessPoint.size() : null);
 
             PHWizardAlertDialog.getInstance().closeProgressDialog();
             if (accessPoint != null && accessPoint.size() > 0) {
@@ -115,15 +117,12 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
                         adapter.updateData(phHueSDK.getAccessPointsFound());
                     }
                 });
-
             }
-
         }
 
         @Override
         public void onCacheUpdated(List<Integer> arg0, PHBridge bridge) {
-            Log.w(TAG, "On CacheUpdated");
-
+            LOG.debug("On CacheUpdated (Not implemented yet).");
         }
 
         @Override
@@ -139,7 +138,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
 
         @Override
         public void onAuthenticationRequired(PHAccessPoint accessPoint) {
-            Log.w(TAG, "Authentication Required.");
+            LOG.debug("Authentication Required.");
             phHueSDK.startPushlinkAuthentication(accessPoint);
             startActivity(new Intent(PHHomeActivity.this, PHPushlinkActivity.class));
 
@@ -150,7 +149,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
             if (PHHomeActivity.this.isFinishing())
                 return;
 
-            Log.v(TAG, "onConnectionResumed" + bridge.getResourceCache().getBridgeConfiguration().getIpAddress());
+            LOG.debug("onConnectionResumed: {}.", bridge.getResourceCache().getBridgeConfiguration().getIpAddress());
             phHueSDK.getLastHeartbeat().put(bridge.getResourceCache().getBridgeConfiguration().getIpAddress(), System.currentTimeMillis());
             for (int i = 0; i < phHueSDK.getDisconnectedAccessPoint().size(); i++) {
 
@@ -163,7 +162,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
 
         @Override
         public void onConnectionLost(PHAccessPoint accessPoint) {
-            Log.v(TAG, "onConnectionLost : " + accessPoint.getIpAddress());
+            LOG.debug("onConnectionLost: {}.", accessPoint.getIpAddress());
             if (!phHueSDK.getDisconnectedAccessPoint().contains(accessPoint)) {
                 phHueSDK.getDisconnectedAccessPoint().add(accessPoint);
             }
@@ -171,14 +170,14 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
 
         @Override
         public void onError(int code, final String message) {
-            Log.e(TAG, "on Error Called : " + code + ":" + message);
+            LOG.error("on Error Called: ({}) {}.", code, message);
 
             if (code == PHHueError.NO_CONNECTION) {
-                Log.w(TAG, "On No Connection");
+                LOG.warn("On No Connection");
             } else if (code == PHHueError.AUTHENTICATION_FAILED || code == PHMessageType.PUSHLINK_AUTHENTICATION_FAILED) {
                 PHWizardAlertDialog.getInstance().closeProgressDialog();
             } else if (code == PHHueError.BRIDGE_NOT_RESPONDING) {
-                Log.w(TAG, "Bridge Not Responding . . . ");
+                LOG.warn("Bridge Not Responding...");
                 PHWizardAlertDialog.getInstance().closeProgressDialog();
                 PHHomeActivity.this.runOnUiThread(new Runnable() {
                     @Override
@@ -211,7 +210,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         @Override
         public void onParsingErrors(List<PHHueParsingError> parsingErrorsList) {
             for (PHHueParsingError parsingError : parsingErrorsList) {
-                Log.e(TAG, "ParsingError : " + parsingError.getMessage());
+                LOG.error("ParsingError: {}.", parsingError.getMessage());
             }
         }
     };
@@ -279,8 +278,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            intent.addFlags(0x8000); // equal to Intent.FLAG_ACTIVITY_CLEAR_TASK which is only available from API level 11
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("isConnected", isConnected);
         startActivity(intent);
     }

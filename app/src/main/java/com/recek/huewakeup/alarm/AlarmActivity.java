@@ -8,16 +8,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.philips.lighting.quickstart.R;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Will be displayed, when the sound alarm goes on.
  */
 public class AlarmActivity extends Activity {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AlarmActivity.class);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LOG.debug("Creating alarm activity.");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
@@ -44,7 +51,9 @@ public class AlarmActivity extends Activity {
     }
 
     private void stopAlarm() {
+        LOG.debug("Stopping alarm.");
         stopService(new Intent(this, AlarmSoundService.class));
+        Toast.makeText(this, "Alarm stopped.", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -6,13 +6,19 @@ import android.content.Intent;
 
 import com.philips.lighting.data.HueSharedPreferences;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Calendar;
 import java.util.List;
 
 public class AlarmStartReceiver extends BroadcastReceiver {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AlarmStartReceiver.class);
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        LOG.info("Alarm broadcast received.");
         HueSharedPreferences prefs = HueSharedPreferences.getInstance(context);
         List<Boolean> wakeDays = prefs.getWakeDays();
         Calendar calendar = Calendar.getInstance();
@@ -23,6 +29,7 @@ public class AlarmStartReceiver extends BroadcastReceiver {
         }
 
         if (wakeDays.size() > dayOfWeek && wakeDays.get(dayOfWeek)) {
+            LOG.debug("Sending alarm sound and activity intents.");
             //Start sound service to play sound for alarm
             Intent startSoundIntent = new Intent(context, AlarmSoundService.class);
             context.startService(startSoundIntent);

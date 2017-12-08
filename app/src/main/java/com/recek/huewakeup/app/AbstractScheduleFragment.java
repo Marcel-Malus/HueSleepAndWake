@@ -69,6 +69,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
                         bridge.getResourceCache().getBridgeConfiguration());
             }
         }
+        LOG.warn("Schedule-{} not found.", scheduleId);
         return null;
     }
 
@@ -88,8 +89,13 @@ public abstract class AbstractScheduleFragment extends Fragment {
 
     protected Date updateSchedule(PHScheduleFix scheduleFix, String timeStr,
                                   Calendar startCal, boolean useDayOfSchedule, boolean before) {
+        PHBridge bridge = mainActivity.getBridge();
+        if (bridge == null) {
+            return null;
+        }
+
         String id = scheduleFix.getId();
-        LOG.info("Found alarm by name and id: {} / {}", scheduleFix.getName(), id);
+        LOG.info("Updating schedule {} ({}).", scheduleFix.getName(), id);
 
         Date wakeTime = MyDateUtils.calculateRelativeTimeTo(startCal, timeStr, before);
         if (wakeTime == null) {
@@ -115,13 +121,18 @@ public abstract class AbstractScheduleFragment extends Fragment {
         }
 
         LOG.info("Sending PUT to {} with {}", id, json);
-        mainActivity.getBridge().doHTTPPut(scheduleFix.getUrl(), json, putListener);
+        bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
         return wakeTime;
     }
 
     protected boolean disableSchedule(PHScheduleFix scheduleFix) {
+        PHBridge bridge = mainActivity.getBridge();
+        if (bridge == null) {
+            return false;
+        }
+
         String id = scheduleFix.getId();
-        LOG.info("Found alarm by name and id: {} / {}", scheduleFix.getName(), id);
+        LOG.info("Disabling schedule {} ({}).", scheduleFix.getName(), id);
 
         scheduleFix.disable();
         final String json;
@@ -135,7 +146,7 @@ public abstract class AbstractScheduleFragment extends Fragment {
 
         if (json != null) {
             LOG.info("Sending PUT to {} with {}", id, json);
-            mainActivity.getBridge().doHTTPPut(scheduleFix.getUrl(), json, putListener);
+            bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
             return true;
         }
 

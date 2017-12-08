@@ -19,6 +19,9 @@ import com.recek.huewakeup.alarm.AlarmStartReceiver;
 import com.recek.huewakeup.settings.AlarmSettingsActivity;
 import com.recek.huewakeup.util.MyDateUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -29,6 +32,8 @@ import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME;
  * @since 2017-09-14.
  */
 public class AlarmScheduleFragment extends Fragment {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AlarmScheduleFragment.class);
 
     private Switch alarmSwitch;
     private TextView statusTxt;
@@ -108,6 +113,7 @@ public class AlarmScheduleFragment extends Fragment {
         String alarmTimeStr = SDF_TIME.format(alarmDate);
         statusTxt.setText(getString(R.string.txt_status_alarm_on, alarmTimeStr));
         getPrefs().setAlarmTime(alarmTimeStr);
+        LOG.debug("Setting sound alarm to: {}.", alarmTimeStr);
         return true;
     }
 
@@ -122,6 +128,7 @@ public class AlarmScheduleFragment extends Fragment {
 
         getPrefs().setAlarmTime(null);
         statusTxt.setText(R.string.txt_status_alarm_off);
+        LOG.debug("Turned off sound alarm.");
         return true;
     }
 }

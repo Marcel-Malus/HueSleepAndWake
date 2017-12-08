@@ -45,6 +45,7 @@ public class AlarmSoundService extends Service {
 
         // Fallback plan
         if (mediaPlayer == null || !mediaPlayer.isPlaying()) {
+            LOG.warn("Media didn't play. Going to fallback plan.");
             Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             if (alarmUri == null) {
                 LOG.warn("Setting ringtone from notification");
@@ -58,6 +59,7 @@ public class AlarmSoundService extends Service {
     }
 
     private void tryPlayingMediaPlayer() {
+        LOG.info("Trying to play chosen media file.");
         String alarmSoundUri = prefs.getAlarmSoundUri();
 
         if (alarmSoundUri != null) {

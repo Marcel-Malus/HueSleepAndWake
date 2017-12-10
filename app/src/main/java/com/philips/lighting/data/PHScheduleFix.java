@@ -2,20 +2,17 @@ package com.philips.lighting.data;
 
 import com.philips.lighting.model.PHBridgeConfiguration;
 import com.philips.lighting.model.PHSchedule;
+import com.recek.huewakeup.util.MyDateUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * @since 2017-08-28.
  */
 public class PHScheduleFix {
-    // TODO: Load locale.
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss", Locale.GERMANY);
 
     private final PHSchedule schedule;
     private final PHBridgeConfiguration bridgeConfig;
@@ -109,7 +106,7 @@ public class PHScheduleFix {
             sb.append("W");
             sb.append(days);
             sb.append("/T");
-            sb.append(SDF.format(localTime));
+            sb.append(MyDateUtils.SDF_TIME.format(localTime));
             json.put("localtime", sb.toString());
             isDirty = true;
         }

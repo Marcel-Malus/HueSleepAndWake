@@ -16,7 +16,7 @@ public class MyDateUtils {
     private static final Logger LOG = LoggerFactory.getLogger(MyDateUtils.class);
 
     // TODO: locale
-    public static final SimpleDateFormat SDF_TIME = new SimpleDateFormat("HH:mm:ss", Locale.GERMANY);
+    public static final SimpleDateFormat SDF_TIME = new SimpleDateFormat("HH:mm:ss", Locale.US);
     private static final String TEXT_TIME_FORMAT = "^((2[0-3]|1[0-9]|0[0-9]|[0-9])(:([0-5][0-9]|[0-9])){0,2})$";
     private static final String BLANK_WAKE_DAYS = "00000000";
 

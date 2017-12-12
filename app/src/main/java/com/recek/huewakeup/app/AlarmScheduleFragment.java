@@ -106,9 +106,7 @@ public class AlarmScheduleFragment extends Fragment {
         Intent intent = new Intent(getActivity(), AlarmStartReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
 
-        alarmManager.set(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), pendingIntent);
-        // TODO: Change to every 24h:
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), 60000, pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), pendingIntent);
 
         String alarmTimeStr = SDF_TIME.format(alarmDate);
         statusTxt.setText(getString(R.string.txt_status_alarm_on, alarmTimeStr));

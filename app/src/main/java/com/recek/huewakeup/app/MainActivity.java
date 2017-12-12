@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.quickstart.PHHomeActivity;
 import com.philips.lighting.quickstart.R;
+import com.philips.lighting.util.PHUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,9 +56,11 @@ public class MainActivity extends Activity {
     protected void onResume() {
         LOG.debug("Resuming main activity.");
         super.onResume();
-        if (getBridge() == null) {
-            LOG.info("Connection to bridge lost. Reconnecting...");
-            reconnect();
+        if (!phHueSDK.isAccessPointConnected(PHUtil.loadLastAccessPointConnected(prefs))) {
+            LOG.warn("Connection to access point lost.");
+            statusText.setText(R.string.txt_status_not_connected);
+        } else {
+            statusText.setText(R.string.txt_status_connected);
         }
     }
 
@@ -117,9 +119,23 @@ public class MainActivity extends Activity {
     }
 
     private void reconnect() {
-        Toast.makeText(this, "Reconnecting...", Toast.LENGTH_SHORT).show();
+        statusText.setText(R.string.txt_status_reconnecting);
+//        PHAccessPoint lastAccessPoint = PHUtil.loadLastAccessPointConnected(prefs);
+//        if (lastAccessPoint != null && !phHueSDK.isAccessPointConnected(lastAccessPoint)) {
+//            phHueSDK.connect(lastAccessPoint);
+//            statusText.setText(R.string.txt_status_connected);
+//        } else {
+//            statusText.setText(R.string.txt_status_reconnect_failed);
+//        }
+
         Intent intent = new Intent(this, PHHomeActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        statusText.setText(R.string.txt_status_paused);
+        super.onPause();
     }
 
     @Override

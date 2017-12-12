@@ -21,6 +21,7 @@ import com.philips.lighting.hue.sdk.PHSDKListener;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
+import com.philips.lighting.util.PHUtil;
 import com.recek.huewakeup.app.MainActivity;
 
 import org.slf4j.Logger;
@@ -70,24 +71,17 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         accessPointList.setOnItemClickListener(this);
         accessPointList.setAdapter(adapter);
 
-        // Try to automatically connect to the last known bridge.  For first time use this will be empty so a bridge search is automatically started.
         prefs = HueSharedPreferences.getInstance(getApplicationContext());
-        String lastIpAddress = prefs.getLastConnectedIPAddress();
-        String lastUsername = prefs.getUsername();
 
         // Automatically try to connect to the last connected IP Address.  For multiple bridge support a different implementation is required.
-        if (lastIpAddress != null && !lastIpAddress.equals("")) {
-            PHAccessPoint lastAccessPoint = new PHAccessPoint();
-            lastAccessPoint.setIpAddress(lastIpAddress);
-            lastAccessPoint.setUsername(lastUsername);
-
-            if (!phHueSDK.isAccessPointConnected(lastAccessPoint)) {
-                PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, PHHomeActivity.this);
-                phHueSDK.connect(lastAccessPoint);
-            }
+        PHAccessPoint lastAccessPoint = PHUtil.loadLastAccessPointConnected(prefs);
+        if (lastAccessPoint != null && !phHueSDK.isAccessPointConnected(lastAccessPoint)) {
+            PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, PHHomeActivity.this);
+            phHueSDK.connect(lastAccessPoint);
         } else {  // First time use, so perform a bridge search.
             doBridgeSearch();
         }
+
     }
 
     @Override
@@ -198,7 +192,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
                     PHHomeActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            PHWizardAlertDialog.showErrorDialog(PHHomeActivity.this, message, R.string.btn_ok);
+                            PHWizardAlertDialog.showErrorAndDemoDialog(PHHomeActivity.this, message, R.string.btn_ok, demoListener);
                         }
                     });
                 }

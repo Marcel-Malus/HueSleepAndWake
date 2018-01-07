@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.GridView;
 
 import com.philips.lighting.data.HueSharedPreferences;
-import com.philips.lighting.quickstart.R;
+import com.recek.huesleepwake.R;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

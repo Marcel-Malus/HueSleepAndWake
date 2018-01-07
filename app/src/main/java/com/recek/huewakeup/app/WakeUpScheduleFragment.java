@@ -10,13 +10,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.philips.lighting.data.PHScheduleFix;
-import com.philips.lighting.quickstart.R;
+import com.recek.huesleepwake.R;
 import com.recek.huewakeup.settings.WakeLightSettingsActivity;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.philips.lighting.quickstart.R.id.lightSwitch;
+import static com.recek.huesleepwake.R.id.lightSwitch;
 import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME;
 
 /**

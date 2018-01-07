@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.philips.lighting.data.PHScheduleFix;
-import com.philips.lighting.quickstart.R;
+import com.recek.huesleepwake.R;
 
 import static com.recek.huewakeup.util.MyDateUtils.hasCorrectFormat;
 

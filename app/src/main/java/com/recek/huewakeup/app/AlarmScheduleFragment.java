@@ -13,7 +13,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.philips.lighting.data.HueSharedPreferences;
-import com.philips.lighting.quickstart.R;
+import com.recek.huesleepwake.R;
 import com.recek.huewakeup.alarm.AlarmSoundService;
 import com.recek.huewakeup.alarm.AlarmStartReceiver;
 import com.recek.huewakeup.settings.AlarmSettingsActivity;

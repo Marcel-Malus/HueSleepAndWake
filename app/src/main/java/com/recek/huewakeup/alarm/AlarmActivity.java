@@ -12,7 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.philips.lighting.quickstart.R;
+import com.recek.huesleepwake.R;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

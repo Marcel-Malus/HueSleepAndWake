@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.philips.lighting.data.HueSharedPreferences;
-import com.philips.lighting.quickstart.R;
+import com.recek.huesleepwake.R;
 import com.recek.huewakeup.util.MyDateUtils;
 
 import java.util.Calendar;

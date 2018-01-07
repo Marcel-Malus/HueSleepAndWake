@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.view.WindowManager;
 
+import com.recek.huesleepwake.R;
+
 /**
  * Generic class for Alert and Progress dialogs wizard
  */

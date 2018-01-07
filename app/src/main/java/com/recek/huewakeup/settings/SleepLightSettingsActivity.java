@@ -6,7 +6,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.philips.lighting.data.PHScheduleFix;
-import com.philips.lighting.quickstart.R;
+import com.recek.huesleepwake.R;
 
 public class SleepLightSettingsActivity extends AbstractHueSettingsActivity {
 

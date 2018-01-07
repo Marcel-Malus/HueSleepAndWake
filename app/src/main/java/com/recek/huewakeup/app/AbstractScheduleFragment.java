@@ -10,7 +10,7 @@ import com.philips.lighting.data.PHScheduleFix;
 import com.philips.lighting.hue.listener.PHHTTPListener;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHSchedule;
-import com.philips.lighting.quickstart.R;
+import com.recek.huesleepwake.R;
 import com.recek.huewakeup.util.MyDateUtils;
 
 import org.json.JSONArray;

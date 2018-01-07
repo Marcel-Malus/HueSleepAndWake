@@ -10,7 +10,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.philips.lighting.data.PHScheduleFix;
-import com.philips.lighting.quickstart.R;
+import com.recek.huesleepwake.R;
 import com.recek.huewakeup.settings.SleepLightSettingsActivity;
 
 import java.util.Calendar;

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.philips.lighting.data.HueSharedPreferences;
-import com.philips.lighting.quickstart.R;
+import com.recek.huesleepwake.R;
 import com.recek.huewakeup.util.MyDateUtils;
 
 import org.slf4j.Logger;

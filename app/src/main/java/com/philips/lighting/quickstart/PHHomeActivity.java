@@ -22,6 +22,7 @@ import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
 import com.philips.lighting.util.PHUtil;
+import com.recek.huesleepwake.R;
 import com.recek.huewakeup.app.MainActivity;
 
 import org.slf4j.Logger;

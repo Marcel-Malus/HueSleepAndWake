@@ -13,8 +13,8 @@ import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.quickstart.PHHomeActivity;
-import com.philips.lighting.quickstart.R;
 import com.philips.lighting.util.PHUtil;
+import com.recek.huesleepwake.R;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +22,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 /**
- * MainActivity - The starting point for creating your own Hue App.
- * Currently contains a simple view with a button to change your lights to random colours.  Remove this and add your own app implementation here! Have fun!
+ * MainActivity - The starting point for the HueSleepWake app.
  *
- * @author SteveyO
+ * @author Marcel Hrnecek
  */
 public class MainActivity extends Activity {
 

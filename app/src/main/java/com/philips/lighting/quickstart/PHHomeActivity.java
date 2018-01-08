@@ -68,7 +68,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
 
         adapter = new AccessPointListAdapter(getApplicationContext(), phHueSDK.getAccessPointsFound());
 
-        ListView accessPointList = (ListView) findViewById(R.id.bridge_list);
+        ListView accessPointList = findViewById(R.id.bridge_list);
         accessPointList.setOnItemClickListener(this);
         accessPointList.setAdapter(adapter);
 
@@ -78,6 +78,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         PHAccessPoint lastAccessPoint = PHUtil.loadLastAccessPointConnected(prefs);
         if (lastAccessPoint != null && !phHueSDK.isAccessPointConnected(lastAccessPoint)) {
             PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, PHHomeActivity.this);
+            LOG.info("Connecting...");
             phHueSDK.connect(lastAccessPoint);
         } else {  // First time use, so perform a bridge search.
             doBridgeSearch();

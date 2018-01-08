@@ -38,6 +38,7 @@ public class MainActivity extends Activity {
     private SleepScheduleFragment sleepFragment;
     private AlarmScheduleFragment alarmFragment;
     private TextView statusText;
+    private boolean isConnected = false;
 
     public HueSharedPreferences getPrefs() {
         return prefs;
@@ -55,7 +56,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         LOG.debug("Resuming main activity.");
         super.onResume();
-        if (!phHueSDK.isAccessPointConnected(PHUtil.loadLastAccessPointConnected(prefs))) {
+        if (!isConnected && !phHueSDK.isAccessPointConnected(PHUtil.loadLastAccessPointConnected(prefs))) {
             LOG.warn("Connection to access point lost.");
             statusText.setText(R.string.txt_status_not_connected);
         } else {
@@ -72,6 +73,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         phHueSDK = PHHueSDK.create();
         prefs = HueSharedPreferences.getInstance(getApplicationContext());
+        isConnected = getIntent().getBooleanExtra("isConnected", false);
+
 
         // WIDGETS
         FragmentManager fragmentManager = getFragmentManager();
@@ -80,7 +83,7 @@ public class MainActivity extends Activity {
         sleepFragment = (SleepScheduleFragment) fragmentManager.findFragmentById(R.id.sleepFragment);
         alarmFragment = (AlarmScheduleFragment) fragmentManager.findFragmentById(R.id.alarmFragment);
 
-        final Button updateSchedulesBtn = (Button) findViewById(R.id.updateSchedulesBtn);
+        final Button updateSchedulesBtn = findViewById(R.id.updateSchedulesBtn);
         updateSchedulesBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +91,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        final Button reconnectBtn = (Button) findViewById(R.id.reconnectBtn);
+        final Button reconnectBtn = findViewById(R.id.reconnectBtn);
         reconnectBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +99,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        statusText = (TextView) findViewById(R.id.statusText);
+        statusText = findViewById(R.id.statusText);
     }
 
     private void updateSchedules() {
@@ -133,6 +136,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onPause() {
+        isConnected = false;
         statusText.setText(R.string.txt_status_paused);
         super.onPause();
     }

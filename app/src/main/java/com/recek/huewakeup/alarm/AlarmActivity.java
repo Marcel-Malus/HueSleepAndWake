@@ -32,7 +32,7 @@ public class AlarmActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
-        Button stopAlarmBtn = (Button) findViewById(R.id.stopAlarmBtn);
+        Button stopAlarmBtn = findViewById(R.id.stopAlarmBtn);
         stopAlarmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,7 +41,7 @@ public class AlarmActivity extends Activity {
             }
         });
 
-        Button snoozeAlarmBtn = (Button) findViewById(R.id.snoozeAlarmBtn);
+        Button snoozeAlarmBtn = findViewById(R.id.snoozeAlarmBtn);
         snoozeAlarmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,6 +66,10 @@ public class AlarmActivity extends Activity {
     private void stopAlarm() {
         stopService(new Intent(this, AlarmSoundService.class));
         Toast.makeText(this, "Alarm stopped", Toast.LENGTH_SHORT).show();
+
+        if (!isFinishing()) {
+            finish();
+        }
     }
 
     private void snoozeAlarm() {
@@ -86,7 +90,7 @@ public class AlarmActivity extends Activity {
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         Toast.makeText(this, "Snoozing 5 Minutes", Toast.LENGTH_SHORT).show();
 
-        stopAlarm();
+        stopService(new Intent(this, AlarmSoundService.class));
     }
 
     @Override

@@ -31,17 +31,20 @@
     <string name="txt_set_wake_end_in_time">Set the time from wakeup schedule till wakeup end schedule.</string>
     <string name="btn_updated_schedules">Update</string>
     <string name="btn_days">Days</string>
+    <string name="action_help">Help</string>
 
     <!--Sound alarm-->
     <string name="txt_sound_alarm">Sound alarm</string>
     <string name="txt_offset_sound_alarm">Offset sound alarm</string>
     <string name="txt_alarm_settings">Alarm settings</string>
     <string name="txt_pick_alarm_sound">Pick alarm sound</string>
+    <string name="txt_alarm_started">Time to wake up!</string>
     <string name="btn_stop_alarm">Stop!</string>
     <string name="btn_snooze_alarm">Snooze</string>
     <string name="txt_no_alarm_sound_picked">No alarm sound picked yet</string>
     <string name="txt_status_error_pick">Error on selecting alarm sound.</string>
     <string name="txt_status_sound_picked">Sound picked</string>
+    <string name="txt_sound_alarm_settings">Settings: Sound alarm</string>
 
     <!--Light wake-->
     <string name="txt_hue_wake_lights">Hue wake lights</string>
@@ -50,11 +53,13 @@
     <string name="txt_select_light_schedule">Select hue schedule for wake up</string>
     <string name="txt_set_light_end_time">Shutdown lights after wake time</string>
     <string name="txt_select_light_end_schedule">Select hue schedule for lights shutdown</string>
+    <string name="txt_hue_wake_settings">Settings: Hue wake lights</string>
 
     <!--Light sleep-->
     <string name="txt_hue_sleep_light">Hue sleep light</string>
     <string name="txt_sleep_light_schedule">Select hue schedule to turn off lights for sleep</string>
     <string name="txt_light_sleep_settings">Light sleep settings</string>
+    <string name="txt_hue_sleep_settings">Settings: Hue sleep light</string>
 
     <!--Status-->
     <string name="txt_status">Status</string>
@@ -75,6 +80,36 @@
     <!--Days Settings-->
     <string name="txt_wake_up_on_days">Wakeup on days:</string>
     <string name="monday">Monday</string>
+
+    <!--Help page-->
+    <string name="txt_help_image">Help image</string>
+    <string name="txt_help_name">Getting started</string>
+    <string name="txt_help_description">
+        "This is a step by step guide to get started. Once the app is setup, you will mainly only "
+        "need the last step.\n\n"
+
+        "Notes:\n"
+        "All time offset settings are currently a textbox with this format: Hours:Minutes:Seconds.\n"
+        "All hue schedules must be configured in the standard hue app or any that is able to do this."
+        "This app is not able to do this an just uses existing schedules!\n\n"
+
+        "1, Setup the Sound alarm, Hue wake and sleep lights. Do this by tapping the "
+        "settings icons (blue circles on the right) in each component respectively.\n"
+        "1a, In \"Sound alarm\" settings you can choose the sound to wake up to.\n"
+        "1b, In \"Hue wake lights\" settings you can select the hue schedules for waking up and "
+        "a second one to switch of the lights again after some time. The offset for "
+        "the wake up light (before wakeup) and the switch off (after wakeup) can also be set here.\n"
+        "1c, In \"Hue sleep light\" settings you can select the hue sleep schedule."
+        "This has no offset, because it just starts as soon as \"update\" is taped (see 4.)\n\n"
+        "2, Activate the components you want to use with the switch buttons in the center (green circles)\n\n"
+        "3, Setup a relative time (from now) in which you want to wake up in the top (purple circle). "
+        "All the offsets set up in 1x steps are relative to this time.\n\n"
+        "4, Press the Update button in bottom left corner (orange circle). This will calculate the "
+        "absolute time for the Sound alarm, Hue wake and sleep lights and sets it accordingly when activated. "
+        "You will see the new time on the left side of each component."
+        "Make sure you are connected before pressing the button (see text below button)! "
+        "When not connected, just press the Reconnect (bottom right) button or restart the app."
+    </string>
 
     <!--Common-->
     <string name="onByI">I</string>

@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.philips.lighting.quickstart.PHHomeActivity"
-            android:label="@string/app_name">
+            android:label="@string/txt_selectbridges">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,15 +30,26 @@
         </activity>
         <activity
             android:name="com.recek.huewakeup.app.MainActivity"
-            android:label="@string/txt_selectbridges" />
+            android:label="@string/app_name" />
         <activity
             android:name="com.philips.lighting.quickstart.PHPushlinkActivity"
-            android:label="@string/app_name" />
-        <activity android:name="com.recek.huewakeup.alarm.AlarmActivity" />
-        <activity android:name="com.recek.huewakeup.settings.AlarmSettingsActivity" />
-        <activity android:name="com.recek.huewakeup.settings.WakeLightSettingsActivity" />
-        <activity android:name="com.recek.huewakeup.settings.SleepLightSettingsActivity" />
+            android:label="@string/txt_pushlink" />
+        <activity
+            android:name="com.recek.huewakeup.alarm.AlarmActivity"
+            android:label="@string/txt_alarm_started" />
+        <activity
+            android:name="com.recek.huewakeup.settings.AlarmSettingsActivity"
+            android:label="@string/txt_sound_alarm_settings" />
+        <activity
+            android:name="com.recek.huewakeup.settings.WakeLightSettingsActivity"
+            android:label="@string/txt_hue_wake_settings" />
+        <activity
+            android:name="com.recek.huewakeup.settings.SleepLightSettingsActivity"
+            android:label="@string/txt_hue_sleep_settings" />
         <activity android:name="com.recek.huewakeup.settings.DaysSettingsActivity" />
+        <activity
+            android:name="com.recek.huewakeup.app.HelpActivity"
+            android:label="@string/txt_help_name" />
 
         <receiver android:name="com.recek.huewakeup.alarm.AlarmStartReceiver" />
 

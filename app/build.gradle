@@ -8,6 +8,8 @@ android {
         applicationId "com.recek.huesleepwake"
         minSdkVersion 19
         targetSdkVersion 27
+        versionCode 1
+        versionName "0.1"
     }
 
     buildTypes {
@@ -21,13 +23,20 @@ android {
 dependencies {
     compile files('libs/huelocalsdk.jar')
     compile files('libs/huesdkresources.jar')
-    //    compile files('libs/docs/huesdkresources-javadoc.jar')
-    //    compile files('libs/docs/huelocalsdk-javadoc.jar')
     compile('com.android.support:support-compat:26.1.0')
-    // https://mvnrepository.com/artifact/org.slf4j/slf4j-android
-//    compile group: 'org.slf4j', name: 'slf4j-android', version: '1.7.25'
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile 'com.github.tony19:logback-android-core:1.1.1-6'
     compile 'com.github.tony19:logback-android-classic:1.1.1-6'
     compile('com.android.support:cardview-v7:26.1.0')
+}
+
+configurations {
+    all {
+        exclude module: 'httpclient'
+        exclude module: 'commons-logging'
+        exclude module: 'opengl-api'
+        exclude module: 'xmlParserAPIs'
+        exclude module: 'xpp3'
+        exclude module: 'android'
+    }
 }

@@ -1,6 +1,7 @@
 <configuration>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>/sdcard/Android/data/com.recek.huesleepwake/logs.log</file>
+        <!--<file>/sdcard/Android/data/com.recek.huesleepwake/logs.log</file>-->
+        <file>/data/data/com.recek.huesleepwake/logs.log</file>
         <append>true</append>
         <encoder>
             <pattern>%d{dd.MM HH:mm:ss} %-5level %logger{35} - %msg%n</pattern>

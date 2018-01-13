@@ -15,7 +15,7 @@ import com.recek.huewakeup.util.MyDateUtils;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME;
+import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME_SHORT;
 
 /**
  * @since 2017-09-14.
@@ -27,7 +27,8 @@ public class WakeTimeFragment extends Fragment {
     private HueSharedPreferences prefs;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_wake_time, container, false);
     }
 
@@ -37,10 +38,10 @@ public class WakeTimeFragment extends Fragment {
 
         prefs = HueSharedPreferences.getInstance(getActivity());
 
-        inputTimeTxt = (EditText) getActivity().findViewById(R.id.wakeTime);
+        inputTimeTxt = getActivity().findViewById(R.id.wakeTime);
         inputTimeTxt.setText(prefs.getWakeTimeRelative());
 
-        statusTxt = (TextView) getActivity().findViewById(R.id.wakeStatusTxt);
+        statusTxt = getActivity().findViewById(R.id.wakeStatusTxt);
         setInitialStatus();
     }
 
@@ -48,7 +49,8 @@ public class WakeTimeFragment extends Fragment {
     private void setInitialStatus() {
         String wakeTime = prefs.getWakeTime();
         if (wakeTime != null) {
-            statusTxt.setText(getResources().getString(R.string.txt_status_current_setting, wakeTime));
+            statusTxt.setText(
+                    getResources().getString(R.string.txt_status_current_setting, wakeTime));
         } else {
             statusTxt.setText(R.string.txt_status_not_set);
         }
@@ -60,7 +62,7 @@ public class WakeTimeFragment extends Fragment {
 
         Date wakeUpDate = MyDateUtils.calculateRelativeTimeTo(cal, wakeTimeRel, false);
         if (wakeUpDate != null) {
-            String wakeTimeStr = SDF_TIME.format(wakeUpDate);
+            String wakeTimeStr = SDF_TIME_SHORT.format(wakeUpDate);
             statusTxt.setText(getString(R.string.txt_status_alarm_on, wakeTimeStr));
             prefs.setWakeTimeRelative(wakeTimeRel);
             prefs.setWakeTime(wakeTimeStr);

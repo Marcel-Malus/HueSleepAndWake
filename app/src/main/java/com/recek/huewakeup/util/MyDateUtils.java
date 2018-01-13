@@ -17,6 +17,7 @@ public class MyDateUtils {
 
     // TODO: locale
     public static final SimpleDateFormat SDF_TIME = new SimpleDateFormat("HH:mm:ss", Locale.US);
+    public static final SimpleDateFormat SDF_TIME_SHORT = new SimpleDateFormat("HH:mm", Locale.US);
     private static final String TEXT_TIME_FORMAT = "^((2[0-3]|1[0-9]|0[0-9]|[0-9])(:([0-5][0-9]|[0-9])){0,2})$";
     private static final String BLANK_WAKE_DAYS = "00000000";
 

@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static com.recek.huesleepwake.R.id.lightSwitch;
-import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME;
+import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME_SHORT;
 
 /**
  * @since 2017-09-14.
@@ -30,7 +30,8 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
     private PHScheduleFix wakeEndSchedule;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_wake_light, container, false);
     }
 
@@ -38,18 +39,20 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        statusTxt = (TextView) getActivity().findViewById(R.id.wakeLightStatusTxt);
+        statusTxt = getActivity().findViewById(R.id.wakeLightStatusTxt);
         String wakeUpScheduleId = getPrefs().getWakeScheduleId();
         setInitialStatus(wakeUpScheduleId);
 
-        wakeLightSwitch = (Switch) getActivity().findViewById(lightSwitch);
+        wakeLightSwitch = getActivity().findViewById(lightSwitch);
         wakeLightSwitch.setChecked(getPrefs().isWakeLightActive());
 
-        final ImageButton settingsBtn = (ImageButton) getActivity().findViewById(R.id.lightSettingsBtn);
+        final ImageButton settingsBtn = getActivity()
+                .findViewById(R.id.lightSettingsBtn);
         settingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent startActivityIntent = new Intent(getActivity(), WakeLightSettingsActivity.class);
+                Intent startActivityIntent = new Intent(getActivity(),
+                        WakeLightSettingsActivity.class);
                 getActivity().startActivity(startActivityIntent);
             }
         });
@@ -79,7 +82,7 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
 
     private void appendStatus(StringBuilder sb, PHScheduleFix schedule) {
         if (schedule.isEnabled()) {
-            String timeStr = SDF_TIME.format(schedule.getLocalTime());
+            String timeStr = SDF_TIME_SHORT.format(schedule.getLocalTime());
             if (sb.length() == 0) {
                 sb.append(getString(R.string.txt_status_alarm_on, timeStr));
             } else {

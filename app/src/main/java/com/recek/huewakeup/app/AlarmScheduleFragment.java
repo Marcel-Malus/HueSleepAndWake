@@ -32,7 +32,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static android.content.Context.ALARM_SERVICE;
-import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME;
+import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME_SHORT;
 
 /**
  * @since 2017-09-14.
@@ -147,7 +147,7 @@ public class AlarmScheduleFragment extends Fragment {
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), pendingIntent);
 
-        String alarmTimeStr = SDF_TIME.format(alarmDate);
+        String alarmTimeStr = SDF_TIME_SHORT.format(alarmDate);
         statusTxt.setText(getString(R.string.txt_status_alarm_on, alarmTimeStr));
         getPrefs().setAlarmTime(alarmTimeStr);
         LOG.debug("Setting sound alarm to: {}.", alarmTimeStr);

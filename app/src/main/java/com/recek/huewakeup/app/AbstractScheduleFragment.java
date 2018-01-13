@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME;
+import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME_SHORT;
 
 /**
  * @since 2017-09-14.
@@ -80,7 +80,9 @@ public abstract class AbstractScheduleFragment extends Fragment {
             PHSchedule schedule = scheduleFix.getSchedule();
             Date date = schedule.getDate();
             if (date != null && schedule.getStatus().equals(PHSchedule.PHScheduleStatus.ENABLED)) {
-                getStatusView().setText(getResources().getString(R.string.txt_status_current_setting, SDF_TIME.format(date)));
+                getStatusView().setText(getResources()
+                        .getString(R.string.txt_status_current_setting,
+                                SDF_TIME_SHORT.format(date)));
                 return;
             }
         }
@@ -209,7 +211,8 @@ public abstract class AbstractScheduleFragment extends Fragment {
                         notifyUserWithUiThread("Failed totally :(");
                         LOG.error("Response indicates errors.");
                     } else {
-                        notifyUserWithUiThread("Failed partially (" + failCnt + "/" + (failCnt + successCnt) + ")");
+                        notifyUserWithUiThread(
+                                "Failed partially (" + failCnt + "/" + (failCnt + successCnt) + ")");
                         LOG.error("Response indicates errors.");
                     }
                 } catch (JSONException e) {

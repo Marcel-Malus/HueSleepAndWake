@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -59,7 +60,8 @@ public class MainActivity extends Activity {
     protected void onResume() {
         LOG.debug("Resuming main activity.");
         super.onResume();
-        if (!isConnected && !phHueSDK.isAccessPointConnected(PHUtil.loadLastAccessPointConnected(prefs))) {
+        if (!isConnected && !phHueSDK
+                .isAccessPointConnected(PHUtil.loadLastAccessPointConnected(prefs))) {
             LOG.warn("Connection to access point lost.");
             statusText.setText(R.string.txt_status_not_connected);
         } else {
@@ -81,10 +83,14 @@ public class MainActivity extends Activity {
 
         // WIDGETS
         FragmentManager fragmentManager = getFragmentManager();
-        wakeTimeFragment = (WakeTimeFragment) fragmentManager.findFragmentById(R.id.wakeTimeFragment);
-        wakeUpFragment = (WakeUpScheduleFragment) fragmentManager.findFragmentById(R.id.wakeUpFragment);
-        sleepFragment = (SleepScheduleFragment) fragmentManager.findFragmentById(R.id.sleepFragment);
-        alarmFragment = (AlarmScheduleFragment) fragmentManager.findFragmentById(R.id.alarmFragment);
+        wakeTimeFragment = (WakeTimeFragment) fragmentManager
+                .findFragmentById(R.id.wakeTimeFragment);
+        wakeUpFragment = (WakeUpScheduleFragment) fragmentManager
+                .findFragmentById(R.id.wakeUpFragment);
+        sleepFragment = (SleepScheduleFragment) fragmentManager
+                .findFragmentById(R.id.sleepFragment);
+        alarmFragment = (AlarmScheduleFragment) fragmentManager
+                .findFragmentById(R.id.alarmFragment);
 
         final Button updateSchedulesBtn = findViewById(R.id.updateSchedulesBtn);
         updateSchedulesBtn.setOnClickListener(new OnClickListener() {
@@ -122,6 +128,12 @@ public class MainActivity extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        alarmFragment.handlePermissionRequestResult(requestCode, grantResults);
     }
 
     private void startHelpActivity() {

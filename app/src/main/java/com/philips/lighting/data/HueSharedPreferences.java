@@ -33,7 +33,7 @@ public class HueSharedPreferences {
 
     private static final String ALARM_TIME = "AlarmTime";
     private static final String ALARM_TIME_RELATIVE = "AlarmTimeRelative";
-    private static final String DEFAULT_ALARM_TIME_RELATIVE = "0:0:0";
+    private static final String DEFAULT_ALARM_TIME_RELATIVE = "0:0";
     private static final String ALARM_IS_ACTIVE = "AlarmIsActive";
     private static final String ALARM_SOUND = "AlarmSound";
 

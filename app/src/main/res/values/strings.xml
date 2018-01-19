@@ -40,7 +40,12 @@
     <string name="txt_pick_alarm_sound">Pick alarm sound</string>
     <string name="txt_alarm_started">Time to wake up!</string>
     <string name="btn_stop_alarm">Stop!</string>
+    <string name="btn_close_alarm">Close</string>
     <string name="btn_snooze_alarm">Snooze</string>
+    <string name="txt_alarm_status_active">Playing music</string>
+    <string name="txt_alarm_status_snooze">Snoozing until: %s</string>
+    <string name="txt_alarm_dismiss_alarm">Dismiss scheduled snooze?</string>
+    <string name="txt_alarm_status_stopped">Alarm stopped</string>
     <string name="txt_no_alarm_sound_picked">No alarm sound picked yet</string>
     <string name="txt_status_error_pick">Error on selecting alarm sound.</string>
     <string name="txt_status_sound_picked">Sound picked</string>
@@ -116,5 +121,7 @@
     <string name="offByO">O</string>
     <string name="btn_ok">OK</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="btn_keep">Keep</string>
+    <string name="btn_dismiss">Dismiss</string>
 
 </resources>

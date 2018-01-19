@@ -1,19 +1,13 @@
 package com.recek.huewakeup.app;
 
-import android.Manifest;
 import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -40,7 +34,6 @@ import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME_SHORT;
 public class AlarmScheduleFragment extends Fragment {
 
     private static final Logger LOG = LoggerFactory.getLogger(AlarmScheduleFragment.class);
-    private static final int PERMISSION_REQUEST_READ_PHONE_STATE = 1;
 
     private Switch alarmSwitch;
     private TextView statusTxt;
@@ -69,41 +62,11 @@ public class AlarmScheduleFragment extends Fragment {
 
         alarmSwitch = getActivity().findViewById(R.id.alarmSwitch);
         alarmSwitch.setChecked(getPrefs().isAlarmActive());
-        alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checkPermission(isChecked);
-            }
-        });
 
         statusTxt = getActivity().findViewById(R.id.alarmStatusTxt);
         setInitialStatus();
 
         alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
-    }
-
-    private void checkPermission(boolean isChecked) {
-        if (isChecked) {
-            int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
-                    Manifest.permission.READ_PHONE_STATE);
-            if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.READ_PHONE_STATE},
-                        PERMISSION_REQUEST_READ_PHONE_STATE);
-            }
-        }
-    }
-
-    public void handlePermissionRequestResult(int requestCode, @NonNull int[] grantResults) {
-        if (requestCode == PERMISSION_REQUEST_READ_PHONE_STATE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                LOG.info("Permission granted: READ_PHONE_STATE");
-            } else {
-                LOG.info("Permission denied: READ_PHONE_STATE");
-                alarmSwitch.setChecked(false);
-                getPrefs().setAlarmActive(false);
-            }
-        }
     }
 
     private void setInitialStatus() {

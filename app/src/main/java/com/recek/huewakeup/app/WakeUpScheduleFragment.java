@@ -30,6 +30,16 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
     private PHScheduleFix wakeEndSchedule;
 
     @Override
+    protected long getSavedTime() {
+        return getPrefs().getWakeLightTime();
+    }
+
+    @Override
+    protected TextView getStatusTxt() {
+        return statusTxt;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_wake_light, container, false);
@@ -40,8 +50,7 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         super.onActivityCreated(savedInstanceState);
 
         statusTxt = getActivity().findViewById(R.id.wakeLightStatusTxt);
-        String wakeUpScheduleId = getPrefs().getWakeScheduleId();
-        setInitialStatus(wakeUpScheduleId);
+        updateStatus();
 
         wakeLightSwitch = getActivity().findViewById(lightSwitch);
         wakeLightSwitch.setChecked(getPrefs().isWakeLightActive());
@@ -56,11 +65,6 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
                 getActivity().startActivity(startActivityIntent);
             }
         });
-    }
-
-    @Override
-    protected TextView getStatusView() {
-        return statusTxt;
     }
 
     @Override
@@ -91,6 +95,7 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
             }
         } else {
             sb.append(getString(R.string.txt_status_alarm_off));
+            getPrefs().setWakeLightTime(-1);
         }
     }
 
@@ -106,13 +111,14 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
             return disableSchedule(wakeSchedule);
         }
 
-        String wakeTimeStr = getPrefs().getWakeLightTime();
+        String wakeTimeStr = getPrefs().getRelativeWakeLightTime();
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 
         Date wakeUpDate = updateSchedule(wakeSchedule, wakeTimeStr, cal, true);
 
         if (wakeUpDate != null) {
+            getPrefs().setWakeLightTime(wakeUpDate.getTime());
             // TODO: evaluate wakeEnd update.
             updateWakeEndSchedule(wakeTime);
             return true;

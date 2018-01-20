@@ -24,23 +24,23 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         setContentView(R.layout.activity_wake_light_settings);
 
         // WAKE UP
-        wakeScheduleSpinner = (Spinner) findViewById(R.id.wakeLightSpinner);
+        wakeScheduleSpinner = findViewById(R.id.wakeLightSpinner);
         String wakeUpScheduleId = getPrefs().getWakeScheduleId();
         buildAndAddAdapter(wakeScheduleSpinner, wakeUpScheduleId);
 
-        wakeInputTimeTxt = (EditText) findViewById(R.id.wakeLightTime);
-        wakeInputTimeTxt.setText(getPrefs().getWakeLightTime());
+        wakeInputTimeTxt = findViewById(R.id.wakeLightTime);
+        wakeInputTimeTxt.setText(getPrefs().getRelativeWakeLightTime());
 
         // WAKE END
-        wakeEndScheduleSpinner = (Spinner) findViewById(R.id.wakeLightEndSpinner);
+        wakeEndScheduleSpinner = findViewById(R.id.wakeLightEndSpinner);
         String wakeEndScheduleId = getPrefs().getWakeEndScheduleId();
         buildAndAddAdapter(wakeEndScheduleSpinner, wakeEndScheduleId);
 
-        wakeEndInputTimeTxt = (EditText) findViewById(R.id.wakeLightEndTime);
+        wakeEndInputTimeTxt = findViewById(R.id.wakeLightEndTime);
         wakeEndInputTimeTxt.setText(getPrefs().getWakeEndTime());
 
         // BUTTONS
-        Button okButton = (Button) findViewById(R.id.lightSettingsOkBtn);
+        Button okButton = findViewById(R.id.lightSettingsOkBtn);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,7 +48,7 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
             }
         });
 
-        Button cancelButton = (Button) findViewById(R.id.lightSettingsCancelBtn);
+        Button cancelButton = findViewById(R.id.lightSettingsCancelBtn);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +60,7 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
     private void onOkClicked() {
         String wakeTime = wakeInputTimeTxt.getText().toString();
         if (hasCorrectFormat(wakeTime)) {
-            getPrefs().setWakeLightTime(wakeTime);
+            getPrefs().setRelativeWakeLightTime(wakeTime);
         }
         PHScheduleFix wakeSchedule = getSelectedValidSchedule(wakeScheduleSpinner);
         if (wakeSchedule != null) {

@@ -1,6 +1,5 @@
 package com.recek.huewakeup.app;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +19,21 @@ import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME_SHORT;
 /**
  * @since 2017-09-14.
  */
-public class WakeTimeFragment extends Fragment {
+public class WakeTimeFragment extends AbstractBasicFragment {
 
     private EditText inputTimeTxt;
     private TextView statusTxt;
     private HueSharedPreferences prefs;
+
+    @Override
+    protected long getSavedTime() {
+        return prefs.getWakeTime();
+    }
+
+    @Override
+    protected TextView getStatusTxt() {
+        return statusTxt;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,18 +51,13 @@ public class WakeTimeFragment extends Fragment {
         inputTimeTxt.setText(prefs.getWakeTimeRelative());
 
         statusTxt = getActivity().findViewById(R.id.wakeStatusTxt);
-        setInitialStatus();
+        updateStatus();
     }
 
-
-    private void setInitialStatus() {
-        String wakeTime = prefs.getWakeTime();
-        if (wakeTime != null) {
-            statusTxt.setText(
-                    getResources().getString(R.string.txt_status_current_setting, wakeTime));
-        } else {
-            statusTxt.setText(R.string.txt_status_not_set);
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateStatus();
     }
 
     public Date onUpdate() {
@@ -65,7 +69,7 @@ public class WakeTimeFragment extends Fragment {
             String wakeTimeStr = SDF_TIME_SHORT.format(wakeUpDate);
             statusTxt.setText(getString(R.string.txt_status_alarm_on, wakeTimeStr));
             prefs.setWakeTimeRelative(wakeTimeRel);
-            prefs.setWakeTime(wakeTimeStr);
+            prefs.setWakeTime(wakeUpDate.getTime());
         } else {
             statusTxt.setText(getString(R.string.txt_status_wrong_format));
         }

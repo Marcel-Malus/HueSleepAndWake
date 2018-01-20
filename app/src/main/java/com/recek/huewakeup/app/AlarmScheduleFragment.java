@@ -1,7 +1,6 @@
 package com.recek.huewakeup.app;
 
 import android.app.AlarmManager;
-import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,7 +30,7 @@ import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME_SHORT;
 /**
  * @since 2017-09-14.
  */
-public class AlarmScheduleFragment extends Fragment {
+public class AlarmScheduleFragment extends AbstractBasicFragment {
 
     private static final Logger LOG = LoggerFactory.getLogger(AlarmScheduleFragment.class);
 
@@ -41,8 +40,14 @@ public class AlarmScheduleFragment extends Fragment {
     private PendingIntent pendingIntent;
     private HueSharedPreferences prefs;
 
-    private HueSharedPreferences getPrefs() {
-        return prefs;
+    @Override
+    protected long getSavedTime() {
+        return prefs.getAlarmTime();
+    }
+
+    @Override
+    protected TextView getStatusTxt() {
+        return statusTxt;
     }
 
     @Override
@@ -61,22 +66,18 @@ public class AlarmScheduleFragment extends Fragment {
         settingsBtn.setOnClickListener(createSettingsListener());
 
         alarmSwitch = getActivity().findViewById(R.id.alarmSwitch);
-        alarmSwitch.setChecked(getPrefs().isAlarmActive());
+        alarmSwitch.setChecked(prefs.isAlarmActive());
 
         statusTxt = getActivity().findViewById(R.id.alarmStatusTxt);
-        setInitialStatus();
+        updateStatus();
 
         alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
     }
 
-    private void setInitialStatus() {
-        String alarmTime = getPrefs().getAlarmTime();
-        if (alarmTime != null) {
-            statusTxt.setText(
-                    getResources().getString(R.string.txt_status_current_setting, alarmTime));
-        } else {
-            statusTxt.setText(R.string.txt_status_not_set);
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateStatus();
     }
 
     private View.OnClickListener createSettingsListener() {
@@ -90,12 +91,12 @@ public class AlarmScheduleFragment extends Fragment {
     }
 
     public boolean updateAlarmSchedule(Date wakeTime) {
-        getPrefs().setAlarmActive(alarmSwitch.isChecked());
+        prefs.setAlarmActive(alarmSwitch.isChecked());
         if (!alarmSwitch.isChecked()) {
             return turnOffAlarm();
         }
 
-        String alarmTimeRel = getPrefs().getAlarmTimeRelative();
+        String alarmTimeRel = prefs.getAlarmTimeRelative();
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 
@@ -112,7 +113,7 @@ public class AlarmScheduleFragment extends Fragment {
 
         String alarmTimeStr = SDF_TIME_SHORT.format(alarmDate);
         statusTxt.setText(getString(R.string.txt_status_alarm_on, alarmTimeStr));
-        getPrefs().setAlarmTime(alarmTimeStr);
+        prefs.setAlarmTime(alarmDate.getTime());
         LOG.debug("Setting sound alarm to: {}.", alarmTimeStr);
         return true;
     }
@@ -126,7 +127,7 @@ public class AlarmScheduleFragment extends Fragment {
         //Stop the Media Player Service to stop sound
         getActivity().stopService(new Intent(getActivity(), AlarmSoundService.class));
 
-        getPrefs().setAlarmTime(null);
+        prefs.setAlarmTime(-1);
         statusTxt.setText(R.string.txt_status_alarm_off);
         LOG.debug("Turned off sound alarm.");
         return true;

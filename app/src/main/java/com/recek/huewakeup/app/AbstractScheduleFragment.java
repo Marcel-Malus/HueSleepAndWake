@@ -1,8 +1,6 @@
 package com.recek.huewakeup.app;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.philips.lighting.data.HueSharedPreferences;
@@ -24,12 +22,10 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME_SHORT;
-
 /**
  * @since 2017-09-14.
  */
-public abstract class AbstractScheduleFragment extends Fragment {
+public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractScheduleFragment.class);
     private static final String SUCCESS = "success";
@@ -47,8 +43,6 @@ public abstract class AbstractScheduleFragment extends Fragment {
         prefs = mainActivity.getPrefs();
         putListener = createPutListener();
     }
-
-    protected abstract TextView getStatusView();
 
     protected abstract void onSuccess();
 
@@ -71,22 +65,6 @@ public abstract class AbstractScheduleFragment extends Fragment {
         }
         LOG.warn("Schedule-{} not found.", scheduleId);
         return null;
-    }
-
-
-    protected void setInitialStatus(String scheduleId) {
-        PHScheduleFix scheduleFix = findScheduleById(scheduleId);
-        if (scheduleFix != null) {
-            PHSchedule schedule = scheduleFix.getSchedule();
-            Date date = schedule.getDate();
-            if (date != null && schedule.getStatus().equals(PHSchedule.PHScheduleStatus.ENABLED)) {
-                getStatusView().setText(getResources()
-                        .getString(R.string.txt_status_current_setting,
-                                SDF_TIME_SHORT.format(date)));
-                return;
-            }
-        }
-        getStatusView().setText(R.string.txt_status_not_set);
     }
 
     protected Date updateSchedule(PHScheduleFix scheduleFix, String timeStr,
@@ -157,12 +135,12 @@ public abstract class AbstractScheduleFragment extends Fragment {
     }
 
     private void notifyUser(final String msg) {
-        getStatusView().setText(msg);
+        getStatusTxt().setText(msg);
 //        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     private void notifyUser(final int msgId) {
-        getStatusView().setText(msgId);
+        getStatusTxt().setText(msgId);
 //        Toast.makeText(getActivity(), msgId, Toast.LENGTH_SHORT).show();
     }
 

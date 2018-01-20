@@ -27,6 +27,17 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
     private PHScheduleFix schedule;
 
     @Override
+    protected long getSavedTime() {
+        // Sleep time will not be saved.
+        return -1;
+    }
+
+    @Override
+    protected TextView getStatusTxt() {
+        return statusTxt;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_sleep_light, container, false);
     }
@@ -35,14 +46,18 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        statusTxt = (TextView) getActivity().findViewById(R.id.sleepStatusTxt);
-        String sleepScheduleId = getPrefs().getSleepScheduleId();
-        setInitialStatus(sleepScheduleId);
+        sleepSwitch = getActivity().findViewById(R.id.sleepSwitch);
+        boolean isSleepActive = getPrefs().isSleepActive();
+        sleepSwitch.setChecked(isSleepActive);
 
-        sleepSwitch = (Switch) getActivity().findViewById(R.id.sleepSwitch);
-        sleepSwitch.setChecked(getPrefs().isSleepActive());
+        statusTxt = getActivity().findViewById(R.id.sleepStatusTxt);
+        if (isSleepActive) {
+            statusTxt.setText(R.string.txt_status_outdated);
+        } else {
+            statusTxt.setText(R.string.txt_status_disabled);
+        }
 
-        final ImageButton settingsBtn = (ImageButton) getActivity().findViewById(R.id.sleepLightSettingsBtn);
+        final ImageButton settingsBtn = getActivity().findViewById(R.id.sleepLightSettingsBtn);
         settingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,11 +65,6 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
                 getActivity().startActivity(startActivityIntent);
             }
         });
-    }
-
-    @Override
-    protected TextView getStatusView() {
-        return statusTxt;
     }
 
     @Override

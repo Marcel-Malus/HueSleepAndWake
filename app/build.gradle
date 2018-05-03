@@ -18,9 +18,11 @@ android {
 }
 
 dependencies {
-    implementation files('libs/huelocalsdk.jar')
-    implementation files('libs/huesdkresources.jar')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation 'com.android.support:support-compat:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support:design:27.1.1'
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'com.github.tony19:logback-android-core:1.1.1-6'
     implementation 'com.github.tony19:logback-android-classic:1.1.1-6'

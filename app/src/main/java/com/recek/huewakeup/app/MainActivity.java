@@ -13,10 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.philips.lighting.data.HueSharedPreferences;
-import com.philips.lighting.hue.sdk.PHHueSDK;
-import com.philips.lighting.model.PHBridge;
-import com.philips.lighting.quickstart.PHHomeActivity;
-import com.philips.lighting.util.PHUtil;
+import com.philips.lighting.quickstart.MainHueActivity;
 import com.recek.huesleepwake.R;
 
 import org.slf4j.Logger;
@@ -33,7 +30,6 @@ public class MainActivity extends Activity {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
-    private PHHueSDK phHueSDK;
     private HueSharedPreferences prefs;
 
     private WakeTimeFragment wakeTimeFragment;
@@ -47,25 +43,10 @@ public class MainActivity extends Activity {
         return prefs;
     }
 
-    public PHBridge getBridge() {
-        PHBridge bridge = phHueSDK.getSelectedBridge();
-        if (bridge == null) {
-            LOG.warn("Bridge not found!");
-        }
-        return bridge;
-    }
-
     @Override
     protected void onResume() {
         LOG.debug("Resuming main activity.");
         super.onResume();
-        if (!isConnected && !phHueSDK
-                .isAccessPointConnected(PHUtil.loadLastAccessPointConnected(prefs))) {
-            LOG.warn("Connection to access point lost.");
-            statusText.setText(R.string.txt_status_not_connected);
-        } else {
-            statusText.setText(R.string.txt_status_connected);
-        }
     }
 
     @Override
@@ -75,7 +56,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setTitle(R.string.app_name);
         setContentView(R.layout.activity_main);
-        phHueSDK = PHHueSDK.create();
         prefs = HueSharedPreferences.getInstance(getApplicationContext());
         isConnected = getIntent().getBooleanExtra("isConnected", false);
 
@@ -154,15 +134,7 @@ public class MainActivity extends Activity {
 
     private void reconnect() {
         statusText.setText(R.string.txt_status_reconnecting);
-//        PHAccessPoint lastAccessPoint = PHUtil.loadLastAccessPointConnected(prefs);
-//        if (lastAccessPoint != null && !phHueSDK.isAccessPointConnected(lastAccessPoint)) {
-//            phHueSDK.connect(lastAccessPoint);
-//            statusText.setText(R.string.txt_status_connected);
-//        } else {
-//            statusText.setText(R.string.txt_status_reconnect_failed);
-//        }
-
-        Intent intent = new Intent(this, PHHomeActivity.class);
+        Intent intent = new Intent(this, MainHueActivity.class);
         startActivity(intent);
     }
 
@@ -171,19 +143,5 @@ public class MainActivity extends Activity {
         isConnected = false;
         statusText.setText(R.string.txt_status_paused);
         super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        PHBridge bridge = phHueSDK.getSelectedBridge();
-        if (bridge != null) {
-
-            if (phHueSDK.isHeartbeatEnabled(bridge)) {
-                phHueSDK.disableHeartbeat(bridge);
-            }
-
-            phHueSDK.disconnect(bridge);
-        }
-        super.onDestroy();
     }
 }

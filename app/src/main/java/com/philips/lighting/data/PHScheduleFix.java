@@ -1,7 +1,8 @@
 package com.philips.lighting.data;
 
-import com.philips.lighting.model.PHBridgeConfiguration;
-import com.philips.lighting.model.PHSchedule;
+import com.philips.lighting.hue.sdk.wrapper.domain.BridgeConfiguration;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
 import com.recek.huewakeup.util.MyDateUtils;
 
 import org.json.JSONException;
@@ -14,8 +15,8 @@ import java.util.Date;
  */
 public class PHScheduleFix {
 
-    private final PHSchedule schedule;
-    private final PHBridgeConfiguration bridgeConfig;
+    private final Schedule schedule;
+    private final BridgeConfiguration bridgeConfig;
     private final String url;
 
     private final String id;
@@ -35,7 +36,7 @@ public class PHScheduleFix {
         this.url = null;
     }
 
-    public PHScheduleFix(PHSchedule schedule, PHBridgeConfiguration bridgeConfig) {
+    public PHScheduleFix(Schedule schedule, BridgeConfiguration bridgeConfig) {
         this.schedule = schedule;
         this.bridgeConfig = bridgeConfig;
 
@@ -47,14 +48,14 @@ public class PHScheduleFix {
 
     private String buildUrl() {
         return "http://" +
-                bridgeConfig.getIpAddress() +
+                bridgeConfig.getNetworkConfiguration().getIpAddress() +
                 "/api/" +
-                bridgeConfig.getUsername() +
+                bridgeConfig.getName() +
                 "/schedules/" +
                 id;
     }
 
-    public PHSchedule getSchedule() {
+    public Schedule getSchedule() {
         return schedule;
     }
 
@@ -88,13 +89,13 @@ public class PHScheduleFix {
 
     public void enable() {
         enabled = true;
-        if (!schedule.getStatus().equals(PHSchedule.PHScheduleStatus.ENABLED))
+        if (!schedule.getStatus().equals(ScheduleStatus.ENABLED))
             this.status = "enabled";
     }
 
     public void disable() {
         enabled = false;
-        if (!schedule.getStatus().equals(PHSchedule.PHScheduleStatus.DISABLED))
+        if (!schedule.getStatus().equals(ScheduleStatus.DISABLED))
             this.status = "disabled";
     }
 

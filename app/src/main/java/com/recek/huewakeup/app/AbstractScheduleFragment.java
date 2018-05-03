@@ -5,22 +5,18 @@ import android.widget.Toast;
 
 import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.data.PHScheduleFix;
-import com.philips.lighting.hue.listener.PHHTTPListener;
-import com.philips.lighting.model.PHBridge;
-import com.philips.lighting.model.PHSchedule;
+import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
+import com.philips.lighting.quickstart.BridgeHolder;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.util.MyDateUtils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * @since 2017-09-14.
@@ -28,20 +24,16 @@ import java.util.Objects;
 public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractScheduleFragment.class);
-    private static final String SUCCESS = "success";
 
     private HueSharedPreferences prefs;
-    private PHHTTPListener putListener;
-    private MainActivity mainActivity;
 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mainActivity = (MainActivity) getActivity();
+        MainActivity mainActivity = (MainActivity) getActivity();
         prefs = mainActivity.getPrefs();
-        putListener = createPutListener();
     }
 
     protected abstract void onSuccess();
@@ -52,24 +44,21 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 
 
     protected PHScheduleFix findScheduleById(String scheduleId) {
-        PHBridge bridge = mainActivity.getBridge();
+        Bridge bridge = BridgeHolder.get();
         if (bridge == null) {
             return null;
         }
-        Map<String, PHSchedule> scheduleMap = bridge.getResourceCache().getSchedules();
-        for (Map.Entry<String, PHSchedule> scheduleEntry : scheduleMap.entrySet()) {
-            if (Objects.equals(scheduleEntry.getKey(), (scheduleId))) {
-                return new PHScheduleFix(scheduleEntry.getValue(),
-                        bridge.getResourceCache().getBridgeConfiguration());
-            }
+        Schedule schedule = bridge.getBridgeState().getSchedule(scheduleId);
+        if (schedule == null) {
+            LOG.warn("Schedule-{} not found.", scheduleId);
+            return null;
         }
-        LOG.warn("Schedule-{} not found.", scheduleId);
-        return null;
+        return new PHScheduleFix(schedule, bridge.getBridgeConfiguration());
     }
 
     protected Date updateSchedule(PHScheduleFix scheduleFix, String timeStr,
                                   Calendar startCal, boolean before) {
-        PHBridge bridge = mainActivity.getBridge();
+        Bridge bridge = BridgeHolder.get();
         if (bridge == null) {
             return null;
         }
@@ -102,12 +91,13 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
         }
 
         LOG.info("Sending PUT to {} with {}", id, json);
-        bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
+        // TODO: Update with new SDK
+//        bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
         return wakeTime;
     }
 
     protected boolean disableSchedule(PHScheduleFix scheduleFix) {
-        PHBridge bridge = mainActivity.getBridge();
+        Bridge bridge = BridgeHolder.get();
         if (bridge == null) {
             return false;
         }
@@ -127,16 +117,12 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 
         if (json != null) {
             LOG.info("Sending PUT to {} with {}", id, json);
-            bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
+            // TODO: Update with new SDK
+//            bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
             return true;
         }
 
         return false;
-    }
-
-    private void notifyUser(final String msg) {
-        getStatusTxt().setText(msg);
-//        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     private void notifyUser(final int msgId) {
@@ -144,59 +130,4 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 //        Toast.makeText(getActivity(), msgId, Toast.LENGTH_SHORT).show();
     }
 
-    protected void notifyUserWithUiThread(final String msg) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                notifyUser(msg);
-            }
-        });
-    }
-
-
-    private void onSuccessWithUiThread() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                onSuccess();
-            }
-        });
-    }
-
-    private PHHTTPListener createPutListener() {
-        return new PHHTTPListener() {
-
-            @Override
-            public void onHTTPResponse(String jsonResponse) {
-                LOG.info("RESPONSE: {}", jsonResponse);
-                try {
-                    int successCnt = 0;
-                    int failCnt = 0;
-                    JSONArray jsonArray = new JSONArray(jsonResponse);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject responseObj = jsonArray.getJSONObject(0);
-                        String status = responseObj.keys().next();
-                        if (Objects.equals(status, SUCCESS)) {
-                            successCnt++;
-                        } else {
-                            failCnt++;
-                        }
-                    }
-
-                    if (failCnt == 0) {
-                        onSuccessWithUiThread();
-                    } else if (successCnt == 0) {
-                        notifyUserWithUiThread("Failed totally :(");
-                        LOG.error("Response indicates errors.");
-                    } else {
-                        notifyUserWithUiThread(
-                                "Failed partially (" + failCnt + "/" + (failCnt + successCnt) + ")");
-                        LOG.error("Response indicates errors.");
-                    }
-                } catch (JSONException e) {
-                    LOG.error("Could not read JSON response. Error: {}", e.getMessage());
-                }
-            }
-        };
-    }
 }

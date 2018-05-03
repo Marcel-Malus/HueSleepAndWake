@@ -36,18 +36,18 @@ public class AlarmSettingsActivity extends Activity {
         setContentView(R.layout.activity_alarm_settings);
         prefs = HueSharedPreferences.getInstance(getApplicationContext());
 
-        timeInput = (EditText) findViewById(R.id.alarmTime);
+        timeInput = findViewById(R.id.alarmTime);
         timeInput.setText(prefs.getAlarmTimeRelative());
 
-        final ImageButton pickAlarmBtn = (ImageButton) findViewById(R.id.pickAlarmSoundBtn);
+        final ImageButton pickAlarmBtn = findViewById(R.id.pickAlarmSoundBtn);
         pickAlarmBtn.setOnClickListener(createPickAlarmListener());
 
-        pickedSoundTxt = (TextView) findViewById(R.id.pickedAlarmSoundTxt);
+        pickedSoundTxt = findViewById(R.id.pickedAlarmSoundTxt);
         initSavedSound();
 
 
         // BUTTONS
-        Button okButton = (Button) findViewById(R.id.alarmSettingsOkBtn);
+        Button okButton = findViewById(R.id.alarmSettingsOkBtn);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +55,7 @@ public class AlarmSettingsActivity extends Activity {
             }
         });
 
-        Button cancelButton = (Button) findViewById(R.id.alarmSettingsCancelBtn);
+        Button cancelButton = findViewById(R.id.alarmSettingsCancelBtn);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -6,7 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.philips.lighting.data.PHScheduleFix;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.recek.huesleepwake.R;
 
 import static com.recek.huewakeup.util.MyDateUtils.hasCorrectFormat;
@@ -62,9 +62,9 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         if (hasCorrectFormat(wakeTime)) {
             getPrefs().setRelativeWakeLightTime(wakeTime);
         }
-        PHScheduleFix wakeSchedule = getSelectedValidSchedule(wakeScheduleSpinner);
+        Schedule wakeSchedule = getSelectedValidSchedule(wakeScheduleSpinner);
         if (wakeSchedule != null) {
-            getPrefs().setWakeScheduleId(wakeSchedule.getId());
+            getPrefs().setWakeScheduleId(wakeSchedule.getIdentifier());
         } else {
             getPrefs().setWakeScheduleId(null);
         }
@@ -73,9 +73,9 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         if (hasCorrectFormat(wakeEndTime)) {
             getPrefs().setWakeEndTime(wakeEndTime);
         }
-        PHScheduleFix wakeEndSchedule = getSelectedValidSchedule(wakeEndScheduleSpinner);
+        Schedule wakeEndSchedule = getSelectedValidSchedule(wakeEndScheduleSpinner);
         if (wakeEndSchedule != null) {
-            getPrefs().setWakeEndScheduleId(wakeEndSchedule.getId());
+            getPrefs().setWakeEndScheduleId(wakeEndSchedule.getIdentifier());
         } else {
             getPrefs().setWakeEndScheduleId(null);
         }

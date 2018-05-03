@@ -3,7 +3,6 @@ package com.recek.huewakeup.app;
 import android.os.Bundle;
 
 import com.philips.lighting.data.HueSharedPreferences;
-import com.philips.lighting.data.PHScheduleFix;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnectionType;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeResponseCallback;
 import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
@@ -49,7 +48,7 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
     }
 
 
-    protected PHScheduleFix findScheduleById(String scheduleId) {
+    protected Schedule findScheduleById(String scheduleId) {
         Bridge bridge = BridgeHolder.get();
         if (bridge == null) {
             return null;
@@ -59,17 +58,15 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
             LOG.warn("Schedule-{} not found.", scheduleId);
             return null;
         }
-        return new PHScheduleFix(schedule, bridge.getBridgeConfiguration());
+        return schedule;
     }
 
-    protected Date updateSchedule(PHScheduleFix scheduleFix, String timeStr,
+    protected Date updateSchedule(Schedule schedule, String timeStr,
                                   Calendar startCal, boolean before) {
         Bridge bridge = BridgeHolder.get();
         if (bridge == null) {
             return null;
         }
-
-        Schedule schedule = scheduleFix.getSchedule();
 
         LOG.info("Updating schedule {} ({}).", schedule.getName(), schedule.getIdentifier());
 
@@ -94,13 +91,11 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
         return wakeTime;
     }
 
-    protected boolean disableSchedule(PHScheduleFix scheduleFix) {
+    protected boolean disableSchedule(Schedule schedule) {
         Bridge bridge = BridgeHolder.get();
         if (bridge == null) {
             return false;
         }
-
-        Schedule schedule = scheduleFix.getSchedule();
 
         LOG.info("Updating schedule {} ({}).", schedule.getName(), schedule.getIdentifier());
 

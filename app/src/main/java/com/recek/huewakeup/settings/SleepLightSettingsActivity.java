@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import com.philips.lighting.data.PHScheduleFix;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.recek.huesleepwake.R;
 
 public class SleepLightSettingsActivity extends AbstractHueSettingsActivity {
@@ -17,11 +17,11 @@ public class SleepLightSettingsActivity extends AbstractHueSettingsActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sleep_ligth_settings);
 
-        sleepScheduleSpinner = (Spinner) findViewById(R.id.sleepLightSpinner);
+        sleepScheduleSpinner = findViewById(R.id.sleepLightSpinner);
         String sleepScheduleId = getPrefs().getSleepScheduleId();
         buildAndAddAdapter(sleepScheduleSpinner, sleepScheduleId);
 
-        Button okButton = (Button) findViewById(R.id.sleepLightSettingsOkBtn);
+        Button okButton = findViewById(R.id.sleepLightSettingsOkBtn);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -29,7 +29,7 @@ public class SleepLightSettingsActivity extends AbstractHueSettingsActivity {
             }
         });
 
-        Button cancelButton = (Button) findViewById(R.id.sleepLightSettingsCancelBtn);
+        Button cancelButton = findViewById(R.id.sleepLightSettingsCancelBtn);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,9 +39,9 @@ public class SleepLightSettingsActivity extends AbstractHueSettingsActivity {
     }
 
     private void onOkClicked() {
-        PHScheduleFix sleepSchedule = getSelectedValidSchedule(sleepScheduleSpinner);
+        Schedule sleepSchedule = getSelectedValidSchedule(sleepScheduleSpinner);
         if (sleepSchedule != null) {
-            getPrefs().setSleepScheduleId(sleepSchedule.getId());
+            getPrefs().setSleepScheduleId(sleepSchedule.getIdentifier());
         }
 
         finish();

@@ -9,7 +9,8 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.philips.lighting.data.PHScheduleFix;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.settings.SleepLightSettingsActivity;
 
@@ -24,7 +25,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
 
     private Switch sleepSwitch;
     private TextView statusTxt;
-    private PHScheduleFix schedule;
+    private Schedule schedule;
 
     @Override
     protected long getSavedTime() {
@@ -71,7 +72,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
     protected void onSuccess() {
         StringBuilder sb = new StringBuilder();
         if (schedule != null) {
-            if (schedule.isEnabled()) {
+            if (ScheduleStatus.ENABLED.equals(schedule.getStatus())) {
                 sb.append(getString(R.string.txt_status_alarm_on, "Now"));
             } else {
                 sb.append(getString(R.string.txt_status_alarm_off));

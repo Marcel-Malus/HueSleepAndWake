@@ -9,7 +9,8 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.philips.lighting.data.PHScheduleFix;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.settings.WakeLightSettingsActivity;
 
@@ -17,7 +18,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static com.recek.huesleepwake.R.id.lightSwitch;
-import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME_SHORT;
 
 /**
  * @since 2017-09-14.
@@ -26,8 +26,8 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
 
     private TextView statusTxt;
     private Switch wakeLightSwitch;
-    private PHScheduleFix wakeSchedule;
-    private PHScheduleFix wakeEndSchedule;
+    private Schedule wakeSchedule;
+    private Schedule wakeEndSchedule;
 
     @Override
     protected long getSavedTime() {
@@ -87,9 +87,11 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         statusTxt.setText(sb.toString());
     }
 
-    private void appendStatus(StringBuilder sb, PHScheduleFix schedule) {
-        if (schedule.isEnabled()) {
-            String timeStr = SDF_TIME_SHORT.format(schedule.getLocalTime());
+    private void appendStatus(StringBuilder sb, Schedule schedule) {
+        if (schedule.getStatus() == ScheduleStatus.ENABLED) {
+            String localTime = schedule.getLocalTime().toString();
+            int startIdx = localTime.indexOf('T') + 1;
+            String timeStr = localTime.substring(startIdx, startIdx + 5);
             if (sb.length() == 0) {
                 sb.append(getString(R.string.txt_status_alarm_on, timeStr));
             } else {

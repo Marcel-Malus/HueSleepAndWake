@@ -69,6 +69,9 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
 
     @Override
     protected void onSuccess() {
+        wakeSchedule = findScheduleById(getPrefs().getWakeScheduleId());
+        wakeEndSchedule = findScheduleById(getPrefs().getWakeEndScheduleId());
+
         StringBuilder sb = new StringBuilder();
         boolean updated = false;
         if (wakeSchedule != null) {
@@ -99,16 +102,17 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         }
     }
 
-    public boolean updateWakeUpSchedule(Date wakeTime) {
+    public void updateWakeUpSchedule(Date wakeTime) {
         wakeSchedule = findScheduleById(getPrefs().getWakeScheduleId());
         if (wakeSchedule == null) {
-            return false;
+            return;
         }
         statusTxt.setText(getString(R.string.txt_status_updating));
 
         getPrefs().setWakeLightActive(wakeLightSwitch.isChecked());
         if (!wakeLightSwitch.isChecked()) {
-            return disableSchedule(wakeSchedule);
+            disableSchedule(wakeSchedule);
+            return;
         }
 
         String wakeTimeStr = getPrefs().getRelativeWakeLightTime();
@@ -121,10 +125,7 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
             getPrefs().setWakeLightTime(wakeUpDate.getTime());
             // TODO: evaluate wakeEnd update.
             updateWakeEndSchedule(wakeTime);
-            return true;
         }
-
-        return false;
     }
 
     private boolean updateWakeEndSchedule(Date wakeTime) {

@@ -1,22 +1,28 @@
 package com.recek.huewakeup.app;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.data.PHScheduleFix;
+import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnectionType;
+import com.philips.lighting.hue.sdk.wrapper.connection.BridgeResponseCallback;
 import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
+import com.philips.lighting.hue.sdk.wrapper.domain.HueError;
+import com.philips.lighting.hue.sdk.wrapper.domain.ReturnCode;
+import com.philips.lighting.hue.sdk.wrapper.domain.clip.ClipResponse;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.timepattern.TimePatternBuilder;
 import com.philips.lighting.quickstart.BridgeHolder;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.util.MyDateUtils;
 
-import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @since 2017-09-14.
@@ -63,8 +69,9 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
             return null;
         }
 
-        String id = scheduleFix.getId();
-        LOG.info("Updating schedule {} ({}).", scheduleFix.getName(), id);
+        Schedule schedule = scheduleFix.getSchedule();
+
+        LOG.info("Updating schedule {} ({}).", schedule.getName(), schedule.getIdentifier());
 
         Date wakeTime = MyDateUtils.calculateRelativeTimeTo(startCal, timeStr, before);
         if (wakeTime == null) {
@@ -72,27 +79,18 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
             return null;
         }
 
-        // Removed pick-a-day feature, so its always the "dayOfSchedule" now. Left the choice for case the feature comes back.
-        String days = MyDateUtils.calculateWakeUpDays(wakeTime, true, prefs.getWakeDaysRaw());
-        if (days == null) {
-            return null;
-        }
 
-        scheduleFix.setLocalTime(wakeTime);
-        scheduleFix.setDays(days);
-        scheduleFix.enable();
-        final String json;
-        try {
-            json = scheduleFix.buildJson();
-        } catch (JSONException e) {
-            LOG.error("Could not build JSON. Error: {}", e.getMessage());
-            Toast.makeText(getActivity(), "Error building request JSON", Toast.LENGTH_SHORT).show();
-            return null;
-        }
+        TimePatternBuilder timePatternBuilder = new TimePatternBuilder();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(wakeTime);
+        timePatternBuilder.startAt(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
+        MyDateUtils.setWeekDay(cal, timePatternBuilder);
 
-        LOG.info("Sending PUT to {} with {}", id, json);
-        // TODO: Update with new SDK
-//        bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
+        schedule.setLocalTime(timePatternBuilder.build());
+        schedule.setStatus(ScheduleStatus.ENABLED);
+
+        bridge.updateResource(schedule, BridgeConnectionType.LOCAL, createUpdateCallback());
+
         return wakeTime;
     }
 
@@ -102,27 +100,42 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
             return false;
         }
 
-        String id = scheduleFix.getId();
-        LOG.info("Disabling schedule {} ({}).", scheduleFix.getName(), id);
+        Schedule schedule = scheduleFix.getSchedule();
 
-        scheduleFix.disable();
-        final String json;
-        try {
-            json = scheduleFix.buildJson();
-        } catch (JSONException e) {
-            LOG.error("Could not build JSON. Error: {}", e.getMessage());
-            Toast.makeText(getActivity(), "Error building request JSON", Toast.LENGTH_SHORT).show();
-            return false;
-        }
+        LOG.info("Updating schedule {} ({}).", schedule.getName(), schedule.getIdentifier());
 
-        if (json != null) {
-            LOG.info("Sending PUT to {} with {}", id, json);
-            // TODO: Update with new SDK
-//            bridge.doHTTPPut(scheduleFix.getUrl(), json, putListener);
-            return true;
-        }
+        schedule.setStatus(ScheduleStatus.DISABLED);
+
+        bridge.updateResource(schedule, BridgeConnectionType.LOCAL, createUpdateCallback());
 
         return false;
+    }
+
+    private BridgeResponseCallback createUpdateCallback() {
+        return new BridgeResponseCallback() {
+            @Override
+            public void handleCallback(Bridge bridge, ReturnCode returnCode, List<ClipResponse> listR, List<HueError> listE) {
+                if (returnCode == ReturnCode.SUCCESS) {
+                    // Identifier (Name) of the created resource
+                    String identifier = listR.get(0).getStringValue();
+                    LOG.info("Update successful for: " + identifier);
+                    onSuccessWithUiThread();
+                    // ...
+                } else {
+                    // ...
+                    LOG.error("Update schedule failed. ErrorCode: {}, First error: {}", returnCode.name(), listE.get(0));
+                }
+            }
+        };
+    }
+
+    private void onSuccessWithUiThread() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                onSuccess();
+            }
+        });
     }
 
     private void notifyUser(final int msgId) {

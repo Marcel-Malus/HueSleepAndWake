@@ -319,21 +319,16 @@ public class MainHueActivity extends AppCompatActivity
                     case Connected:
                         bridgeIpTextView.setVisibility(View.VISIBLE);
                         bridgeDiscoveryButton.setVisibility(View.VISIBLE);
-                        startAppActivity();
+                        startAppActivity(true);
                         break;
                 }
             }
         });
     }
 
-    private void startAppActivity() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-    }
-
 
     // Starting the main activity this way, prevents the PushLink Activity being shown when pressing the back button.
-    public void startMainActivity(boolean isConnected) {
+    private void startAppActivity(boolean isConnected) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

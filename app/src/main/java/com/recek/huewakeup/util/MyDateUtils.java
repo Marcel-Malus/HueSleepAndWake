@@ -1,5 +1,7 @@
 package com.recek.huewakeup.util;
 
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.timepattern.TimePatternBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +73,32 @@ public class MyDateUtils {
         } catch (NumberFormatException e) {
             LOG.error("Could not interpret days ({}) for wake up: {}.", wakeDays, e.getMessage());
             return null;
+        }
+    }
+
+    public static void setWeekDay(Calendar cal, TimePatternBuilder timePatternBuilder) {
+        switch (cal.get(Calendar.DAY_OF_WEEK)) {
+            case 1:
+                timePatternBuilder.repeatsOnSunday();
+                break;
+            case 2:
+                timePatternBuilder.repeatsOnMonday();
+                break;
+            case 3:
+                timePatternBuilder.repeatsOnTuesday();
+                break;
+            case 4:
+                timePatternBuilder.repeatsOnWednesday();
+                break;
+            case 5:
+                timePatternBuilder.repeatsOnThursday();
+                break;
+            case 6:
+                timePatternBuilder.repeatsOnFriday();
+                break;
+            case 7:
+                timePatternBuilder.repeatsOnSaturday();
+                break;
         }
     }
 }

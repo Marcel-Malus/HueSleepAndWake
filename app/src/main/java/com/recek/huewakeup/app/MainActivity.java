@@ -46,6 +46,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         LOG.debug("Resuming main activity.");
+        // TODO: Check Connection?
         super.onResume();
     }
 
@@ -115,20 +116,11 @@ public class MainActivity extends Activity {
     }
 
     private void updateSchedules() {
-        statusText.setText(R.string.txt_status_updating);
-        boolean updated = false;
-
         Date wakeTime = wakeTimeFragment.onUpdate();
         if (wakeTime != null) {
-            updated = wakeUpFragment.updateWakeUpSchedule(wakeTime);
-            updated = sleepFragment.updateSleepSchedule() || updated;
-            updated = alarmFragment.updateAlarmSchedule(wakeTime) || updated;
-        }
-
-        if (updated) {
-            statusText.setText(R.string.txt_status_update_finished);
-        } else {
-            statusText.setText(R.string.txt_status_updated_nothing);
+            wakeUpFragment.updateWakeUpSchedule(wakeTime);
+            sleepFragment.updateSleepSchedule();
+            alarmFragment.updateAlarmSchedule(wakeTime);
         }
     }
 

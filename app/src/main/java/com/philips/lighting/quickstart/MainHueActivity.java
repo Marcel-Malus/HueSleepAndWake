@@ -173,7 +173,7 @@ public class MainHueActivity extends AppCompatActivity
         stopBridgeDiscovery();
         disconnectFromBridge();
 
-        bridge = new BridgeBuilder("app name", "device name")
+        bridge = new BridgeBuilder(getString(R.string.app_name), "device name")
                 .setIpAddress(bridgeIp)
                 .setConnectionType(BridgeConnectionType.LOCAL)
                 .setBridgeConnectionCallback(bridgeConnectionCallback)

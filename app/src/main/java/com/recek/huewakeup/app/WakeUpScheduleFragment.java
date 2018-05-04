@@ -87,6 +87,11 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         statusTxt.setText(sb.toString());
     }
 
+    @Override
+    protected void onFailure() {
+        statusTxt.setText(R.string.txt_status_update_failed);
+    }
+
     private void appendStatus(StringBuilder sb, Schedule schedule) {
         if (schedule.getStatus() == ScheduleStatus.ENABLED) {
             String localTime = schedule.getLocalTime().toString();

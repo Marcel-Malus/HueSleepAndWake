@@ -43,6 +43,8 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 
     protected abstract void onSuccess();
 
+    protected abstract void onFailure();
+
     protected HueSharedPreferences getPrefs() {
         return prefs;
     }
@@ -115,10 +117,12 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
                     String identifier = listR.get(0).getStringValue();
                     LOG.info("Update successful for: " + identifier);
                     onSuccessWithUiThread();
-                    // ...
                 } else {
-                    // ...
-                    LOG.error("Update schedule failed. ErrorCode: {}, First error: {}", returnCode.name(), listE.get(0));
+                    LOG.error("Update schedule failed. ErrorCode: {}", returnCode.name());
+                    if (listE.size() > 0) {
+                        LOG.error("Update schedule failed. First error: {}", listE.get(0));
+                    }
+                    onFailureWithUiThread();
                 }
             }
         };
@@ -129,6 +133,15 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
             @Override
             public void run() {
                 onSuccess();
+            }
+        });
+    }
+
+    private void onFailureWithUiThread() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                onFailure();
             }
         });
     }

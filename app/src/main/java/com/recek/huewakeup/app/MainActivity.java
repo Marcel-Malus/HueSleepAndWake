@@ -13,6 +13,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.philips.lighting.data.HueSharedPreferences;
+import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnection;
+import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnectionCallback;
+import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnectionType;
+import com.philips.lighting.hue.sdk.wrapper.connection.BridgeStateCacheType;
+import com.philips.lighting.hue.sdk.wrapper.connection.BridgeStateUpdatedCallback;
+import com.philips.lighting.hue.sdk.wrapper.connection.BridgeStateUpdatedEvent;
+import com.philips.lighting.hue.sdk.wrapper.connection.ConnectionEvent;
+import com.philips.lighting.hue.sdk.wrapper.connection.HeartbeatManager;
+import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
+import com.philips.lighting.hue.sdk.wrapper.domain.HueError;
+import com.philips.lighting.quickstart.BridgeHolder;
 import com.philips.lighting.quickstart.MainHueActivity;
 import com.recek.huesleepwake.R;
 
@@ -20,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * MainActivity - The starting point for the HueSleepWake app.
@@ -43,11 +55,16 @@ public class MainActivity extends Activity {
         return prefs;
     }
 
+
     @Override
-    protected void onResume() {
-        LOG.debug("Resuming main activity.");
-        // TODO: Check Connection?
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
+
+        LOG.info("onRestart. Checking Connection...");
+        statusText.setText(R.string.txt_status_checking_connection);
+        BridgeConnection connection = BridgeHolder.get().getBridgeConnection(BridgeConnectionType.LOCAL);
+        HeartbeatManager heartbeatManager = connection.getHeartbeatManager();
+        heartbeatManager.performOneHeartbeat(BridgeStateCacheType.BRIDGE_CONFIG);
     }
 
     @Override
@@ -89,6 +106,9 @@ public class MainActivity extends Activity {
         });
 
         statusText = findViewById(R.id.statusText);
+        BridgeHolder.get().addBridgeStateUpdatedCallback(bridgeStateUpdatedCallback);
+        BridgeHolder.get().setBridgeConnectionCallback(bridgeConnectionCallback);
+        updateConnectionStatus();
     }
 
     @Override
@@ -130,10 +150,81 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
-    @Override
-    protected void onPause() {
-        isConnected = false;
-        statusText.setText(R.string.txt_status_paused);
-        super.onPause();
+    private void updateConnectionStatus() {
+        if (isConnected) {
+            statusText.setText(R.string.txt_status_connected);
+        } else {
+            statusText.setText(R.string.txt_status_not_connected);
+        }
     }
+
+    private void updateConnectionStatusOnUiThread() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateConnectionStatus();
+            }
+        });
+    }
+
+    @Override
+    protected void onStop() {
+        statusText.setText(R.string.txt_status_stopped);
+        super.onStop();
+    }
+
+    /**
+     * The callback the receives bridge state update events
+     */
+    private BridgeStateUpdatedCallback bridgeStateUpdatedCallback = new BridgeStateUpdatedCallback() {
+        @Override
+        public void onBridgeStateUpdated(Bridge bridge,
+                                         BridgeStateUpdatedEvent bridgeStateUpdatedEvent) {
+            LOG.info("Bridge state updated event: " + bridgeStateUpdatedEvent);
+
+            switch (bridgeStateUpdatedEvent) {
+                case UNKNOWN:
+                    LOG.warn("Unknown bridge state.");
+                    // Is that so?
+                    isConnected = false;
+                    break;
+                default:
+                    isConnected = true;
+                    break;
+            }
+
+            updateConnectionStatusOnUiThread();
+        }
+    };
+
+    /**
+     * The callback that receives bridge connection events
+     */
+    private BridgeConnectionCallback bridgeConnectionCallback = new BridgeConnectionCallback() {
+        @Override
+        public void onConnectionEvent(BridgeConnection bridgeConnection,
+                                      ConnectionEvent connectionEvent) {
+            LOG.info("Connection event: " + connectionEvent);
+
+            switch (connectionEvent) {
+                case CONNECTED:
+                case CONNECTION_RESTORED:
+                    isConnected = true;
+                    break;
+                default:
+                    isConnected = false;
+                    break;
+            }
+
+            updateConnectionStatusOnUiThread();
+        }
+
+
+        @Override
+        public void onConnectionError(BridgeConnection bridgeConnection, List<HueError> list) {
+            for (HueError error : list) {
+                LOG.error("Connection error: " + error.toString());
+            }
+        }
+    };
 }

@@ -83,6 +83,11 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
         statusTxt.setText(sb.toString());
     }
 
+    @Override
+    protected void onFailure() {
+        statusTxt.setText(R.string.txt_status_update_failed);
+    }
+
     public boolean updateSleepSchedule() {
         schedule = findScheduleById(getPrefs().getSleepScheduleId());
         if (schedule == null) {

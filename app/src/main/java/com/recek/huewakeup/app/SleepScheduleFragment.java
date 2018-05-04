@@ -25,7 +25,6 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
 
     private Switch sleepSwitch;
     private TextView statusTxt;
-    private Schedule schedule;
 
     @Override
     protected long getSavedTime() {
@@ -70,6 +69,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
 
     @Override
     protected void onSuccess() {
+        Schedule schedule = findScheduleById(getPrefs().getSleepScheduleId());
         StringBuilder sb = new StringBuilder();
         if (schedule != null) {
             if (ScheduleStatus.ENABLED.equals(schedule.getStatus())) {
@@ -88,19 +88,21 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
         statusTxt.setText(R.string.txt_status_update_failed);
     }
 
-    public boolean updateSleepSchedule() {
-        schedule = findScheduleById(getPrefs().getSleepScheduleId());
+    public void updateSleepSchedule() {
+        statusTxt.setText(getString(R.string.txt_status_updating));
+        Schedule schedule = findScheduleById(getPrefs().getSleepScheduleId());
         if (schedule == null) {
-            return false;
+            statusTxt.setText(getString(R.string.txt_status_no_schedule_found));
+            return;
         }
 
         if (!sleepSwitch.isChecked()) {
             getPrefs().setSleepActive(false);
-            return disableSchedule(schedule);
+            disableSchedule(schedule);
+            return;
         }
 
         updateSchedule(schedule, ONE_MINUTE, Calendar.getInstance(), false);
         getPrefs().setSleepActive(true);
-        return true;
     }
 }

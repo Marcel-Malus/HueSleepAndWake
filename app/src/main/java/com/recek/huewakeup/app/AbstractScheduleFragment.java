@@ -73,6 +73,9 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
         cal.setTime(wakeTime);
         timePatternBuilder.startAt(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
         MyDateUtils.setWeekDay(cal, timePatternBuilder);
+        // Doesn't seem to work
+//        cal.add(Calendar.MINUTE, 30);
+//        timePatternBuilder.endAt(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
 
         schedule.setLocalTime(timePatternBuilder.build());
         schedule.setStatus(ScheduleStatus.ENABLED);
@@ -82,10 +85,15 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
         return wakeTime;
     }
 
-    protected boolean disableSchedule(Schedule schedule) {
+    protected void disableSchedule(Schedule schedule) {
+        if (schedule.getStatus() == ScheduleStatus.DISABLED) {
+            // Already disabled. Nothing to update.
+            getStatusTxt().setText(R.string.txt_status_alarm_off);
+            return;
+        }
         Bridge bridge = BridgeHolder.get();
         if (bridge == null) {
-            return false;
+            return;
         }
 
         LOG.info("Updating schedule {} ({}).", schedule.getName(), schedule.getIdentifier());
@@ -94,7 +102,7 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 
         bridge.updateResource(schedule, BridgeConnectionType.LOCAL, createUpdateCallback());
 
-        return false;
+        return;
     }
 
     private BridgeResponseCallback createUpdateCallback() {

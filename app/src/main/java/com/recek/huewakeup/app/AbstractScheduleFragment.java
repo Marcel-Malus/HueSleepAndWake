@@ -2,7 +2,6 @@ package com.recek.huewakeup.app;
 
 import android.os.Bundle;
 
-import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnectionType;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeResponseCallback;
 import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
@@ -30,25 +29,15 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractScheduleFragment.class);
 
-    private HueSharedPreferences prefs;
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        MainActivity mainActivity = (MainActivity) getActivity();
-        prefs = mainActivity.getPrefs();
     }
 
     protected abstract void onSuccess();
 
     protected abstract void onFailure();
-
-    protected HueSharedPreferences getPrefs() {
-        return prefs;
-    }
-
 
     protected Schedule findScheduleById(String scheduleId) {
         Bridge bridge = BridgeHolder.get();
@@ -129,7 +118,7 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
     }
 
     private void onSuccessWithUiThread() {
-        getActivity().runOnUiThread(new Runnable() {
+        mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 onSuccess();
@@ -138,7 +127,7 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
     }
 
     private void onFailureWithUiThread() {
-        getActivity().runOnUiThread(new Runnable() {
+        mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 onFailure();

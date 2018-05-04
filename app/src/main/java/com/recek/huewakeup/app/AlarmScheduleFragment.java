@@ -11,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.philips.lighting.data.HueSharedPreferences;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.alarm.AlarmSoundService;
 import com.recek.huewakeup.alarm.AlarmStartReceiver;
@@ -38,11 +37,10 @@ public class AlarmScheduleFragment extends AbstractBasicFragment {
     private TextView statusTxt;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
-    private HueSharedPreferences prefs;
 
     @Override
     protected long getSavedTime() {
-        return prefs.getAlarmTime();
+        return getPrefs().getAlarmTime();
     }
 
     @Override
@@ -60,13 +58,11 @@ public class AlarmScheduleFragment extends AbstractBasicFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        prefs = HueSharedPreferences.getInstance(getActivity());
-
         final ImageButton settingsBtn = getActivity().findViewById(R.id.alarmSettingsBtn);
         settingsBtn.setOnClickListener(createSettingsListener());
 
         alarmSwitch = getActivity().findViewById(R.id.alarmSwitch);
-        alarmSwitch.setChecked(prefs.isAlarmActive());
+        alarmSwitch.setChecked(getPrefs().isAlarmActive());
 
         statusTxt = getActivity().findViewById(R.id.alarmStatusTxt);
         updateStatus();
@@ -91,12 +87,12 @@ public class AlarmScheduleFragment extends AbstractBasicFragment {
     }
 
     public boolean updateAlarmSchedule(Date wakeTime) {
-        prefs.setAlarmActive(alarmSwitch.isChecked());
+        getPrefs().setAlarmActive(alarmSwitch.isChecked());
         if (!alarmSwitch.isChecked()) {
             return turnOffAlarm();
         }
 
-        String alarmTimeRel = prefs.getAlarmTimeRelative();
+        String alarmTimeRel = getPrefs().getAlarmTimeRelative();
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 
@@ -113,7 +109,7 @@ public class AlarmScheduleFragment extends AbstractBasicFragment {
 
         String alarmTimeStr = SDF_TIME_SHORT.format(alarmDate);
         statusTxt.setText(getString(R.string.txt_status_alarm_on, alarmTimeStr));
-        prefs.setAlarmTime(alarmDate.getTime());
+        getPrefs().setAlarmTime(alarmDate.getTime());
         LOG.debug("Setting sound alarm to: {}.", alarmTimeStr);
         return true;
     }
@@ -127,7 +123,7 @@ public class AlarmScheduleFragment extends AbstractBasicFragment {
         //Stop the Media Player Service to stop sound
         getActivity().stopService(new Intent(getActivity(), AlarmSoundService.class));
 
-        prefs.setAlarmTime(-1);
+        getPrefs().setAlarmTime(-1);
         statusTxt.setText(R.string.txt_status_alarm_off);
         LOG.debug("Turned off sound alarm.");
         return true;

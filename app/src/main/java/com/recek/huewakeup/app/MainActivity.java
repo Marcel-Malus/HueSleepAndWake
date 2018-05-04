@@ -12,7 +12,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnection;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnectionCallback;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnectionType;
@@ -42,19 +41,12 @@ public class MainActivity extends Activity {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
-    private HueSharedPreferences prefs;
-
     private WakeTimeFragment wakeTimeFragment;
     private WakeUpScheduleFragment wakeUpFragment;
     private SleepScheduleFragment sleepFragment;
     private AlarmScheduleFragment alarmFragment;
     private TextView statusText;
     private boolean isConnected = false;
-
-    public HueSharedPreferences getPrefs() {
-        return prefs;
-    }
-
 
     @Override
     protected void onRestart() {
@@ -74,7 +66,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setTitle(R.string.app_name);
         setContentView(R.layout.activity_main);
-        prefs = HueSharedPreferences.getInstance(getApplicationContext());
         isConnected = getIntent().getBooleanExtra("isConnected", false);
 
 

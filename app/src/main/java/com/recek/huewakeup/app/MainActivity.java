@@ -1,9 +1,9 @@
 package com.recek.huewakeup.app;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,7 +37,7 @@ import java.util.List;
  *
  * @author Marcel Hrnecek
  */
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 

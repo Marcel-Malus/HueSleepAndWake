@@ -1,11 +1,19 @@
 <configuration>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <!--<file>/sdcard/Android/data/com.recek.huesleepwake/logs.log</file>-->
-        <file>/data/data/com.recek.huesleepwake/logs.log</file>
+        <!--Logs only find with file reader on device itself. Not with Win Explorer-->
+        <file>/sdcard/Android/data/com.recek.huesleepwake/logs.log</file>
+        <!--<file>/data/data/com.recek.huesleepwake/logs.log</file>-->
         <append>true</append>
         <encoder>
             <pattern>%d{dd.MM HH:mm:ss} %-5level %logger{35} - %msg%n</pattern>
         </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover period -->
+            <fileNamePattern>${LOG_DIR}/log.%d.txt</fileNamePattern>
+
+            <!-- keep 7 days' worth of history -->
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
     </appender>
 
     <appender name="LOGCAT" class="ch.qos.logback.classic.android.LogcatAppender">

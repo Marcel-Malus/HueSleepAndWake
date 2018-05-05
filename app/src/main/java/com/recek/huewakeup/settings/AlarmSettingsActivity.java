@@ -1,11 +1,11 @@
 package com.recek.huewakeup.settings;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +20,7 @@ import com.recek.huewakeup.util.MyDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AlarmSettingsActivity extends Activity {
+public class AlarmSettingsActivity extends AppCompatActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(AlarmSettingsActivity.class);
     private static final int PICK_AUDIO_REQUEST = 0;

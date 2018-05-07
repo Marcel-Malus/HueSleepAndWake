@@ -40,11 +40,11 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
     protected abstract void onFailure();
 
     protected Schedule findScheduleById(String scheduleId) {
-        Bridge bridge = BridgeHolder.get();
-        if (bridge == null) {
+        if (!BridgeHolder.hasBridge()) {
+            LOG.warn("No bridge present.");
             return null;
         }
-        Schedule schedule = bridge.getBridgeState().getSchedule(scheduleId);
+        Schedule schedule = BridgeHolder.get().getBridgeState().getSchedule(scheduleId);
         if (schedule == null) {
             LOG.warn("Schedule-{} not found.", scheduleId);
             return null;
@@ -54,11 +54,6 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 
     protected Date updateSchedule(Schedule schedule, String timeStr,
                                   Calendar startCal, boolean before) {
-        Bridge bridge = BridgeHolder.get();
-        if (bridge == null) {
-            return null;
-        }
-
         LOG.info("Updating schedule {} ({}).", schedule.getName(), schedule.getIdentifier());
 
         Date wakeTime = MyDateUtils.calculateRelativeTimeTo(startCal, timeStr, before);
@@ -80,9 +75,13 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
         schedule.setLocalTime(timePatternBuilder.build());
         schedule.setStatus(ScheduleStatus.ENABLED);
 
-        bridge.updateResource(schedule, BridgeConnectionType.LOCAL, createUpdateCallback());
-
-        return wakeTime;
+        if (!BridgeHolder.hasBridge()) {
+            LOG.warn("No bridge present.");
+            return null;
+        } else {
+            BridgeHolder.get().updateResource(schedule, BridgeConnectionType.LOCAL, createUpdateCallback());
+            return wakeTime;
+        }
     }
 
     protected void disableSchedule(Schedule schedule) {
@@ -91,8 +90,7 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
             getStatusTxt().setText(R.string.txt_status_alarm_off);
             return;
         }
-        Bridge bridge = BridgeHolder.get();
-        if (bridge == null) {
+        if (!BridgeHolder.hasBridge()) {
             return;
         }
 
@@ -100,9 +98,7 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 
         schedule.setStatus(ScheduleStatus.DISABLED);
 
-        bridge.updateResource(schedule, BridgeConnectionType.LOCAL, createUpdateCallback());
-
-        return;
+        BridgeHolder.get().updateResource(schedule, BridgeConnectionType.LOCAL, createUpdateCallback());
     }
 
     private BridgeResponseCallback createUpdateCallback() {

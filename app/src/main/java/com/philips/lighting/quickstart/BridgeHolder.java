@@ -23,6 +23,10 @@ public class BridgeHolder {
         INSTANCE.bridge = null;
     }
 
+    public static boolean hasBridge() {
+        return INSTANCE.bridge != null;
+    }
+
     private BridgeHolder() {
     }
 }

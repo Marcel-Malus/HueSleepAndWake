@@ -54,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
 
         LOG.info("onRestart. Checking Connection...");
         statusText.setText(R.string.txt_status_checking_connection);
+        if (!BridgeHolder.hasBridge()) {
+            LOG.warn("No bridge present.");
+            statusText.setText(R.string.txt_status_bridge_not_found);
+            return;
+        }
         BridgeConnection connection = BridgeHolder.get().getBridgeConnection(BridgeConnectionType.LOCAL);
         HeartbeatManager heartbeatManager = connection.getHeartbeatManager();
         heartbeatManager.performOneHeartbeat(BridgeStateCacheType.BRIDGE_CONFIG);
@@ -97,9 +102,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         statusText = findViewById(R.id.statusText);
-        BridgeHolder.get().addBridgeStateUpdatedCallback(bridgeStateUpdatedCallback);
-        BridgeHolder.get().setBridgeConnectionCallback(bridgeConnectionCallback);
-        updateConnectionStatus();
+        if (BridgeHolder.hasBridge()) {
+            BridgeHolder.get().addBridgeStateUpdatedCallback(bridgeStateUpdatedCallback);
+            BridgeHolder.get().setBridgeConnectionCallback(bridgeConnectionCallback);
+            updateConnectionStatus();
+        } else {
+            LOG.warn("No bridge present.");
+            reconnect();
+        }
     }
 
     @Override

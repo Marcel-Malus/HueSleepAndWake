@@ -6,7 +6,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.philips.lighting.data.HueSharedPreferences;
-import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.builder.ScheduleBuilder;
 import com.philips.lighting.quickstart.BridgeHolder;
@@ -38,9 +37,8 @@ public class AbstractHueSettingsActivity extends AppCompatActivity {
     }
 
     private void populateAvailableSchedules() {
-        Bridge bridge = BridgeHolder.get();
-        if (bridge != null) {
-            List<Schedule> scheduleList = bridge.getBridgeState().getSchedules();
+        if (BridgeHolder.hasBridge()) {
+            List<Schedule> scheduleList = BridgeHolder.get().getBridgeState().getSchedules();
             for (Schedule schedule : scheduleList) {
                 idToScheduleMap.put(schedule.getIdentifier(), schedule);
             }

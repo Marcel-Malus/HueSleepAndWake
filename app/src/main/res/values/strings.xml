@@ -86,6 +86,7 @@
     <string name="txt_status_alarm_on">ON: %s</string>
     <string name="txt_status_alarm_off">OFF</string>
     <string name="txt_status_update_failed">Update failed. Try reconnect.</string>
+    <string name="txt_status_bridge_not_found">No bridge. Try reconnect.</string>
 
     <!--Days Settings-->
     <string name="txt_wake_up_on_days">Wakeup on days:</string>

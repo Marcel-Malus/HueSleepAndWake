@@ -40,7 +40,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
-    public static final int MAX_CONNECTION_ATTEMPTS = 3;
+    private static final int MAX_CONNECTION_ATTEMPTS = 3;
 
     private WakeTimeFragment wakeTimeFragment;
     private WakeUpScheduleFragment wakeUpFragment;

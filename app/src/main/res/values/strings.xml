@@ -26,6 +26,17 @@
     <string name="txt_last_heartbeat">Last Heartbeat : </string>
     <string name="btn_demo">Demo</string>
 
+    <!--EULA-->
+    <string name="txt_eula_title">Disclaimer of Warranties</string>
+    <string name="txt_eula_content">
+        "Please use with caution and setup a backup alarm for the first few times of use!\n\n"
+        "There is no guaranty that this App works! For example due to a bug this App does not wake you up there are no warranties for any damages that arise from waking up late.\n\n"
+        "IN NO EVENT WILL THE AUTHORS BE HELD LIABLE FOR ANY DAMAGES ARISING FROM THE USE OF THIS SOFTWARE. IF YOU DO NOT WISH TO DO SO, DO NOT USE THE SOFTWARE.\n\n"
+        "Read the End User Licence Agreement for this App in the Google Play Store for further information."
+    </string>
+    <string name="btn_agree">Agree</string>
+    <string name="btn_decline">Decline</string>
+
     <!--Main menu-->
     <string name="txt_set_wake_in_time">Wake me up in</string>
     <string name="txt_set_wake_end_in_time">Set the time from wakeup schedule till wakeup end schedule.</string>

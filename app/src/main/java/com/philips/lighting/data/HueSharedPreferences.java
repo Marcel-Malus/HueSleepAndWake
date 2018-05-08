@@ -9,6 +9,7 @@ import java.util.List;
 
 public class HueSharedPreferences {
     private static final String HUE_SHARED_PREFERENCES_STORE = "HueSharedPrefs";
+    private static final String LAST_APP_VERSION_NAME = "AppVersionName";
     private static final String LAST_CONNECTED_USERNAME = "LastConnectedUsername";
     private static final String LAST_CONNECTED_IP = "LastConnectedIP";
 
@@ -74,21 +75,12 @@ public class HueSharedPreferences {
     }
 
 
-    public String getUsername() {
-        return mSharedPreferences.getString(LAST_CONNECTED_USERNAME, "");
+    public String getLastAppVersionName() {
+        return mSharedPreferences.getString(LAST_APP_VERSION_NAME, null);
     }
 
-    public boolean setUsername(String username) {
-        mSharedPreferencesEditor.putString(LAST_CONNECTED_USERNAME, username);
-        return (mSharedPreferencesEditor.commit());
-    }
-
-    public String getLastConnectedIPAddress() {
-        return mSharedPreferences.getString(LAST_CONNECTED_IP, "");
-    }
-
-    public boolean setLastConnectedIPAddress(String ipAddress) {
-        mSharedPreferencesEditor.putString(LAST_CONNECTED_IP, ipAddress);
+    public boolean setLastAppVersionName(String versionName) {
+        mSharedPreferencesEditor.putString(LAST_APP_VERSION_NAME, versionName);
         return (mSharedPreferencesEditor.commit());
     }
 

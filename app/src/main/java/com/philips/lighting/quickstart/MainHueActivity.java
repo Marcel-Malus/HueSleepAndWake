@@ -13,11 +13,9 @@ import android.widget.TextView;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnection;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnectionCallback;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnectionType;
-import com.philips.lighting.hue.sdk.wrapper.connection.BridgeStateCacheType;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeStateUpdatedCallback;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeStateUpdatedEvent;
 import com.philips.lighting.hue.sdk.wrapper.connection.ConnectionEvent;
-import com.philips.lighting.hue.sdk.wrapper.connection.HeartbeatManager;
 import com.philips.lighting.hue.sdk.wrapper.discovery.BridgeDiscovery;
 import com.philips.lighting.hue.sdk.wrapper.discovery.BridgeDiscoveryCallback;
 import com.philips.lighting.hue.sdk.wrapper.discovery.BridgeDiscoveryResult;
@@ -82,16 +80,6 @@ public class MainHueActivity extends AppCompatActivity
         } else {
             connectToBridge(lastUsedBridgeIp);
         }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-
-        Log.i(TAG, "onRestart. Checking Connection...");
-        BridgeConnection connection = bridge.getBridgeConnection(BridgeConnectionType.LOCAL);
-        HeartbeatManager heartbeatManager = connection.getHeartbeatManager();
-        heartbeatManager.performOneHeartbeat(BridgeStateCacheType.BRIDGE_CONFIG);
     }
 
     /**

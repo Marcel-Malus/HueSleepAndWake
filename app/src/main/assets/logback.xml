@@ -1,7 +1,10 @@
 <configuration>
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+
+    <property name="LOG_DIR" value="/sdcard/Android/data/com.recek.huesleepwake" />
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--Logs only find with file reader on device itself. Not with Win Explorer-->
-        <file>/sdcard/Android/data/com.recek.huesleepwake/logs.log</file>
+        <file>${LOG_DIR}/log.txt</file>
         <!--<file>/data/data/com.recek.huesleepwake/logs.log</file>-->
         <append>true</append>
         <encoder>

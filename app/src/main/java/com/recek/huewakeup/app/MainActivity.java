@@ -40,6 +40,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
+    public static final int MAX_CONNECTION_ATTEMPTS = 3;
 
     private WakeTimeFragment wakeTimeFragment;
     private WakeUpScheduleFragment wakeUpFragment;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private AlarmScheduleFragment alarmFragment;
     private TextView statusText;
     private boolean isConnected = false;
+    private int connectionAttempts = 0;
 
     @Override
     protected void onRestart() {
@@ -168,6 +170,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void timedOut() {
+        LOG.warn("Timed out. Disconnecting now.");
+        if (BridgeHolder.hasBridge()) {
+            BridgeHolder.get().disconnect();
+            BridgeHolder.clear();
+        }
+    }
+
     @Override
     protected void onStop() {
         statusText.setText(R.string.txt_status_stopped);
@@ -225,6 +235,11 @@ public class MainActivity extends AppCompatActivity {
         public void onConnectionError(BridgeConnection bridgeConnection, List<HueError> list) {
             for (HueError error : list) {
                 LOG.error("Connection error: " + error.toString());
+            }
+            isConnected = false;
+            connectionAttempts++;
+            if (connectionAttempts == MAX_CONNECTION_ATTEMPTS) {
+                timedOut();
             }
         }
     };

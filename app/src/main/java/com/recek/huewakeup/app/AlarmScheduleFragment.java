@@ -3,6 +3,7 @@ package com.recek.huewakeup.app;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,7 +106,12 @@ public class AlarmScheduleFragment extends AbstractBasicFragment {
         Intent intent = new Intent(getActivity(), AlarmStartReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), pendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // See: https://developer.android.com/training/monitoring-device-state/doze-standby
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), pendingIntent);
+        } else {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), pendingIntent);
+        }
 
         String alarmTimeStr = SDF_TIME_SHORT.format(alarmDate);
         statusTxt.setText(getString(R.string.txt_status_alarm_on, alarmTimeStr));

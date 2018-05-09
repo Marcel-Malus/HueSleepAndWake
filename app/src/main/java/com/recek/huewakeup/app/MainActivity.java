@@ -108,9 +108,12 @@ public class MainActivity extends AppCompatActivity {
             BridgeHolder.get().addBridgeStateUpdatedCallback(bridgeStateUpdatedCallback);
             BridgeHolder.get().setBridgeConnectionCallback(bridgeConnectionCallback);
             updateConnectionStatus();
-        } else {
-            LOG.warn("No bridge present.");
+        } else if (isConnected) {
+            LOG.warn("No bridge present, but should be. Reconnecting...");
             reconnect();
+        } else {
+            LOG.info("Demo run.");
+            statusText.setText(R.string.txt_status_demo);
         }
     }
 

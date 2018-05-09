@@ -56,6 +56,7 @@ public class MainHueActivity extends AppCompatActivity
     private TextView bridgeIpTextView;
     private View pushlinkImage;
     private Button bridgeDiscoveryButton;
+    private Button demoButton;
 
     enum UIState {
         Idle,
@@ -88,6 +89,7 @@ public class MainHueActivity extends AppCompatActivity
         pushlinkImage = findViewById(R.id.pushlink_image);
         bridgeDiscoveryButton = findViewById(R.id.bridge_discovery_button);
         bridgeDiscoveryButton.setOnClickListener(this);
+        demoButton = findViewById(R.id.demoBtn);
 
         // Connect to a bridge or start the bridge discovery
         String lastUsedBridgeIp = getLastUsedBridgeIp();
@@ -350,6 +352,7 @@ public class MainHueActivity extends AppCompatActivity
                 bridgeIpTextView.setVisibility(View.GONE);
                 pushlinkImage.setVisibility(View.GONE);
                 bridgeDiscoveryButton.setVisibility(View.GONE);
+                demoButton.setVisibility(View.GONE);
 
                 switch (state) {
                     case Idle:
@@ -360,6 +363,8 @@ public class MainHueActivity extends AppCompatActivity
                         break;
                     case BridgeDiscoveryResults:
                         bridgeDiscoveryListView.setVisibility(View.VISIBLE);
+                        if (status.contains(" 0 "))
+                            demoButton.setVisibility(View.VISIBLE);
                         break;
                     case Connecting:
                         bridgeIpTextView.setVisibility(View.VISIBLE);
@@ -380,7 +385,6 @@ public class MainHueActivity extends AppCompatActivity
         });
     }
 
-
     // Starting the main activity this way, prevents the PushLink Activity being shown when pressing the back button.
     private void startAppActivity(boolean isConnected) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -389,5 +393,9 @@ public class MainHueActivity extends AppCompatActivity
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("isConnected", isConnected);
         startActivity(intent);
+    }
+
+    public void startDemo(View view) {
+        startAppActivity(false);
     }
 }

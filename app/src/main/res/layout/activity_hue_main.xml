@@ -30,7 +30,7 @@
     <ImageView
         android:id="@+id/pushlink_image"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="280dp"
         android:visibility="visible"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/pushlink_image" />
@@ -38,7 +38,7 @@
     <ListView
         android:id="@+id/bridge_discovery_result_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone" />
 
     <Button
@@ -46,5 +46,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Re-run bridge discovery" />
+
+    <Button
+        android:id="@+id/demoBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="startDemo"
+        android:text="@string/btn_demo" />
 
 </LinearLayout>

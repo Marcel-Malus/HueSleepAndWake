@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 
 import com.recek.huewakeup.util.AbsoluteTime;
 
@@ -40,6 +39,8 @@ public class TimePickerFragment extends DialogFragment {
 
         // Create a new instance of TimePickerDialog and return it
         return new TimePickerDialog(getActivity(), onTimeSetListener, hour, minute,
-                DateFormat.is24HourFormat(getActivity()));
+//                DateFormat.is24HourFormat(getActivity())
+                true
+        );
     }
 }

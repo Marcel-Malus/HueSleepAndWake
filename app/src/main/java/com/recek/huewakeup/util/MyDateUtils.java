@@ -27,6 +27,11 @@ public class MyDateUtils {
             return null;
         }
 
+        return calculateRelativeTimeTo(cal, absoluteTime, before);
+    }
+
+    public static Date calculateRelativeTimeTo(Calendar cal, AbsoluteTime absoluteTime,
+                                               boolean before) {
         if (before) {
             absoluteTime.before();
         }

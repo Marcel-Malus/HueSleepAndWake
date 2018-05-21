@@ -16,6 +16,7 @@ import com.recek.huesleepwake.R;
 import com.recek.huewakeup.alarm.AlarmSoundService;
 import com.recek.huewakeup.alarm.AlarmStartReceiver;
 import com.recek.huewakeup.settings.AlarmSettingsActivity;
+import com.recek.huewakeup.util.AbsoluteTime;
 import com.recek.huewakeup.util.MyDateUtils;
 
 import org.slf4j.Logger;
@@ -87,20 +88,22 @@ public class AlarmScheduleFragment extends AbstractBasicFragment {
         };
     }
 
-    public boolean updateAlarmSchedule(Date wakeTime) {
+    public void updateAlarmSchedule(Date wakeTime) {
         getPrefs().setAlarmActive(alarmSwitch.isChecked());
         if (!alarmSwitch.isChecked()) {
-            return turnOffAlarm();
+            turnOffAlarm();
+            return;
         }
 
-        String alarmTimeRel = getPrefs().getAlarmTimeRelative();
+        AbsoluteTime absoluteTime = new AbsoluteTime();
+        absoluteTime.minutes = getPrefs().getAlarmTimeOffset();
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 
-        Date alarmDate = MyDateUtils.calculateRelativeTimeTo(cal, alarmTimeRel, false);
+        Date alarmDate = MyDateUtils.calculateRelativeTimeTo(cal, absoluteTime, false);
         if (alarmDate == null) {
             statusTxt.setText(R.string.txt_status_wrong_format);
-            return false;
+            return;
         }
 
         Intent intent = new Intent(getActivity(), AlarmStartReceiver.class);
@@ -108,7 +111,8 @@ public class AlarmScheduleFragment extends AbstractBasicFragment {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // See: https://developer.android.com/training/monitoring-device-state/doze-standby
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmDate.getTime(),
+                    pendingIntent);
         } else {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), pendingIntent);
         }
@@ -117,10 +121,9 @@ public class AlarmScheduleFragment extends AbstractBasicFragment {
         statusTxt.setText(getString(R.string.txt_status_alarm_on, alarmTimeStr));
         getPrefs().setAlarmTime(alarmDate.getTime());
         LOG.debug("Setting sound alarm to: {}.", alarmTimeStr);
-        return true;
     }
 
-    private boolean turnOffAlarm() {
+    private void turnOffAlarm() {
         if (pendingIntent == null) {
             Intent intent = new Intent(getActivity(), AlarmStartReceiver.class);
             pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
@@ -132,6 +135,5 @@ public class AlarmScheduleFragment extends AbstractBasicFragment {
         getPrefs().setAlarmTime(-1);
         statusTxt.setText(R.string.txt_status_alarm_off);
         LOG.debug("Turned off sound alarm.");
-        return true;
     }
 }

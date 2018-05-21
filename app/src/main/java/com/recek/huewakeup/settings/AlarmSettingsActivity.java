@@ -8,14 +8,13 @@ import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.philips.lighting.data.HueSharedPreferences;
 import com.recek.huesleepwake.R;
-import com.recek.huewakeup.util.MyDateUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,8 @@ public class AlarmSettingsActivity extends AppCompatActivity {
 
     private HueSharedPreferences prefs;
     private TextView pickedSoundTxt;
-    private EditText timeInput;
+    private TextView offsetTextView;
+    private int currentOffset = 0;
     private String alarmSoundUriStr = null;
 
     @Override
@@ -36,8 +36,13 @@ public class AlarmSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_alarm_settings);
         prefs = HueSharedPreferences.getInstance(getApplicationContext());
 
-        timeInput = findViewById(R.id.alarmTime);
-        timeInput.setText(prefs.getAlarmTimeRelative());
+        offsetTextView = findViewById(R.id.alarmTimeTxt);
+        currentOffset = prefs.getAlarmTimeOffset();
+        offsetTextView.setText(getString(R.string.txt_offset_sound_alarm, currentOffset));
+
+        SeekBar offsetSeekBar = findViewById(R.id.alarmOffsetSeekBar);
+        offsetSeekBar.setProgress(currentOffset);
+        offsetSeekBar.setOnSeekBarChangeListener(createOffsetSeekBarListener());
 
         final ImageButton pickAlarmBtn = findViewById(R.id.pickAlarmSoundBtn);
         pickAlarmBtn.setOnClickListener(createPickAlarmListener());
@@ -62,6 +67,26 @@ public class AlarmSettingsActivity extends AppCompatActivity {
                 onCancelClicked();
             }
         });
+    }
+
+    private SeekBar.OnSeekBarChangeListener createOffsetSeekBarListener() {
+        return new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                currentOffset = progress;
+                offsetTextView.setText(getString(R.string.txt_offset_sound_alarm, progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        };
     }
 
 
@@ -101,7 +126,8 @@ public class AlarmSettingsActivity extends AppCompatActivity {
             String fileName = extractFileName(alarmSoundUri);
             LOG.info("Got file: {}", fileName);
 
-            grantUriPermission(getPackageName(), alarmSoundUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            grantUriPermission(getPackageName(), alarmSoundUri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION);
             final int takeFlags = data.getFlags() & Intent.FLAG_GRANT_READ_URI_PERMISSION;
             // Check for the freshest data.
             //noinspection WrongConstant
@@ -139,10 +165,7 @@ public class AlarmSettingsActivity extends AppCompatActivity {
             prefs.setAlarmSoundUri(alarmSoundUriStr);
         }
 
-        String timeString = timeInput.getText().toString();
-        if (MyDateUtils.hasCorrectFormat(timeString)) {
-            prefs.setAlarmTimeRelative(timeString);
-        }
+        prefs.setAlarmTimeOffset(currentOffset);
 
         finish();
     }

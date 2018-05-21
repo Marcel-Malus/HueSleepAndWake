@@ -34,8 +34,8 @@ public class HueSharedPreferences {
     private static final String SLEEP_IS_ACTIVE = "SleepIsActive";
 
     private static final String ALARM_TIME = "AlarmTimeL";
-    private static final String ALARM_TIME_RELATIVE = "AlarmTimeRelative";
-    private static final String DEFAULT_ALARM_TIME_RELATIVE = "0:0";
+    private static final String ALARM_TIME_OFFSET = "AlarmTimeOffset";
+    private static final int DEFAULT_ALARM_TIME_RELATIVE = 0;
     private static final String ALARM_IS_ACTIVE = "AlarmIsActive";
     private static final String ALARM_SOUND = "AlarmSound";
 
@@ -183,12 +183,12 @@ public class HueSharedPreferences {
         mSharedPreferencesEditor.apply();
     }
 
-    public String getAlarmTimeRelative() {
-        return mSharedPreferences.getString(ALARM_TIME_RELATIVE, DEFAULT_ALARM_TIME_RELATIVE);
+    public int getAlarmTimeOffset() {
+        return mSharedPreferences.getInt(ALARM_TIME_OFFSET, DEFAULT_ALARM_TIME_RELATIVE);
     }
 
-    public boolean setAlarmTimeRelative(String time) {
-        mSharedPreferencesEditor.putString(ALARM_TIME_RELATIVE, time);
+    public boolean setAlarmTimeOffset(int time) {
+        mSharedPreferencesEditor.putInt(ALARM_TIME_OFFSET, time);
         return (mSharedPreferencesEditor.commit());
     }
 

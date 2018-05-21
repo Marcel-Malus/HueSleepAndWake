@@ -8,6 +8,14 @@ public class AbsoluteTime {
     public int hours;
     public boolean isValid;
 
+    public AbsoluteTime() {
+        timeString = "0:0:0";
+        seconds = 0;
+        minutes = 0;
+        hours = 0;
+        isValid = true;
+    }
+
     public AbsoluteTime(String timeString) {
         this.timeString = timeString;
 

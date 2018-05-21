@@ -46,7 +46,7 @@
 
     <!--Sound alarm-->
     <string name="txt_sound_alarm">Sound alarm</string>
-    <string name="txt_offset_sound_alarm">Offset sound alarm</string>
+    <string name="txt_offset_sound_alarm">Offset sound alarm: %d Minutes</string>
     <string name="txt_alarm_settings">Alarm settings</string>
     <string name="txt_pick_alarm_sound">Pick alarm sound</string>
     <string name="txt_alarm_started">Time to wake up!</string>
@@ -103,6 +103,10 @@
     <!--Days Settings-->
     <string name="txt_wake_up_on_days">Wakeup on days:</string>
     <string name="monday">Monday</string>
+
+    <!--Settings -->
+    <string name="txt_minutes_offset">%d Minutes</string>
+
 
     <!--Help page-->
     <string name="txt_help_image">Help image</string>

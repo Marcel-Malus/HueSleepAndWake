@@ -3,13 +3,11 @@
     package="com.recek.huesleepwake">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--For logging-->
+    <!-- For logging -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- Permissions required to Waking Lock if device screen is off -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-    <!-- Permissions for playing alarm sound out of uri stored in preferences. Really? Test it! -->
-    <!--<uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />-->
 
     <application
         android:name="com.philips.lighting.quickstart.HueQuickStartApp"

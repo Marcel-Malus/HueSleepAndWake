@@ -32,5 +32,27 @@ public class HueQuickStartApp extends Application {
         Persistence.setStorageLocation(getFilesDir().getAbsolutePath(), "HueQuickStart");
         HueLog.setConsoleLogLevel(INFO);
         HueLog.setFileLogLevel(DEBUG, NETWORK + CLIENT + WRAPPER);
+
+        // Setup handler for uncaught exceptions (For file logging).
+        final Thread.UncaughtExceptionHandler defaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread thread, Throwable e) {
+                logUncaughtException(e);
+                defaultUncaughtExceptionHandler.uncaughtException(thread, e);
+            }
+        });
+    }
+
+    public void logUncaughtException(Throwable e) {
+        Logger LOG = LoggerFactory.getLogger(HueQuickStartApp.class);
+        LOG.error("App crashed! Message: " + e.getMessage());
+        LOG.error("Logging Stack Trace (top 5):");
+        StackTraceElement[] stackTrace = e.getStackTrace();
+        int maxFive = stackTrace.length < 5 ? stackTrace.length : 5;
+        for (int i = 0; i < maxFive; i++) {
+            StackTraceElement stackTraceElement = stackTrace[i];
+            LOG.error(stackTraceElement.toString());
+        }
     }
 }

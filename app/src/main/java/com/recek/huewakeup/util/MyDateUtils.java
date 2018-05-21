@@ -22,24 +22,18 @@ public class MyDateUtils {
     }
 
     public static Date calculateRelativeTimeTo(Calendar cal, String timeStr, boolean before) {
-        if (!hasCorrectFormat(timeStr)) {
+        AbsoluteTime absoluteTime = new AbsoluteTime(timeStr);
+        if (!absoluteTime.isValid) {
             return null;
         }
 
-        String[] timeParts = timeStr.split(":");
-        int hours = Integer.valueOf(timeParts[0]);
-        int minutes = timeParts.length > 1 ? Integer.valueOf(timeParts[1]) : 0;
-        int seconds = timeParts.length > 2 ? Integer.valueOf(timeParts[2]) : 0;
-
         if (before) {
-            hours *= -1;
-            minutes *= -1;
-            seconds *= -1;
+            absoluteTime.before();
         }
 
-        cal.add(Calendar.SECOND, seconds);
-        cal.add(Calendar.MINUTE, minutes);
-        cal.add(Calendar.HOUR_OF_DAY, hours);
+        cal.add(Calendar.SECOND, absoluteTime.seconds);
+        cal.add(Calendar.MINUTE, absoluteTime.minutes);
+        cal.add(Calendar.HOUR_OF_DAY, absoluteTime.hours);
         return cal.getTime();
     }
 

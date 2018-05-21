@@ -1,11 +1,14 @@
 package com.recek.huewakeup.app;
 
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.philips.lighting.data.HueSharedPreferences;
 import com.recek.huesleepwake.R;
@@ -19,7 +22,7 @@ import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME_SHORT;
 /**
  * @since 2017-09-14.
  */
-public class WakeTimeFragment extends AbstractBasicFragment {
+public class WakeTimeFragment extends AbstractBasicFragment implements TimePickerDialog.OnTimeSetListener {
 
     private EditText inputTimeTxt;
     private TextView statusTxt;
@@ -50,6 +53,17 @@ public class WakeTimeFragment extends AbstractBasicFragment {
         inputTimeTxt = getActivity().findViewById(R.id.wakeTime);
         inputTimeTxt.setText(prefs.getWakeTimeRelative());
 
+        Button pickWakeTimeBtn = getActivity().findViewById(R.id.pickTimeBtn);
+        pickWakeTimeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerFragment newFragment = new TimePickerFragment();
+                newFragment.setTimeSetListener(WakeTimeFragment.this);
+                newFragment.setCurrentTime(prefs.getWakeTimeRelative());
+                newFragment.show(getFragmentManager(), "timePicker");
+            }
+        });
+
         statusTxt = getActivity().findViewById(R.id.wakeStatusTxt);
         updateStatus();
     }
@@ -75,5 +89,11 @@ public class WakeTimeFragment extends AbstractBasicFragment {
         }
 
         return wakeUpDate;
+    }
+
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        String timeString = getResources().getString(R.string.txt_time_hour_minute, hourOfDay, minute);
+        inputTimeTxt.setText(timeString);
+        prefs.setWakeTimeRelative(timeString);
     }
 }

@@ -141,5 +141,6 @@
     <string name="btn_cancel">Cancel</string>
     <string name="btn_keep">Keep</string>
     <string name="btn_dismiss">Dismiss</string>
+    <string name="txt_time_hour_minute">%d:%d</string>
 
 </resources>

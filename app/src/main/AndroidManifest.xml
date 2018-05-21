@@ -29,7 +29,8 @@
             android:label="@string/app_name" />
         <activity
             android:name="com.recek.huewakeup.alarm.AlarmActivity"
-            android:label="@string/txt_alarm_started" />
+            android:label="@string/txt_alarm_started"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.recek.huewakeup.settings.AlarmSettingsActivity"
             android:label="@string/txt_sound_alarm_settings" />

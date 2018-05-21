@@ -13,6 +13,7 @@ import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.settings.WakeLightSettingsActivity;
+import com.recek.huewakeup.util.AbsoluteTime;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -121,11 +122,11 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
             return;
         }
 
-        String wakeTimeStr = getPrefs().getRelativeWakeLightTime();
+        AbsoluteTime absoluteTime = new AbsoluteTime(0, getPrefs().getWakeLightTimeOffset(), 0);
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 
-        Date wakeUpDate = updateSchedule(wakeSchedule, wakeTimeStr, cal, true);
+        Date wakeUpDate = updateSchedule(wakeSchedule, absoluteTime, cal, true);
 
         if (wakeUpDate != null) {
             getPrefs().setWakeLightTime(wakeUpDate.getTime());
@@ -139,11 +140,12 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         if (wakeEndSchedule == null) {
             return false;
         }
-        String wakeEndTimeStr = getPrefs().getWakeEndTime();
+
+        AbsoluteTime absoluteTime = new AbsoluteTime(0, getPrefs().getWakeEndTimeOffset(), 0);
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 
-        Date wakeEndDate = updateSchedule(wakeEndSchedule, wakeEndTimeStr, cal, false);
+        Date wakeEndDate = updateSchedule(wakeEndSchedule, absoluteTime, cal, false);
         return wakeEndDate != null;
     }
 }

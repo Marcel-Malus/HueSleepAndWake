@@ -1,23 +1,23 @@
 package com.recek.huewakeup.util;
 
+/**
+ * TODO: Make solid conversions between string and number representation of the time + always up to date validation.
+ */
 public class AbsoluteTime {
 
-    private String timeString;
     public int seconds;
     public int minutes;
     public int hours;
     public boolean isValid;
 
-    public AbsoluteTime() {
-        timeString = "0:0:0";
-        seconds = 0;
-        minutes = 0;
-        hours = 0;
+    public AbsoluteTime(int hours, int minutes, int seconds) {
+        this.seconds = seconds;
+        this.minutes = minutes;
+        this.hours = hours;
         isValid = true;
     }
 
     public AbsoluteTime(String timeString) {
-        this.timeString = timeString;
 
         if (!MyDateUtils.hasCorrectFormat(timeString)) {
             isValid = false;
@@ -36,10 +36,5 @@ public class AbsoluteTime {
             minutes *= -1;
             seconds *= -1;
         }
-    }
-
-    @Override
-    public String toString() {
-        return timeString;
     }
 }

@@ -27,16 +27,17 @@
                 android:paddingStart="5dp"
                 android:text="@string/txt_set_light_time" />
 
-            <EditText
-                android:id="@+id/wakeLightTime"
-                android:layout_width="wrap_content"
+            <SeekBar
+                android:id="@+id/wakeLightSeekBar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/wakeLightTimeTxt"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="5dp"
-                android:ems="5"
-                android:inputType="time"
-                android:maxLength="8" />
+                android:layout_centerInParent="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:max="30"
+                android:progress="0" />
+
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
@@ -99,16 +100,16 @@
                 android:paddingStart="5dp"
                 android:text="@string/txt_set_light_end_time" />
 
-            <EditText
-                android:id="@+id/wakeLightEndTime"
-                android:layout_width="wrap_content"
+            <SeekBar
+                android:id="@+id/wakeLightEndSeekBar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/wakeLightEndTimeTxt"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="5dp"
-                android:ems="5"
-                android:inputType="time"
-                android:maxLength="8" />
+                android:layout_centerInParent="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:max="60"
+                android:progress="0" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

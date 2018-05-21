@@ -13,6 +13,7 @@ import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.timepattern.TimePatternBuilder;
 import com.philips.lighting.quickstart.BridgeHolder;
 import com.recek.huesleepwake.R;
+import com.recek.huewakeup.util.AbsoluteTime;
 import com.recek.huewakeup.util.MyDateUtils;
 
 import org.slf4j.Logger;
@@ -52,11 +53,11 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
         return schedule;
     }
 
-    protected Date updateSchedule(Schedule schedule, String timeStr,
+    protected Date updateSchedule(Schedule schedule, AbsoluteTime absoluteTime,
                                   Calendar startCal, boolean before) {
         LOG.info("Updating schedule {} ({}).", schedule.getName(), schedule.getIdentifier());
 
-        Date wakeTime = MyDateUtils.calculateRelativeTimeTo(startCal, timeStr, before);
+        Date wakeTime = MyDateUtils.calculateRelativeTimeTo(startCal, absoluteTime, before);
         if (wakeTime == null) {
             notifyUser(R.string.txt_status_wrong_format);
             return null;

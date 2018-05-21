@@ -95,8 +95,7 @@ public class AlarmScheduleFragment extends AbstractBasicFragment {
             return;
         }
 
-        AbsoluteTime absoluteTime = new AbsoluteTime();
-        absoluteTime.minutes = getPrefs().getAlarmTimeOffset();
+        AbsoluteTime absoluteTime = new AbsoluteTime(0, getPrefs().getAlarmTimeOffset(), 0);
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 

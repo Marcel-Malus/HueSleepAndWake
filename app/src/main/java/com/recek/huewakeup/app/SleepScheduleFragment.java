@@ -13,6 +13,7 @@ import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.settings.SleepLightSettingsActivity;
+import com.recek.huewakeup.util.AbsoluteTime;
 
 import java.util.Calendar;
 
@@ -20,8 +21,6 @@ import java.util.Calendar;
  * @since 2017-09-14.
  */
 public class SleepScheduleFragment extends AbstractScheduleFragment {
-
-    private static final String ONE_MINUTE = "0:1";
 
     private Switch sleepSwitch;
     private TextView statusTxt;
@@ -38,7 +37,8 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_sleep_light, container, false);
     }
 
@@ -61,7 +61,8 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
         settingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent startActivityIntent = new Intent(getActivity(), SleepLightSettingsActivity.class);
+                Intent startActivityIntent = new Intent(getActivity(),
+                        SleepLightSettingsActivity.class);
                 getActivity().startActivity(startActivityIntent);
             }
         });
@@ -102,7 +103,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
             return;
         }
 
-        updateSchedule(schedule, ONE_MINUTE, Calendar.getInstance(), false);
+        updateSchedule(schedule, new AbsoluteTime(0, 1, 0), Calendar.getInstance(), false);
         getPrefs().setSleepActive(true);
     }
 }

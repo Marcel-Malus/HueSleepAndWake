@@ -21,12 +21,12 @@ public class HueSharedPreferences {
 
     private static final String WAKE_SCHEDULE_ID = "WakeScheduleId";
     private static final String WAKE_LIGHT_TIME = "WakeLightTimeL";
-    private static final String WAKE_LIGHT_TIME_RELATIVE = "WakeLightTimeRelative";
-    private static final String DEFAULT_WAKE_LIGHT_TIME = "0:5";
+    private static final String WAKE_LIGHT_TIME_OFFSET = "WakeLightTimeOffset";
+    private static final int DEFAULT_WAKE_LIGHT_TIME = 5;
 
     private static final String WAKE_END_SCHEDULE_ID = "WakeEndScheduleId";
     private static final String WAKE_END_TIME = "WakeEndTime";
-    private static final String DEFAULT_WAKE_END_TIME = "0:30";
+    private static final int DEFAULT_WAKE_END_OFFSET = 30;
 
     private static final String WAKE_LIGHT_IS_ACTIVE = "WakeLightIsActive";
 
@@ -120,12 +120,12 @@ public class HueSharedPreferences {
         mSharedPreferencesEditor.apply();
     }
 
-    public String getRelativeWakeLightTime() {
-        return mSharedPreferences.getString(WAKE_LIGHT_TIME_RELATIVE, DEFAULT_WAKE_LIGHT_TIME);
+    public int getWakeLightTimeOffset() {
+        return mSharedPreferences.getInt(WAKE_LIGHT_TIME_OFFSET, DEFAULT_WAKE_LIGHT_TIME);
     }
 
-    public void setRelativeWakeLightTime(String wakeTime) {
-        mSharedPreferencesEditor.putString(WAKE_LIGHT_TIME_RELATIVE, wakeTime);
+    public void setWakeLightTimeOffset(int wakeTime) {
+        mSharedPreferencesEditor.putInt(WAKE_LIGHT_TIME_OFFSET, wakeTime);
         mSharedPreferencesEditor.apply();
     }
 
@@ -138,13 +138,13 @@ public class HueSharedPreferences {
         return (mSharedPreferencesEditor.commit());
     }
 
-    public String getWakeEndTime() {
-        return mSharedPreferences.getString(WAKE_END_TIME, DEFAULT_WAKE_END_TIME);
+    public int getWakeEndTimeOffset() {
+        return mSharedPreferences.getInt(WAKE_END_TIME, DEFAULT_WAKE_END_OFFSET);
     }
 
-    public boolean setWakeEndTime(String wakeTime) {
-        mSharedPreferencesEditor.putString(WAKE_END_TIME, wakeTime);
-        return (mSharedPreferencesEditor.commit());
+    public void setWakeEndTimeOffset(int wakeTime) {
+        mSharedPreferencesEditor.putInt(WAKE_END_TIME, wakeTime);
+        mSharedPreferencesEditor.apply();
     }
 
     public boolean isWakeLightActive() {

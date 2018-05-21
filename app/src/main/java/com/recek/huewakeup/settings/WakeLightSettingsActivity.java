@@ -3,20 +3,21 @@ package com.recek.huewakeup.settings;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.recek.huesleepwake.R;
 
-import static com.recek.huewakeup.util.MyDateUtils.hasCorrectFormat;
-
 public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
 
-    private EditText wakeInputTimeTxt;
+    private TextView wakeTimeTxt;
     private Spinner wakeScheduleSpinner;
-    private EditText wakeEndInputTimeTxt;
+    private TextView wakeEndTimeTxt;
     private Spinner wakeEndScheduleSpinner;
+    private int currentWakeTimeOffset;
+    private int currentWakeEndTimeOffset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,16 +29,27 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         String wakeUpScheduleId = getPrefs().getWakeScheduleId();
         buildAndAddAdapter(wakeScheduleSpinner, wakeUpScheduleId);
 
-        wakeInputTimeTxt = findViewById(R.id.wakeLightTime);
-        wakeInputTimeTxt.setText(getPrefs().getRelativeWakeLightTime());
+        wakeTimeTxt = findViewById(R.id.wakeLightTimeTxt);
+        currentWakeTimeOffset = getPrefs().getWakeLightTimeOffset();
+        wakeTimeTxt.setText(getString(R.string.txt_set_light_time, currentWakeTimeOffset));
+
+        SeekBar wakeTimeSeekBar = findViewById(R.id.wakeLightSeekBar);
+        wakeTimeSeekBar.setProgress(currentWakeTimeOffset);
+        wakeTimeSeekBar.setOnSeekBarChangeListener(createWakeTimeSeekBarListener());
 
         // WAKE END
         wakeEndScheduleSpinner = findViewById(R.id.wakeLightEndSpinner);
         String wakeEndScheduleId = getPrefs().getWakeEndScheduleId();
         buildAndAddAdapter(wakeEndScheduleSpinner, wakeEndScheduleId);
 
-        wakeEndInputTimeTxt = findViewById(R.id.wakeLightEndTime);
-        wakeEndInputTimeTxt.setText(getPrefs().getWakeEndTime());
+        wakeEndTimeTxt = findViewById(R.id.wakeLightEndTimeTxt);
+        currentWakeEndTimeOffset = getPrefs().getWakeEndTimeOffset();
+        wakeEndTimeTxt
+                .setText(getString(R.string.txt_set_light_end_time, currentWakeEndTimeOffset));
+
+        SeekBar wakeTimeEndSeekBar = findViewById(R.id.wakeLightEndSeekBar);
+        wakeTimeEndSeekBar.setProgress(currentWakeEndTimeOffset);
+        wakeTimeEndSeekBar.setOnSeekBarChangeListener(createWakeEndTimeSeekBarListener());
 
         // BUTTONS
         Button okButton = findViewById(R.id.lightSettingsOkBtn);
@@ -57,11 +69,50 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         });
     }
 
+    private SeekBar.OnSeekBarChangeListener createWakeTimeSeekBarListener() {
+        return new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                currentWakeTimeOffset = progress;
+                wakeTimeTxt.setText(getString(R.string.txt_set_light_time, currentWakeTimeOffset));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        };
+    }
+
+    private SeekBar.OnSeekBarChangeListener createWakeEndTimeSeekBarListener() {
+        return new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                currentWakeEndTimeOffset = progress;
+                wakeEndTimeTxt.setText(
+                        getString(R.string.txt_set_light_end_time, currentWakeEndTimeOffset));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        };
+    }
+
     private void onOkClicked() {
-        String wakeTime = wakeInputTimeTxt.getText().toString();
-        if (hasCorrectFormat(wakeTime)) {
-            getPrefs().setRelativeWakeLightTime(wakeTime);
-        }
+        getPrefs().setWakeLightTimeOffset(currentWakeTimeOffset);
+
         Schedule wakeSchedule = getSelectedValidSchedule(wakeScheduleSpinner);
         if (wakeSchedule != null) {
             getPrefs().setWakeScheduleId(wakeSchedule.getIdentifier());
@@ -69,10 +120,8 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
             getPrefs().setWakeScheduleId(null);
         }
 
-        String wakeEndTime = wakeEndInputTimeTxt.getText().toString();
-        if (hasCorrectFormat(wakeEndTime)) {
-            getPrefs().setWakeEndTime(wakeEndTime);
-        }
+        getPrefs().setWakeEndTimeOffset(currentWakeEndTimeOffset);
+
         Schedule wakeEndSchedule = getSelectedValidSchedule(wakeEndScheduleSpinner);
         if (wakeEndSchedule != null) {
             getPrefs().setWakeEndScheduleId(wakeEndSchedule.getIdentifier());

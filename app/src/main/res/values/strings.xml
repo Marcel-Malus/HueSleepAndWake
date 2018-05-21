@@ -65,9 +65,9 @@
     <!--Light wake-->
     <string name="txt_hue_wake_lights">Hue wake lights</string>
     <string name="txt_lights_settings">Lights settings</string>
-    <string name="txt_set_light_time">Start lights before wake time</string>
+    <string name="txt_set_light_time">Start lights %d minutes before wake time</string>
     <string name="txt_select_light_schedule">Select hue schedule for wake up</string>
-    <string name="txt_set_light_end_time">Shutdown lights after wake time</string>
+    <string name="txt_set_light_end_time">Shutdown lights %d minutes after wake time</string>
     <string name="txt_select_light_end_schedule">Select hue schedule for lights shutdown</string>
     <string name="txt_hue_wake_settings">Settings: Hue wake lights</string>
 

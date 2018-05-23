@@ -21,6 +21,21 @@ public class MyDateUtils {
         return timeStr != null && timeStr.matches(TEXT_TIME_FORMAT);
     }
 
+    public static Date calculateNextTimeOf(String timeStr) {
+        AbsoluteTime absoluteTime = new AbsoluteTime(timeStr);
+        if (!absoluteTime.isValid) {
+            return null;
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MINUTE, absoluteTime.minutes);
+        cal.set(Calendar.HOUR_OF_DAY, absoluteTime.hours);
+        if (cal.before(Calendar.getInstance())) {
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        return cal.getTime();
+    }
+
     public static Date calculateRelativeTimeTo(Calendar cal, String timeStr, boolean before) {
         AbsoluteTime absoluteTime = new AbsoluteTime(timeStr);
         if (!absoluteTime.isValid) {

@@ -38,15 +38,16 @@
     <string name="btn_decline">Decline</string>
 
     <!--Main menu-->
-    <string name="txt_set_wake_in_time">Wake me up in</string>
+    <string name="txt_set_wake_in_time">Wake me up…</string>
     <string name="txt_set_wake_end_in_time">Set the time from wakeup schedule till wakeup end schedule.</string>
     <string name="btn_updated_schedules">Update</string>
     <string name="btn_days">Days</string>
     <string name="action_help">Help</string>
+    <string name="btn_pick_time">Pick Time</string>
 
     <!--Sound alarm-->
     <string name="txt_sound_alarm">Sound alarm</string>
-    <string name="txt_offset_sound_alarm">Offset sound alarm: %d Minutes</string>
+    <string name="txt_offset_sound_alarm">Offset sound alarm: %d Minutes (after wake time)</string>
     <string name="txt_alarm_settings">Alarm settings</string>
     <string name="txt_pick_alarm_sound">Pick alarm sound</string>
     <string name="txt_alarm_started">Time to wake up!</string>
@@ -146,5 +147,7 @@
     <string name="btn_keep">Keep</string>
     <string name="btn_dismiss">Dismiss</string>
     <string name="txt_time_hour_minute">%d:%d</string>
+    <string name="btn_toggle_in">in</string>
+    <string name="btn_toggle_at">at</string>
 
 </resources>

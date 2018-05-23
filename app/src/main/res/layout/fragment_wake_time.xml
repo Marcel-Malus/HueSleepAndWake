@@ -35,15 +35,6 @@
                 android:inputType="time"
                 android:maxLength="8" />
 
-            <TextView
-                android:id="@+id/wakeStatusTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@id/wakeTime"
-                android:layout_margin="5dp"
-                android:text="@string/txt_status" />
-
             <Button
                 android:id="@+id/pickTimeBtn"
                 android:layout_width="wrap_content"
@@ -51,7 +42,27 @@
                 android:layout_below="@+id/wakeTimeTxt"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="5dp"
-                android:text="Pick Time" />
+                android:text="@string/btn_pick_time" />
+
+            <ToggleButton
+                android:id="@+id/inAtToggleBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wakeTimeTxt"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:textOff="@string/btn_toggle_in"
+                android:textOn="@string/btn_toggle_at" />
+
+            <TextView
+                android:id="@+id/wakeStatusTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/inAtToggleBtn"
+                android:layout_margin="5dp"
+                android:text="@string/txt_status" />
 
         </RelativeLayout>
 

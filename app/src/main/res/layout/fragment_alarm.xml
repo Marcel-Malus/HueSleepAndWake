@@ -51,6 +51,7 @@
                 android:layout_marginEnd="48dp"
                 android:layout_toStartOf="@id/alarmSettingsBtn"
                 android:switchMinWidth="55dp"
+                android:showText="true"
                 android:textOff="@string/offByO"
                 android:textOn="@string/onByI" />
 

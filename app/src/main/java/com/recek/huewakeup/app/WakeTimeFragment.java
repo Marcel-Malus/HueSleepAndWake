@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.ToggleButton;
 
 import com.philips.lighting.data.HueSharedPreferences;
 import com.recek.huesleepwake.R;
@@ -26,6 +27,7 @@ public class WakeTimeFragment extends AbstractBasicFragment implements TimePicke
 
     private EditText inputTimeTxt;
     private TextView statusTxt;
+    private ToggleButton inAtToggleBtn;
     private HueSharedPreferences prefs;
 
     @Override
@@ -53,6 +55,9 @@ public class WakeTimeFragment extends AbstractBasicFragment implements TimePicke
         inputTimeTxt = getActivity().findViewById(R.id.wakeTime);
         inputTimeTxt.setText(prefs.getWakeTimeRelative());
 
+        inAtToggleBtn = getActivity().findViewById(R.id.inAtToggleBtn);
+        inAtToggleBtn.setChecked(prefs.isWakeTimeAt());
+
         Button pickWakeTimeBtn = getActivity().findViewById(R.id.pickTimeBtn);
         pickWakeTimeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,14 +80,20 @@ public class WakeTimeFragment extends AbstractBasicFragment implements TimePicke
     }
 
     public Date onUpdate() {
-        String wakeTimeRel = inputTimeTxt.getText().toString();
+        String wakeTimeString = inputTimeTxt.getText().toString();
         Calendar cal = Calendar.getInstance();
 
-        Date wakeUpDate = MyDateUtils.calculateRelativeTimeTo(cal, wakeTimeRel, false);
+        Date wakeUpDate;
+        prefs.setWakeTimeAt(inAtToggleBtn.isChecked());
+        if (inAtToggleBtn.isChecked()) {
+            wakeUpDate = MyDateUtils.calculateNextTimeOf(wakeTimeString);
+        } else {
+            wakeUpDate = MyDateUtils.calculateRelativeTimeTo(cal, wakeTimeString, false);
+        }
         if (wakeUpDate != null) {
             String wakeTimeStr = SDF_TIME_SHORT.format(wakeUpDate);
             statusTxt.setText(getString(R.string.txt_status_alarm_on, wakeTimeStr));
-            prefs.setWakeTimeRelative(wakeTimeRel);
+            prefs.setWakeTimeRelative(wakeTimeString);
             prefs.setWakeTime(wakeUpDate.getTime());
         } else {
             statusTxt.setText(getString(R.string.txt_status_wrong_format));

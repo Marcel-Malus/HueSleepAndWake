@@ -50,6 +50,7 @@
                 android:layout_alignBottom="@id/lightSettingsBtn"
                 android:layout_toStartOf="@id/lightSettingsBtn"
                 android:layout_marginEnd="48dp"
+                android:showText="true"
                 android:textOn="@string/onByI"
                 android:textOff="@string/offByO"
                 android:switchMinWidth="55dp" />

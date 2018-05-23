@@ -10,14 +10,13 @@ import java.util.List;
 public class HueSharedPreferences {
     private static final String HUE_SHARED_PREFERENCES_STORE = "HueSharedPrefs";
     private static final String LAST_APP_VERSION_NAME = "AppVersionName";
-    private static final String LAST_CONNECTED_USERNAME = "LastConnectedUsername";
-    private static final String LAST_CONNECTED_IP = "LastConnectedIP";
 
     private static final String DEFAULT_SCHEDULE_ID = "-1";
 
     private static final String WAKE_TIME = "WakeTimeL";
     private static final String WAKE_TIME_RELATIVE = "WakeTimeRelative";
     private static final String DEFAULT_WAKE_TIME_RELATIVE = "8:00";
+    private static final String WAKE_TIME_AT = "WakeTimeAt";
 
     private static final String WAKE_SCHEDULE_ID = "WakeScheduleId";
     private static final String WAKE_LIGHT_TIME = "WakeLightTimeL";
@@ -100,6 +99,15 @@ public class HueSharedPreferences {
     public boolean setWakeTimeRelative(String wakeTime) {
         mSharedPreferencesEditor.putString(WAKE_TIME_RELATIVE, wakeTime);
         return (mSharedPreferencesEditor.commit());
+    }
+
+    public boolean isWakeTimeAt() {
+        return mSharedPreferences.getBoolean(WAKE_TIME_AT, false);
+    }
+
+    public void setWakeTimeAt(boolean isAt) {
+        mSharedPreferencesEditor.putBoolean(WAKE_TIME_AT, isAt);
+        mSharedPreferencesEditor.apply();
     }
 
     public String getWakeScheduleId() {

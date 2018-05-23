@@ -8,9 +8,12 @@ import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
 import com.philips.lighting.hue.sdk.wrapper.domain.HueError;
 import com.philips.lighting.hue.sdk.wrapper.domain.ReturnCode;
 import com.philips.lighting.hue.sdk.wrapper.domain.clip.ClipResponse;
+import com.philips.lighting.hue.sdk.wrapper.domain.device.light.LightState;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.builder.ClipActionBuilder;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.timepattern.TimePatternBuilder;
+import com.philips.lighting.hue.sdk.wrapper.knownbridges.KnownBridges;
 import com.philips.lighting.quickstart.BridgeHolder;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.util.AbsoluteTime;
@@ -145,4 +148,25 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 //        Toast.makeText(getActivity(), msgId, Toast.LENGTH_SHORT).show();
     }
 
+    protected void setScheduleDefaultsAndUpload(Schedule schedule,
+                                                LightState lightState,
+                                                BridgeResponseCallback bridgeResponseCallback) {
+
+        ClipActionBuilder clipActionBuilder = new ClipActionBuilder();
+        clipActionBuilder.setGroupLightState("1", lightState);
+
+        // Triggers 1-1-2035 @ 10:05 A.M. Mandatory, will be overwritten on update.
+        TimePatternBuilder timePatternBuilder = new TimePatternBuilder();
+        timePatternBuilder.startAtDate(1, 1, 2035, 10, 5, 0);
+
+        schedule.setLocalTime(timePatternBuilder.build());
+        schedule.setRecycle(true);
+
+        Bridge bridge = BridgeHolder.get();
+        schedule.setClipAction(clipActionBuilder.setUsername(KnownBridges.retrieveWhitelistEntry(
+                bridge.getIdentifier())).buildSingle(
+                bridge.getBridgeConfiguration().getVersion()));
+
+        bridge.createResource(schedule, BridgeConnectionType.LOCAL, bridgeResponseCallback);
+    }
 }

@@ -9,14 +9,25 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.philips.lighting.hue.sdk.wrapper.connection.BridgeResponseCallback;
+import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
+import com.philips.lighting.hue.sdk.wrapper.domain.HueError;
+import com.philips.lighting.hue.sdk.wrapper.domain.ReturnCode;
+import com.philips.lighting.hue.sdk.wrapper.domain.clip.ClipResponse;
+import com.philips.lighting.hue.sdk.wrapper.domain.device.light.LightState;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
+import com.philips.lighting.quickstart.BridgeHolder;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.settings.WakeLightSettingsActivity;
 import com.recek.huewakeup.util.AbsoluteTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static com.recek.huesleepwake.R.id.lightSwitch;
 
@@ -24,6 +35,15 @@ import static com.recek.huesleepwake.R.id.lightSwitch;
  * @since 2017-09-14.
  */
 public class WakeUpScheduleFragment extends AbstractScheduleFragment {
+
+    private static final Logger LOG = LoggerFactory.getLogger(WakeUpScheduleFragment.class);
+
+    private static final String DEFAULT_WAKE_UP_SCHEDULE_NAME = "HDuD_Default_WakeUp";
+    private static final String DEFAULT_WAKE_END_SCHEDULE_NAME = "HDuD_Default_WakeEnd";
+    // Brightness is a scale from 1 (the minimum) to 254 (the maximum). Note: a brightness of 1 is not off.
+    public static final int WAKE_UP_BRIGHTNESS = 200;
+    // 100ms * 6000 = 600s = 10m
+    public static final int WAKE_UP_TRANSITION = 6000;
 
     private TextView statusTxt;
     private Switch wakeLightSwitch;
@@ -89,6 +109,97 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
     @Override
     protected void onFailure() {
         statusTxt.setText(R.string.txt_status_update_failed);
+    }
+
+
+    public void initDefaultSchedules() {
+        Schedule wakeSchedule = findScheduleById(getPrefs().getWakeScheduleId());
+        Schedule wakeEndSchedule = findScheduleById(getPrefs().getWakeEndScheduleId());
+        if (wakeSchedule != null && wakeEndSchedule != null) {
+            // Schedules are set. No need to set defaults.
+            return;
+        }
+
+        Bridge bridge = BridgeHolder.get();
+        List<Schedule> scheduleList = bridge.getBridgeState().getSchedules();
+        // Do defaults already exist? If so than set them as current.
+        for (Schedule schedule : scheduleList) {
+            if (schedule.getName().equals(DEFAULT_WAKE_UP_SCHEDULE_NAME) && wakeSchedule == null) {
+                LOG.info("Found default schedule {}", DEFAULT_WAKE_UP_SCHEDULE_NAME);
+                // Will not be set, because it is maybe set on "NONE" on purpose.
+//                getPrefs().setWakeScheduleId(schedule.getIdentifier());
+                wakeSchedule = schedule;
+            } else if (schedule.getName()
+                    .equals(DEFAULT_WAKE_END_SCHEDULE_NAME) && wakeEndSchedule == null) {
+                LOG.info("Found default schedule {}", DEFAULT_WAKE_END_SCHEDULE_NAME);
+                // Will not be set, because it is maybe set on "NONE" on purpose.
+//                getPrefs().setWakeEndScheduleId(schedule.getIdentifier());
+                wakeEndSchedule = schedule;
+            }
+        }
+
+        if (wakeSchedule == null) {
+            createDefaultWakeSchedule();
+        }
+        if (wakeEndSchedule == null) {
+            createDefaultWakeEndSchedule();
+        }
+    }
+
+    private void createDefaultWakeSchedule() {
+        Schedule schedule = new Schedule();
+        schedule.setName(DEFAULT_WAKE_UP_SCHEDULE_NAME);
+        schedule.setDescription("Default wake up schedule for Hue Dusk and Dawn");
+
+        LightState lightState = new LightState();
+        lightState.setOn(true);
+        lightState.setBrightness(WAKE_UP_BRIGHTNESS);
+        lightState.setTransitionTime(WAKE_UP_TRANSITION);
+
+        setScheduleDefaultsAndUpload(schedule, lightState, new BridgeResponseCallback() {
+            @Override
+            public void handleCallback(Bridge bridge, ReturnCode returnCode,
+                                       List<ClipResponse> responses, List<HueError> errors) {
+                if (returnCode == ReturnCode.SUCCESS) {
+                    // Identifier of the created resource
+                    String identifier = responses.get(0).getStringValue();
+                    getPrefs().setWakeScheduleId(identifier);
+                    LOG.info("Created default wake up schedule with id {}", identifier);
+                } else {
+                    LOG.warn("Unable to create default schedule. {} errors.", errors.size());
+                    if (errors.size() > 0) {
+                        LOG.warn("1. Error: {}", errors.get(0));
+                    }
+                }
+            }
+        });
+    }
+
+    private void createDefaultWakeEndSchedule() {
+        Schedule schedule = new Schedule();
+        schedule.setName(DEFAULT_WAKE_END_SCHEDULE_NAME);
+        schedule.setDescription("Default wake end schedule for Hue Dusk and Dawn");
+
+        LightState lightState = new LightState();
+        lightState.setOn(false);
+
+        setScheduleDefaultsAndUpload(schedule, lightState, new BridgeResponseCallback() {
+            @Override
+            public void handleCallback(Bridge bridge, ReturnCode returnCode,
+                                       List<ClipResponse> responses, List<HueError> errors) {
+                if (returnCode == ReturnCode.SUCCESS) {
+                    // Identifier of the created resource
+                    String identifier = responses.get(0).getStringValue();
+                    getPrefs().setWakeEndScheduleId(identifier);
+                    LOG.info("Created default wake end schedule with id {}", identifier);
+                } else {
+                    LOG.warn("Unable to create default schedule. {} errors.", errors.size());
+                    if (errors.size() > 0) {
+                        LOG.warn("1. Error: {}", errors.get(0));
+                    }
+                }
+            }
+        });
     }
 
     private void appendStatus(StringBuilder sb, Schedule schedule) {

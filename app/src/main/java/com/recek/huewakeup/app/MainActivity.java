@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
             statusText.setText(R.string.txt_status_bridge_not_found);
             return;
         }
-        BridgeConnection connection = BridgeHolder.get().getBridgeConnection(BridgeConnectionType.LOCAL);
+        BridgeConnection connection = BridgeHolder.get()
+                .getBridgeConnection(BridgeConnectionType.LOCAL);
         HeartbeatManager heartbeatManager = connection.getHeartbeatManager();
         heartbeatManager.performOneHeartbeat(BridgeStateCacheType.BRIDGE_CONFIG);
     }
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             BridgeHolder.get().addBridgeStateUpdatedCallback(bridgeStateUpdatedCallback);
             BridgeHolder.get().setBridgeConnectionCallback(bridgeConnectionCallback);
             updateConnectionStatus();
+            initDefaultSchedules();
         } else if (isConnected) {
             LOG.warn("No bridge present, but should be. Reconnecting...");
             reconnect();
@@ -139,6 +141,11 @@ public class MainActivity extends AppCompatActivity {
     private void startHelpActivity() {
         Intent intent = new Intent(this, HelpActivity.class);
         startActivity(intent);
+    }
+
+    private void initDefaultSchedules() {
+        wakeUpFragment.initDefaultSchedules();
+        sleepFragment.initDefaultSchedules();
     }
 
     private void updateSchedules() {

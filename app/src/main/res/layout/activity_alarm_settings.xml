@@ -65,7 +65,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerHorizontal="true"
                 android:contentDescription="@string/txt_pick_alarm_sound"
-                android:src="@drawable/ic_music_note_black_24dp" />
+                android:src="@drawable/ic_music_note_orange" />
 
             <TextView
                 android:id="@+id/pickedAlarmSoundTxt"
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_marginStart="20dp"
-            android:background="@android:color/holo_green_light"
+            android:background="@color/okBtn"
             android:text="@string/btn_ok" />
 
         <Button
@@ -104,7 +104,7 @@
             android:layout_alignEnd="@id/alarmSettingsOkBtn"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
-            android:background="@android:color/holo_orange_light"
+            android:background="@color/cancelBtn"
             android:text="@string/btn_cancel" />
     </RelativeLayout>
 </LinearLayout>

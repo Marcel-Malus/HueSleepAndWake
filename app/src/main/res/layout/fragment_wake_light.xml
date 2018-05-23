@@ -29,25 +29,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_alignBaseline="@+id/lightSwitch"
+                android:layout_below="@+id/wakeLightTimeTxt"
                 android:layout_marginStart="5dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
                 android:text="@string/txt_status" />
 
             <ImageButton
                 android:id="@+id/lightSettingsBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/wakeLightTimeTxt"
                 android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:layout_margin="5dp"
-                android:src="@drawable/ic_settings_black_24dp"
-                android:contentDescription="@string/txt_lights_settings" />
+                android:contentDescription="@string/txt_lights_settings"
+                android:src="@drawable/ic_settings_orange" />
 
             <Switch
                 android:id="@+id/lightSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/lightSettingsBtn"
+                android:layout_centerVertical="true"
                 android:layout_toStartOf="@id/lightSettingsBtn"
                 android:layout_marginEnd="48dp"
                 android:showText="true"

@@ -161,7 +161,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_marginStart="20dp"
-            android:background="@android:color/holo_green_light"
+            android:background="@color/okBtn"
             android:text="@string/btn_ok" />
 
         <Button
@@ -171,7 +171,7 @@
             android:layout_alignEnd="@id/lightSettingsOkBtn"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
-            android:background="@android:color/holo_orange_light"
+            android:background="@color/cancelBtn"
             android:text="@string/btn_cancel" />
     </RelativeLayout>
 

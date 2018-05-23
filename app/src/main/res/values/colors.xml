@@ -6,4 +6,7 @@
     <color name="colorAccent">#ffaa00</color>
     <color name="morningOrange">#ffe88e</color>
 
+    <color name="okBtn">@android:color/holo_green_dark</color>
+    <color name="cancelBtn">@color/colorAccent</color>
+
 </resources>

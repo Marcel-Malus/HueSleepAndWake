@@ -18,7 +18,9 @@
         android:layout_marginTop="150dp"
         android:paddingBottom="20dp"
         android:textSize="64sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:text="Clock" />
 
     <TextView
         android:id="@+id/alarmTxtStatus"
@@ -27,7 +29,9 @@
         android:layout_below="@id/alarmTxtClk"
         android:layout_centerHorizontal="true"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:text="Alarm Status" />
 
     <Button
         android:id="@+id/snoozeAlarmBtn"

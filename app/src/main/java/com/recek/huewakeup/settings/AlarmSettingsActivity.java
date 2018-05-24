@@ -2,6 +2,8 @@ package com.recek.huewakeup.settings;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
@@ -19,16 +21,23 @@ import com.recek.huesleepwake.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class AlarmSettingsActivity extends AppCompatActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(AlarmSettingsActivity.class);
     private static final int PICK_AUDIO_REQUEST = 0;
 
     private HueSharedPreferences prefs;
+    private MediaPlayer mediaPlayer;
+
     private TextView pickedSoundTxt;
     private TextView offsetTextView;
+    private ImageButton playBtn;
+
     private int currentOffset = 0;
     private String alarmSoundUriStr = null;
+    private boolean isAlarmPlaying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +59,7 @@ public class AlarmSettingsActivity extends AppCompatActivity {
         pickedSoundTxt = findViewById(R.id.pickedAlarmSoundTxt);
         initSavedSound();
 
+        playBtn = findViewById(R.id.playAlarmSoundBtn);
 
         // BUTTONS
         Button okButton = findViewById(R.id.alarmSettingsOkBtn);
@@ -104,9 +114,9 @@ public class AlarmSettingsActivity extends AppCompatActivity {
     }
 
     private void initSavedSound() {
-        String alarmSoundUriString = prefs.getAlarmSoundUri();
-        if (alarmSoundUriString != null) {
-            Uri alarmSoundUri = Uri.parse(alarmSoundUriString);
+        alarmSoundUriStr = prefs.getAlarmSoundUri();
+        if (alarmSoundUriStr != null) {
+            Uri alarmSoundUri = Uri.parse(alarmSoundUriStr);
             String fileName = extractFileName(alarmSoundUri);
             if (fileName != null) {
                 pickedSoundTxt.setText(fileName);
@@ -160,6 +170,50 @@ public class AlarmSettingsActivity extends AppCompatActivity {
         return fileName;
     }
 
+    public void onPlayClicked(View view) {
+        if (isAlarmPlaying) {
+            stopPlayingSound();
+        } else if (alarmSoundUriStr != null) {
+            LOG.info("Trying to play chosen media file.");
+            Uri parsedUri = Uri.parse(alarmSoundUriStr);
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+            try {
+                mediaPlayer.setDataSource(getApplicationContext(), parsedUri);
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                LOG.warn("Failed loading alarm sound.");
+                Toast.makeText(this, "Failed playing sound.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mp.reset();
+                    mp.release();
+                    isAlarmPlaying = false;
+                    playBtn.setImageResource(R.drawable.ic_play_orange);
+                }
+            });
+            isAlarmPlaying = true;
+            playBtn.setImageResource(R.drawable.ic_stop_orange);
+        }
+    }
+
+    private void stopPlayingSound() {
+        if (isAlarmPlaying) {
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+                mediaPlayer.reset();
+                mediaPlayer.release();
+            }
+            isAlarmPlaying = false;
+            playBtn.setImageResource(R.drawable.ic_play_orange);
+        }
+    }
+
     private void onOkClicked() {
         if (alarmSoundUriStr != null) {
             prefs.setAlarmSoundUri(alarmSoundUriStr);
@@ -172,5 +226,11 @@ public class AlarmSettingsActivity extends AppCompatActivity {
 
     private void onCancelClicked() {
         finish();
+    }
+
+    @Override
+    protected void onStop() {
+        stopPlayingSound();
+        super.onStop();
     }
 }

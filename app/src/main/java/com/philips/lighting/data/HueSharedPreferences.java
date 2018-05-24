@@ -37,6 +37,8 @@ public class HueSharedPreferences {
     private static final int DEFAULT_ALARM_TIME_RELATIVE = 0;
     private static final String ALARM_IS_ACTIVE = "AlarmIsActive";
     private static final String ALARM_SOUND = "AlarmSound";
+    private static final String SNOOZE_TIME = "SnoozeTime";
+    private static final int DEFAULT_SNOOZE_TIME = 5;
 
     private static final String WAKE_DAYS = "WakeDays";
     private static final String DEFAULT_WAKE_DAYS = "0000000";
@@ -216,6 +218,15 @@ public class HueSharedPreferences {
     public boolean setAlarmSoundUri(String uri) {
         mSharedPreferencesEditor.putString(ALARM_SOUND, uri);
         return (mSharedPreferencesEditor.commit());
+    }
+
+    public int getSnoozeTime() {
+        return mSharedPreferences.getInt(SNOOZE_TIME, DEFAULT_SNOOZE_TIME);
+    }
+
+    public void setSnoozeTime(int time) {
+        mSharedPreferencesEditor.putInt(SNOOZE_TIME, time);
+        mSharedPreferencesEditor.apply();
     }
 
     public String getWakeDaysRaw() {

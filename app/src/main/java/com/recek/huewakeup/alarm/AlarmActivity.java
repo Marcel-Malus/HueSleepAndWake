@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.philips.lighting.data.HueSharedPreferences;
 import com.recek.huesleepwake.R;
 
 import org.slf4j.Logger;
@@ -30,16 +32,20 @@ import static com.recek.huewakeup.util.MyDateUtils.SDF_TIME_SHORT;
 public class AlarmActivity extends AppCompatActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(AlarmActivity.class);
+
     private TextView alarmTxtStatus;
     private Button stopAlarmBtn;
     private PendingIntent pendingIntent;
     private boolean isAlarmStopped = false;
+    private HueSharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LOG.debug("Creating alarm activity.");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
+
+        prefs = HueSharedPreferences.getInstance(getApplicationContext());
 
         stopAlarmBtn = findViewById(R.id.stopAlarmBtn);
         stopAlarmBtn.setOnClickListener(new View.OnClickListener() {
@@ -111,9 +117,16 @@ public class AlarmActivity extends AppCompatActivity {
         pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
         Calendar calendar = Calendar.getInstance();
-        // TODO: Make this choosable by settings.
-        calendar.add(Calendar.MINUTE, 5);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        calendar.add(Calendar.MINUTE, prefs.getSnoozeTime());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // See: https://developer.android.com/training/monitoring-device-state/doze-standby
+            alarmManager
+                    .setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                            pendingIntent);
+        } else {
+            alarmManager
+                    .setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
         alarmTxtStatus.setText(getResources().getString(R.string.txt_alarm_status_snooze,
                 SDF_TIME_SHORT.format(calendar.getTime())));
         stopAlarmBtn.setText(R.string.btn_close_alarm);

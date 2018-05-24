@@ -93,6 +93,45 @@
     </android.support.v7.widget.CardView>
 
 
+    <!--SNOOZE TIME-->
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/snoozeTimeCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <TextView
+                android:id="@+id/snoozeTimeTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="@string/txt_snooze_time" />
+
+            <SeekBar
+                android:id="@+id/snoozeTimeSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/snoozeTimeTxt"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:max="30"
+                android:progress="0" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+
     <!--BUTTONS-->
     <RelativeLayout
         android:layout_width="match_parent"

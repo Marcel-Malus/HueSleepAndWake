@@ -34,10 +34,12 @@ public class AlarmSettingsActivity extends AppCompatActivity {
     private TextView pickedSoundTxt;
     private TextView offsetTextView;
     private ImageButton playBtn;
+    private TextView snoozeTextView;
 
     private int currentOffset = 0;
     private String alarmSoundUriStr = null;
     private boolean isAlarmPlaying = false;
+    private int currentSnoozeTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,14 @@ public class AlarmSettingsActivity extends AppCompatActivity {
 
         playBtn = findViewById(R.id.playAlarmSoundBtn);
 
+        currentSnoozeTime = prefs.getSnoozeTime();
+        snoozeTextView = findViewById(R.id.snoozeTimeTxt);
+        snoozeTextView.setText(getString(R.string.txt_snooze_time, currentSnoozeTime));
+
+        SeekBar snoozeTimeSeekBar = findViewById(R.id.snoozeTimeSeekBar);
+        snoozeTimeSeekBar.setProgress(currentSnoozeTime);
+        snoozeTimeSeekBar.setOnSeekBarChangeListener(createSnoozeSeekBarListener());
+
         // BUTTONS
         Button okButton = findViewById(R.id.alarmSettingsOkBtn);
         okButton.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +89,24 @@ public class AlarmSettingsActivity extends AppCompatActivity {
         });
     }
 
+    private SeekBar.OnSeekBarChangeListener createSnoozeSeekBarListener() {
+        return new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                currentSnoozeTime = progress;
+                snoozeTextView.setText(getString(R.string.txt_snooze_time, currentSnoozeTime));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        };
+    }
+
     private SeekBar.OnSeekBarChangeListener createOffsetSeekBarListener() {
         return new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -89,12 +117,10 @@ public class AlarmSettingsActivity extends AppCompatActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         };
     }
@@ -220,6 +246,7 @@ public class AlarmSettingsActivity extends AppCompatActivity {
         }
 
         prefs.setAlarmTimeOffset(currentOffset);
+        prefs.setSnoozeTime(currentSnoozeTime);
 
         finish();
     }

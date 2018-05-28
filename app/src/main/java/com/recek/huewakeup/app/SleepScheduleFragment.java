@@ -16,6 +16,9 @@ import com.recek.huewakeup.settings.SleepLightSettingsActivity;
 import com.recek.huewakeup.util.AbsoluteTime;
 
 import java.util.Calendar;
+import java.util.Date;
+
+import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_SLEEP_SCHEDULE_NAME;
 
 /**
  * @since 2017-09-14.
@@ -97,13 +100,32 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
             return;
         }
 
+        getPrefs().setSleepActive(sleepSwitch.isChecked());
         if (!sleepSwitch.isChecked()) {
-            getPrefs().setSleepActive(false);
             disableSchedule(schedule);
             return;
         }
 
-        updateSchedule(schedule, new AbsoluteTime(0, 1, 0), Calendar.getInstance(), false);
-        getPrefs().setSleepActive(true);
+        Date sleepDate = updateSchedule(schedule, new AbsoluteTime(0, 1, 0), Calendar.getInstance(),
+                false);
+        if (sleepDate != null) {
+            if (schedule.getName().equals(DEFAULT_SLEEP_SCHEDULE_NAME)) {
+                // else disable preWakeUp?
+                updatePostSleepSchedule(sleepDate);
+            }
+        }
+    }
+
+    private void updatePostSleepSchedule(Date sleepDate) {
+
+        Schedule postSleepSchedule = findScheduleById(getPrefs().getPostSleepScheduleId());
+        if (postSleepSchedule == null) {
+            return;
+        }
+        AbsoluteTime absoluteTime = new AbsoluteTime(0, 0, 10);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(sleepDate);
+
+        updateSchedule(postSleepSchedule, absoluteTime, cal, false);
     }
 }

@@ -29,7 +29,8 @@ public class DefaultSchedules {
     public static final String DEFAULT_WAKE_UP_SCHEDULE_NAME = "HDuD_Default_WakeUp";
     private static final String DEFAULT_WAKE_UP_PRE_SCHEDULE_NAME = "HDuD_Default_Pre_WakeUp";
     private static final String DEFAULT_WAKE_END_SCHEDULE_NAME = "HDuD_Default_WakeEnd";
-    private static final String DEFAULT_SLEEP_SCHEDULE_NAME = "HDuD_Default_Sleep";
+    public static final String DEFAULT_SLEEP_SCHEDULE_NAME = "HDuD_Default_Sleep";
+    private static final String DEFAULT_POST_SLEEP_SCHEDULE_NAME = "HDuD_Default_Post_Sleep";
     // Brightness is a scale from 1 (the minimum) to 254 (the maximum). Note: a brightness of 1 is not off.
     private static final int WAKE_UP_BRIGHTNESS = 200;
     // 100ms * 6000 = 600s = 10m
@@ -189,6 +190,7 @@ public class DefaultSchedules {
         schedule.setDescription("Default sleep schedule for Hue Dusk and Dawn");
 
         LightState lightState = new LightState();
+        // this screws up transition (thus post schedule needed, see below)
 //        lightState.setOn(false);
         lightState.setBrightness(1);
         lightState.setTransitionTime(SLEEP_TRANSITION_TIME);
@@ -202,6 +204,36 @@ public class DefaultSchedules {
                     String identifier = responses.get(0).getStringValue();
                     prefs.setSleepScheduleId(identifier);
                     LOG.info("Created default sleep schedule with id {}", identifier);
+                    createDefaultPostSleepSchedule();
+                } else {
+                    LOG.warn("Unable to create default schedule. {} errors.", errors.size());
+                    if (errors.size() > 0) {
+                        LOG.warn("1. Error: {}", errors.get(0));
+                    }
+                }
+            }
+        });
+    }
+
+    // Necessary because transition does not work with switching lights off and setting brightness at once.
+    private void createDefaultPostSleepSchedule() {
+
+        Schedule schedule = new Schedule();
+        schedule.setName(DEFAULT_POST_SLEEP_SCHEDULE_NAME);
+        schedule.setDescription("Default post sleep schedule for Hue Dusk and Dawn");
+
+        LightState lightState = new LightState();
+        lightState.setOn(false);
+
+        setScheduleDefaultsAndUpload(schedule, lightState, new BridgeResponseCallback() {
+            @Override
+            public void handleCallback(Bridge bridge, ReturnCode returnCode,
+                                       List<ClipResponse> responses, List<HueError> errors) {
+                if (returnCode == ReturnCode.SUCCESS) {
+                    // Identifier of the created resource
+                    String identifier = responses.get(0).getStringValue();
+                    prefs.setPostSleepScheduleId(identifier);
+                    LOG.info("Created default post sleep schedule with id {}", identifier);
                 } else {
                     LOG.warn("Unable to create default schedule. {} errors.", errors.size());
                     if (errors.size() > 0) {

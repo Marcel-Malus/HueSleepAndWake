@@ -31,6 +31,7 @@ public class HueSharedPreferences {
     private static final String WAKE_LIGHT_IS_ACTIVE = "WakeLightIsActive";
 
     private static final String SLEEP_SCHEDULE_ID = "SleepScheduleId";
+    private static final String POST_SLEEP_SCHEDULE_ID = "PostSleepScheduleId";
     private static final String SLEEP_IS_ACTIVE = "SleepIsActive";
 
     private static final String ALARM_TIME = "AlarmTimeL";
@@ -180,9 +181,18 @@ public class HueSharedPreferences {
         return mSharedPreferences.getString(SLEEP_SCHEDULE_ID, DEFAULT_SCHEDULE_ID);
     }
 
-    public boolean setSleepScheduleId(String sleepScheduleId) {
-        mSharedPreferencesEditor.putString(SLEEP_SCHEDULE_ID, sleepScheduleId);
-        return (mSharedPreferencesEditor.commit());
+    public void setSleepScheduleId(String scheduleId) {
+        mSharedPreferencesEditor.putString(SLEEP_SCHEDULE_ID, scheduleId);
+        mSharedPreferencesEditor.apply();
+    }
+
+    public String getPostSleepScheduleId() {
+        return mSharedPreferences.getString(POST_SLEEP_SCHEDULE_ID, DEFAULT_SCHEDULE_ID);
+    }
+
+    public void setPostSleepScheduleId(String scheduleId) {
+        mSharedPreferencesEditor.putString(POST_SLEEP_SCHEDULE_ID, scheduleId);
+        mSharedPreferencesEditor.apply();
     }
 
     public boolean isSleepActive() {

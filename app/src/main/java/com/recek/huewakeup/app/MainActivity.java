@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnection;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnectionCallback;
 import com.philips.lighting.hue.sdk.wrapper.connection.BridgeConnectionType;
@@ -25,6 +26,7 @@ import com.philips.lighting.hue.sdk.wrapper.domain.HueError;
 import com.philips.lighting.quickstart.BridgeHolder;
 import com.philips.lighting.quickstart.MainHueActivity;
 import com.recek.huesleepwake.R;
+import com.recek.huewakeup.util.DefaultSchedules;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             BridgeHolder.get().addBridgeStateUpdatedCallback(bridgeStateUpdatedCallback);
             BridgeHolder.get().setBridgeConnectionCallback(bridgeConnectionCallback);
             updateConnectionStatus();
-            initDefaultSchedules();
+            new DefaultSchedules(HueSharedPreferences.getInstance(this)).init();
         } else if (isConnected) {
             LOG.warn("No bridge present, but should be. Reconnecting...");
             reconnect();
@@ -141,11 +143,6 @@ public class MainActivity extends AppCompatActivity {
     private void startHelpActivity() {
         Intent intent = new Intent(this, HelpActivity.class);
         startActivity(intent);
-    }
-
-    private void initDefaultSchedules() {
-        wakeUpFragment.initDefaultSchedules();
-        sleepFragment.initDefaultSchedules();
     }
 
     private void updateSchedules() {

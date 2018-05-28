@@ -8,12 +8,9 @@ import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
 import com.philips.lighting.hue.sdk.wrapper.domain.HueError;
 import com.philips.lighting.hue.sdk.wrapper.domain.ReturnCode;
 import com.philips.lighting.hue.sdk.wrapper.domain.clip.ClipResponse;
-import com.philips.lighting.hue.sdk.wrapper.domain.device.light.LightState;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
-import com.philips.lighting.hue.sdk.wrapper.domain.resource.builder.ClipActionBuilder;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.timepattern.TimePatternBuilder;
-import com.philips.lighting.hue.sdk.wrapper.knownbridges.KnownBridges;
 import com.philips.lighting.quickstart.BridgeHolder;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.util.AbsoluteTime;
@@ -70,7 +67,8 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
         TimePatternBuilder timePatternBuilder = new TimePatternBuilder();
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
-        timePatternBuilder.startAt(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
+        timePatternBuilder.startAt(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
+                cal.get(Calendar.SECOND));
         MyDateUtils.setWeekDay(cal, timePatternBuilder);
         // Doesn't seem to work
 //        cal.add(Calendar.MINUTE, 30);
@@ -83,7 +81,8 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
             LOG.warn("No bridge present.");
             return null;
         } else {
-            BridgeHolder.get().updateResource(schedule, BridgeConnectionType.LOCAL, createUpdateCallback());
+            BridgeHolder.get()
+                    .updateResource(schedule, BridgeConnectionType.LOCAL, createUpdateCallback());
             return wakeTime;
         }
     }
@@ -102,13 +101,15 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 
         schedule.setStatus(ScheduleStatus.DISABLED);
 
-        BridgeHolder.get().updateResource(schedule, BridgeConnectionType.LOCAL, createUpdateCallback());
+        BridgeHolder.get()
+                .updateResource(schedule, BridgeConnectionType.LOCAL, createUpdateCallback());
     }
 
     private BridgeResponseCallback createUpdateCallback() {
         return new BridgeResponseCallback() {
             @Override
-            public void handleCallback(Bridge bridge, ReturnCode returnCode, List<ClipResponse> listR, List<HueError> listE) {
+            public void handleCallback(Bridge bridge, ReturnCode returnCode,
+                                       List<ClipResponse> listR, List<HueError> listE) {
                 if (returnCode == ReturnCode.SUCCESS) {
                     // Identifier (Name) of the created resource
                     String identifier = listR.get(0).getStringValue();
@@ -146,27 +147,5 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
     private void notifyUser(final int msgId) {
         getStatusTxt().setText(msgId);
 //        Toast.makeText(getActivity(), msgId, Toast.LENGTH_SHORT).show();
-    }
-
-    protected void setScheduleDefaultsAndUpload(Schedule schedule,
-                                                LightState lightState,
-                                                BridgeResponseCallback bridgeResponseCallback) {
-
-        ClipActionBuilder clipActionBuilder = new ClipActionBuilder();
-        clipActionBuilder.setGroupLightState("1", lightState);
-
-        // Triggers 1-1-2035 @ 10:05 A.M. Mandatory, will be overwritten on update.
-        TimePatternBuilder timePatternBuilder = new TimePatternBuilder();
-        timePatternBuilder.startAtDate(1, 1, 2035, 10, 5, 0);
-
-        schedule.setLocalTime(timePatternBuilder.build());
-        schedule.setRecycle(true);
-
-        Bridge bridge = BridgeHolder.get();
-        schedule.setClipAction(clipActionBuilder.setUsername(KnownBridges.retrieveWhitelistEntry(
-                bridge.getIdentifier())).buildSingle(
-                bridge.getBridgeConfiguration().getVersion()));
-
-        bridge.createResource(schedule, BridgeConnectionType.LOCAL, bridgeResponseCallback);
     }
 }

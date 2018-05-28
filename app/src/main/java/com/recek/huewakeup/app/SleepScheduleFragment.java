@@ -130,7 +130,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
         schedule.setDescription("Default sleep schedule for Hue Dusk and Dawn");
 
         LightState lightState = new LightState();
-        lightState.setOn(false);
+//        lightState.setOn(false);
         lightState.setBrightness(1);
         lightState.setTransitionTime(SLEEP_TRANSITION_TIME);
 

@@ -39,6 +39,7 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
     private static final Logger LOG = LoggerFactory.getLogger(WakeUpScheduleFragment.class);
 
     private static final String DEFAULT_WAKE_UP_SCHEDULE_NAME = "HDuD_Default_WakeUp";
+    private static final String DEFAULT_WAKE_UP_PRE_SCHEDULE_NAME = "HDuD_Default_Pre_WakeUp";
     private static final String DEFAULT_WAKE_END_SCHEDULE_NAME = "HDuD_Default_WakeEnd";
     // Brightness is a scale from 1 (the minimum) to 254 (the maximum). Note: a brightness of 1 is not off.
     public static final int WAKE_UP_BRIGHTNESS = 200;
@@ -152,7 +153,8 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         schedule.setDescription("Default wake up schedule for Hue Dusk and Dawn");
 
         LightState lightState = new LightState();
-        lightState.setOn(true);
+        // this screws up transition (thus pre schedule needed, see below)
+//        lightState.setOn(true);
         lightState.setBrightness(WAKE_UP_BRIGHTNESS);
         lightState.setTransitionTime(WAKE_UP_TRANSITION);
 
@@ -165,6 +167,36 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
                     String identifier = responses.get(0).getStringValue();
                     getPrefs().setWakeScheduleId(identifier);
                     LOG.info("Created default wake up schedule with id {}", identifier);
+                    createDefaultPreWakeSchedule();
+                } else {
+                    LOG.warn("Unable to create default schedule. {} errors.", errors.size());
+                    if (errors.size() > 0) {
+                        LOG.warn("1. Error: {}", errors.get(0));
+                    }
+                }
+            }
+        });
+    }
+
+    // Necessary because transition does not work with switching lights on and setting brightness at once.
+    private void createDefaultPreWakeSchedule() {
+        Schedule schedule = new Schedule();
+        schedule.setName(DEFAULT_WAKE_UP_PRE_SCHEDULE_NAME);
+        schedule.setDescription("Default pre wake up schedule for Hue Dusk and Dawn");
+
+        LightState lightState = new LightState();
+        lightState.setOn(true);
+        lightState.setBrightness(1);
+
+        setScheduleDefaultsAndUpload(schedule, lightState, new BridgeResponseCallback() {
+            @Override
+            public void handleCallback(Bridge bridge, ReturnCode returnCode,
+                                       List<ClipResponse> responses, List<HueError> errors) {
+                if (returnCode == ReturnCode.SUCCESS) {
+                    // Identifier of the created resource
+                    String identifier = responses.get(0).getStringValue();
+                    getPrefs().setPreWakeScheduleId(identifier);
+                    LOG.info("Created default pre wake up schedule with id {}", identifier);
                 } else {
                     LOG.warn("Unable to create default schedule. {} errors.", errors.size());
                     if (errors.size() > 0) {
@@ -240,10 +272,27 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         Date wakeUpDate = updateSchedule(wakeSchedule, absoluteTime, cal, true);
 
         if (wakeUpDate != null) {
+            if (wakeSchedule.getName().equals(DEFAULT_WAKE_UP_SCHEDULE_NAME)) {
+                // else disable preWakeUp?
+                updatePreWakeUpSchedule(wakeUpDate);
+            }
+
             getPrefs().setWakeLightTime(wakeUpDate.getTime());
             // TODO: evaluate wakeEnd update.
             updateWakeEndSchedule(wakeTime);
         }
+    }
+
+    private void updatePreWakeUpSchedule(Date wakeUpDate) {
+        Schedule wakeSchedule = findScheduleById(getPrefs().getPreWakeScheduleId());
+        if (wakeSchedule == null) {
+            return;
+        }
+        AbsoluteTime absoluteTime = new AbsoluteTime(0, 0, 10);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(wakeUpDate);
+
+        updateSchedule(wakeSchedule, absoluteTime, cal, true);
     }
 
     private boolean updateWakeEndSchedule(Date wakeTime) {

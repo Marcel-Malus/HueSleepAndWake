@@ -19,6 +19,7 @@ public class HueSharedPreferences {
     private static final String WAKE_TIME_AT = "WakeTimeAt";
 
     private static final String WAKE_SCHEDULE_ID = "WakeScheduleId";
+    private static final String PRE_WAKE_SCHEDULE_ID = "PreWakeScheduleId";
     private static final String WAKE_LIGHT_TIME = "WakeLightTimeL";
     private static final String WAKE_LIGHT_TIME_OFFSET = "WakeLightTimeOffset";
     private static final int DEFAULT_WAKE_LIGHT_TIME = 5;
@@ -116,9 +117,18 @@ public class HueSharedPreferences {
         return mSharedPreferences.getString(WAKE_SCHEDULE_ID, DEFAULT_SCHEDULE_ID);
     }
 
-    public boolean setWakeScheduleId(String wakeScheduleId) {
+    public void setWakeScheduleId(String wakeScheduleId) {
         mSharedPreferencesEditor.putString(WAKE_SCHEDULE_ID, wakeScheduleId);
-        return (mSharedPreferencesEditor.commit());
+        mSharedPreferencesEditor.apply();
+    }
+
+    public String getPreWakeScheduleId() {
+        return mSharedPreferences.getString(PRE_WAKE_SCHEDULE_ID, DEFAULT_SCHEDULE_ID);
+    }
+
+    public void setPreWakeScheduleId(String scheduleId) {
+        mSharedPreferencesEditor.putString(PRE_WAKE_SCHEDULE_ID, scheduleId);
+        mSharedPreferencesEditor.apply();
     }
 
     public long getWakeLightTime() {

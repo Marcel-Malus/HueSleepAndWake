@@ -8,6 +8,8 @@ import android.widget.Spinner;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.recek.huesleepwake.R;
 
+import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_SLEEP_SCHEDULE_NAME;
+
 public class SleepLightSettingsActivity extends AbstractHueSettingsActivity {
 
     private Spinner sleepScheduleSpinner;
@@ -19,7 +21,7 @@ public class SleepLightSettingsActivity extends AbstractHueSettingsActivity {
 
         sleepScheduleSpinner = findViewById(R.id.sleepLightSpinner);
         String sleepScheduleId = getPrefs().getSleepScheduleId();
-        buildAndAddAdapter(sleepScheduleSpinner, sleepScheduleId);
+        buildAndAddAdapter(sleepScheduleSpinner, sleepScheduleId, DEFAULT_SLEEP_SCHEDULE_NAME);
 
         Button okButton = findViewById(R.id.sleepLightSettingsOkBtn);
         okButton.setOnClickListener(new View.OnClickListener() {
@@ -42,6 +44,8 @@ public class SleepLightSettingsActivity extends AbstractHueSettingsActivity {
         Schedule sleepSchedule = getSelectedValidSchedule(sleepScheduleSpinner);
         if (sleepSchedule != null) {
             getPrefs().setSleepScheduleId(sleepSchedule.getIdentifier());
+        } else {
+            getPrefs().setSleepScheduleId(null);
         }
 
         finish();

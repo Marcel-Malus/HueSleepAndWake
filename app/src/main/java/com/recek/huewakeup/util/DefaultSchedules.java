@@ -26,11 +26,12 @@ public class DefaultSchedules {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultSchedules.class);
 
-    public static final String DEFAULT_WAKE_UP_SCHEDULE_NAME = "HDuD_Default_WakeUp";
-    public static final String DEFAULT_PRE_WAKE_UP_SCHEDULE_NAME = "HDuD_Default_Pre_WakeUp";
-    public static final String DEFAULT_WAKE_END_SCHEDULE_NAME = "HDuD_Default_WakeEnd";
-    public static final String DEFAULT_SLEEP_SCHEDULE_NAME = "HDuD_Default_Sleep";
-    public static final String DEFAULT_POST_SLEEP_SCHEDULE_NAME = "HDuD_Default_Post_Sleep";
+    public static final String DEFAULT_SCHEDULE_NAME = "HDuD_Default_";
+    public static final String DEFAULT_WAKE_UP_SCHEDULE_NAME = DEFAULT_SCHEDULE_NAME + "WakeUp";
+    public static final String DEFAULT_PRE_WAKE_UP_SCHEDULE_NAME = DEFAULT_SCHEDULE_NAME + "Pre_WakeUp";
+    public static final String DEFAULT_WAKE_END_SCHEDULE_NAME = DEFAULT_SCHEDULE_NAME + "WakeEnd";
+    public static final String DEFAULT_SLEEP_SCHEDULE_NAME = DEFAULT_SCHEDULE_NAME + "Sleep";
+    public static final String DEFAULT_POST_SLEEP_SCHEDULE_NAME = DEFAULT_SCHEDULE_NAME + "Post_Sleep";
     // Brightness is a scale from 1 (the minimum) to 254 (the maximum). Note: a brightness of 1 is not off.
     private static final int WAKE_UP_BRIGHTNESS = 200;
     // 100ms * 6000 = 600s = 10m

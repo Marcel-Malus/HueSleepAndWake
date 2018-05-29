@@ -10,6 +10,9 @@ import android.widget.TextView;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.recek.huesleepwake.R;
 
+import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_WAKE_END_SCHEDULE_NAME;
+import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_WAKE_UP_SCHEDULE_NAME;
+
 public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
 
     private TextView wakeTimeTxt;
@@ -27,7 +30,7 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         // WAKE UP
         wakeScheduleSpinner = findViewById(R.id.wakeLightSpinner);
         String wakeUpScheduleId = getPrefs().getWakeScheduleId();
-        buildAndAddAdapter(wakeScheduleSpinner, wakeUpScheduleId);
+        buildAndAddAdapter(wakeScheduleSpinner, wakeUpScheduleId, DEFAULT_WAKE_UP_SCHEDULE_NAME);
 
         wakeTimeTxt = findViewById(R.id.wakeLightTimeTxt);
         currentWakeTimeOffset = getPrefs().getWakeLightTimeOffset();
@@ -40,7 +43,8 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         // WAKE END
         wakeEndScheduleSpinner = findViewById(R.id.wakeLightEndSpinner);
         String wakeEndScheduleId = getPrefs().getWakeEndScheduleId();
-        buildAndAddAdapter(wakeEndScheduleSpinner, wakeEndScheduleId);
+        buildAndAddAdapter(wakeEndScheduleSpinner, wakeEndScheduleId,
+                DEFAULT_WAKE_END_SCHEDULE_NAME);
 
         wakeEndTimeTxt = findViewById(R.id.wakeLightEndTimeTxt);
         currentWakeEndTimeOffset = getPrefs().getWakeEndTimeOffset();

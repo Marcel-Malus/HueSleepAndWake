@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_SCHEDULE_NAME;
+
 public abstract class AbstractHueSettingsActivity extends AppCompatActivity {
 
     private static final Schedule NONE_SCHEDULE = new ScheduleBuilder().setIdentifier("-1").setName("NONE").build();
@@ -43,16 +45,24 @@ public abstract class AbstractHueSettingsActivity extends AppCompatActivity {
                 idToScheduleMap.put(schedule.getIdentifier(), schedule);
             }
         } else {
-            idToScheduleMap.put("-2", new ScheduleBuilder().setIdentifier("-2").setName("Aufwachen").build());
-            idToScheduleMap.put("-3", new ScheduleBuilder().setIdentifier("-3").setName("Wecker aus").build());
-            idToScheduleMap.put("-4", new ScheduleBuilder().setIdentifier("-4").setName("Schlafen").build());
+            idToScheduleMap.put("-2",
+                    new ScheduleBuilder().setIdentifier("-2").setName("Wake up").build());
+            idToScheduleMap.put("-3",
+                    new ScheduleBuilder().setIdentifier("-3").setName("Wake end").build());
+            idToScheduleMap
+                    .put("-4", new ScheduleBuilder().setIdentifier("-4").setName("Sleep").build());
         }
     }
 
-    protected void buildAndAddAdapter(Spinner scheduleSpinner, String selectedScheduleId) {
+    protected void buildAndAddAdapter(Spinner scheduleSpinner, String selectedScheduleId,
+                                      String defaultSchedule) {
         List<ScheduleListItem> schedules = new ArrayList<>();
         schedules.add(new ScheduleListItem(NONE_SCHEDULE));
         for (Schedule schedule : idToScheduleMap.values()) {
+            if (schedule.getName().startsWith(DEFAULT_SCHEDULE_NAME) && !schedule.getName()
+                    .equals(defaultSchedule)) {
+                continue;
+            }
             schedules.add(new ScheduleListItem(schedule));
         }
 

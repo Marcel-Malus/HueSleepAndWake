@@ -9,16 +9,21 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
+import com.philips.lighting.quickstart.BridgeHolder;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.settings.WakeLightSettingsActivity;
 import com.recek.huewakeup.util.AbsoluteTime;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static com.recek.huesleepwake.R.id.lightSwitch;
+import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_PRE_WAKE_UP_SCHEDULE_NAME;
+import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_WAKE_END_SCHEDULE_NAME;
 import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_WAKE_UP_SCHEDULE_NAME;
 
 /**
@@ -119,7 +124,11 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
 
         getPrefs().setWakeLightActive(wakeLightSwitch.isChecked());
         if (!wakeLightSwitch.isChecked()) {
-            disableSchedule(wakeSchedule);
+            disableDefaultWakeUpSchedules();
+            if (!wakeSchedule.getName().equals(DEFAULT_WAKE_UP_SCHEDULE_NAME)) {
+                disableSchedule(wakeSchedule);
+            }
+            disableWakeEndSchedule();
             return;
         }
 
@@ -131,13 +140,28 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
 
         if (wakeUpDate != null) {
             if (wakeSchedule.getName().equals(DEFAULT_WAKE_UP_SCHEDULE_NAME)) {
-                // else disable preWakeUp?
                 updatePreWakeUpSchedule(wakeUpDate);
+            } else {
+                disableDefaultWakeUpSchedules();
             }
 
             getPrefs().setWakeLightTime(wakeUpDate.getTime());
-            // TODO: evaluate wakeEnd update.
             updateWakeEndSchedule(wakeTime);
+        }
+    }
+
+    private void disableDefaultWakeUpSchedules() {
+        if (!BridgeHolder.hasBridge()) {
+            return;
+        }
+        Bridge bridge = BridgeHolder.get();
+        List<Schedule> scheduleList = bridge.getBridgeState().getSchedules();
+        for (Schedule schedule : scheduleList) {
+            if (schedule.getName().equals(DEFAULT_WAKE_UP_SCHEDULE_NAME)) {
+                disableSchedule(schedule);
+            } else if (schedule.getName().equals(DEFAULT_PRE_WAKE_UP_SCHEDULE_NAME)) {
+                disableSchedule(schedule);
+            }
         }
     }
 
@@ -153,17 +177,47 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
         updateSchedule(wakeSchedule, absoluteTime, cal, true);
     }
 
-    private boolean updateWakeEndSchedule(Date wakeTime) {
+    private void updateWakeEndSchedule(Date wakeTime) {
         Schedule wakeEndSchedule = findScheduleById(getPrefs().getWakeEndScheduleId());
         if (wakeEndSchedule == null) {
-            return false;
+            return;
         }
 
         AbsoluteTime absoluteTime = new AbsoluteTime(0, getPrefs().getWakeEndTimeOffset(), 0);
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);
 
-        Date wakeEndDate = updateSchedule(wakeEndSchedule, absoluteTime, cal, false);
-        return wakeEndDate != null;
+        updateSchedule(wakeEndSchedule, absoluteTime, cal, false);
+
+        if (!wakeEndSchedule.getName().equals(DEFAULT_WAKE_END_SCHEDULE_NAME)) {
+            disableDefaultWakeEndSchedule();
+        }
     }
+
+    private void disableWakeEndSchedule() {
+        Schedule wakeEndSchedule = findScheduleById(getPrefs().getWakeEndScheduleId());
+        if (wakeEndSchedule == null) {
+            return;
+        }
+        disableDefaultWakeEndSchedule();
+        if (!wakeEndSchedule.getName().equals(DEFAULT_WAKE_END_SCHEDULE_NAME)) {
+            disableSchedule(wakeEndSchedule);
+        }
+    }
+
+    private void disableDefaultWakeEndSchedule() {
+        if (!BridgeHolder.hasBridge()) {
+            return;
+        }
+        Bridge bridge = BridgeHolder.get();
+        List<Schedule> scheduleList = bridge.getBridgeState().getSchedules();
+        for (Schedule schedule : scheduleList) {
+            if (schedule.getName().equals(DEFAULT_WAKE_END_SCHEDULE_NAME)) {
+                disableSchedule(schedule);
+                return;
+            }
+        }
+    }
+
+
 }

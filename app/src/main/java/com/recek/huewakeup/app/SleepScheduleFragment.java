@@ -9,16 +9,21 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
+import com.philips.lighting.quickstart.BridgeHolder;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.settings.SleepLightSettingsActivity;
 import com.recek.huewakeup.util.AbsoluteTime;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_POST_SLEEP_SCHEDULE_NAME;
 import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_SLEEP_SCHEDULE_NAME;
+import static com.recek.huewakeup.util.DefaultSchedules.SLEEP_TRANSITION_TIME_MNT;
 
 /**
  * @since 2017-09-14.
@@ -102,7 +107,10 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
 
         getPrefs().setSleepActive(sleepSwitch.isChecked());
         if (!sleepSwitch.isChecked()) {
-            disableSchedule(schedule);
+            disableDefaultSleepSchedules();
+            if (!schedule.getName().equals(DEFAULT_SLEEP_SCHEDULE_NAME)) {
+                disableSchedule(schedule);
+            }
             return;
         }
 
@@ -110,8 +118,24 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
                 false);
         if (sleepDate != null) {
             if (schedule.getName().equals(DEFAULT_SLEEP_SCHEDULE_NAME)) {
-                // else disable preWakeUp?
                 updatePostSleepSchedule(sleepDate);
+            } else {
+                disableDefaultSleepSchedules();
+            }
+        }
+    }
+
+    private void disableDefaultSleepSchedules() {
+        if (!BridgeHolder.hasBridge()) {
+            return;
+        }
+        Bridge bridge = BridgeHolder.get();
+        List<Schedule> scheduleList = bridge.getBridgeState().getSchedules();
+        for (Schedule schedule : scheduleList) {
+            if (schedule.getName().equals(DEFAULT_SLEEP_SCHEDULE_NAME)) {
+                disableSchedule(schedule);
+            } else if (schedule.getName().equals(DEFAULT_POST_SLEEP_SCHEDULE_NAME)) {
+                disableSchedule(schedule);
             }
         }
     }
@@ -122,7 +146,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
         if (postSleepSchedule == null) {
             return;
         }
-        AbsoluteTime absoluteTime = new AbsoluteTime(0, 0, 10);
+        AbsoluteTime absoluteTime = new AbsoluteTime(0, SLEEP_TRANSITION_TIME_MNT, 10);
         Calendar cal = Calendar.getInstance();
         cal.setTime(sleepDate);
 

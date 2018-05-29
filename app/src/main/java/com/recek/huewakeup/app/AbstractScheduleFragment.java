@@ -97,7 +97,7 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
             return;
         }
 
-        LOG.info("Updating schedule {} ({}).", schedule.getName(), schedule.getIdentifier());
+        LOG.info("Disabling schedule {} ({}).", schedule.getName(), schedule.getIdentifier());
 
         schedule.setStatus(ScheduleStatus.DISABLED);
 

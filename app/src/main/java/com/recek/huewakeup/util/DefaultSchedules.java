@@ -27,15 +27,16 @@ public class DefaultSchedules {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultSchedules.class);
 
     public static final String DEFAULT_WAKE_UP_SCHEDULE_NAME = "HDuD_Default_WakeUp";
-    private static final String DEFAULT_WAKE_UP_PRE_SCHEDULE_NAME = "HDuD_Default_Pre_WakeUp";
-    private static final String DEFAULT_WAKE_END_SCHEDULE_NAME = "HDuD_Default_WakeEnd";
+    public static final String DEFAULT_PRE_WAKE_UP_SCHEDULE_NAME = "HDuD_Default_Pre_WakeUp";
+    public static final String DEFAULT_WAKE_END_SCHEDULE_NAME = "HDuD_Default_WakeEnd";
     public static final String DEFAULT_SLEEP_SCHEDULE_NAME = "HDuD_Default_Sleep";
-    private static final String DEFAULT_POST_SLEEP_SCHEDULE_NAME = "HDuD_Default_Post_Sleep";
+    public static final String DEFAULT_POST_SLEEP_SCHEDULE_NAME = "HDuD_Default_Post_Sleep";
     // Brightness is a scale from 1 (the minimum) to 254 (the maximum). Note: a brightness of 1 is not off.
     private static final int WAKE_UP_BRIGHTNESS = 200;
     // 100ms * 6000 = 600s = 10m
     private static final int WAKE_UP_TRANSITION = 6000;
     // 100ms * 9000 = 900s = 15m
+    public static final int SLEEP_TRANSITION_TIME_MNT = 15;
     private static final int SLEEP_TRANSITION_TIME = 9000;
 
     private final HueSharedPreferences prefs;
@@ -131,7 +132,7 @@ public class DefaultSchedules {
     // Necessary because transition does not work with switching lights on and setting brightness at once.
     private void createDefaultPreWakeSchedule() {
         Schedule schedule = new Schedule();
-        schedule.setName(DEFAULT_WAKE_UP_PRE_SCHEDULE_NAME);
+        schedule.setName(DEFAULT_PRE_WAKE_UP_SCHEDULE_NAME);
         schedule.setDescription("Default pre wake up schedule for Hue Dusk and Dawn");
 
         LightState lightState = new LightState();

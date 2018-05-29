@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class AbstractHueSettingsActivity extends AppCompatActivity {
+public abstract class AbstractHueSettingsActivity extends AppCompatActivity {
 
     private static final Schedule NONE_SCHEDULE = new ScheduleBuilder().setIdentifier("-1").setName("NONE").build();
 

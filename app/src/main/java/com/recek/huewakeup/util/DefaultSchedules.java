@@ -17,6 +17,7 @@ import com.philips.lighting.quickstart.BridgeHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +41,8 @@ public class DefaultSchedules {
     public static final int SLEEP_TRANSITION_TIME_MNT = 15;
     private static final int SLEEP_TRANSITION_TIME = 9000;
 
+    private int toDeleteSchedules = 0;
+
     private final HueSharedPreferences prefs;
 
     public DefaultSchedules(HueSharedPreferences prefs) {
@@ -51,7 +54,7 @@ public class DefaultSchedules {
         Schedule wakeEndSchedule = findScheduleById(prefs.getWakeEndScheduleId());
         Schedule sleepSchedule = findScheduleById(prefs.getSleepScheduleId());
         if (wakeSchedule != null && wakeEndSchedule != null && sleepSchedule != null) {
-            // Schedules are set. No need to set defaults.
+            LOG.info("Schedules are set. No need to set defaults.");
             return;
         }
 
@@ -90,16 +93,40 @@ public class DefaultSchedules {
         }
     }
 
+    public void reset() {
+        LOG.info("Resetting default schedules...");
+        toDeleteSchedules = 0;
+        Bridge bridge = BridgeHolder.get();
+        List<Schedule> scheduleList = bridge.getBridgeState().getSchedules();
+        List<Schedule> toDeleteScheduleList = new ArrayList<>();
+        for (Schedule schedule : scheduleList) {
+            if (schedule.getName().startsWith(DEFAULT_SCHEDULE_NAME)) {
+                LOG.info("Found default schedule {}", schedule.getName());
+                toDeleteScheduleList.add(schedule);
+            }
+        }
+        toDeleteSchedules = toDeleteScheduleList.size();
+        if (toDeleteSchedules > 0) {
+            LOG.info("Starting to delete {} default schedules...", toDeleteSchedules);
+            for (Schedule schedule : toDeleteScheduleList) {
+                bridge.deleteResource(schedule, createScheduleDeleteCallback());
+            }
+        } else {
+            LOG.info("No default schedules found.");
+            createAndSetAllDefaultSchedules();
+        }
+    }
+
     private Schedule findScheduleById(String scheduleId) {
         Schedule schedule = BridgeHolder.get().getBridgeState().getSchedule(scheduleId);
         if (schedule == null) {
-            LOG.warn("Schedule-{} not found.", scheduleId);
             return null;
         }
         return schedule;
     }
 
     private void createDefaultWakeSchedule() {
+        LOG.info("Creating default wake schedules.");
         Schedule schedule = new Schedule();
         schedule.setName(DEFAULT_WAKE_UP_SCHEDULE_NAME);
         schedule.setDescription("Default wake up schedule for Hue Dusk and Dawn");
@@ -160,6 +187,7 @@ public class DefaultSchedules {
     }
 
     private void createDefaultWakeEndSchedule() {
+        LOG.info("Creating default wake end schedule.");
         Schedule schedule = new Schedule();
         schedule.setName(DEFAULT_WAKE_END_SCHEDULE_NAME);
         schedule.setDescription("Default wake end schedule for Hue Dusk and Dawn");
@@ -187,6 +215,7 @@ public class DefaultSchedules {
     }
 
     private void createDefaultSleepSchedule() {
+        LOG.info("Creating default sleep schedules.");
         Schedule schedule = new Schedule();
         schedule.setName(DEFAULT_SLEEP_SCHEDULE_NAME);
         schedule.setDescription("Default sleep schedule for Hue Dusk and Dawn");
@@ -246,7 +275,6 @@ public class DefaultSchedules {
         });
     }
 
-
     private void setScheduleDefaultsAndUpload(Schedule schedule,
                                               LightState lightState,
                                               BridgeResponseCallback bridgeResponseCallback) {
@@ -260,6 +288,7 @@ public class DefaultSchedules {
 
         schedule.setLocalTime(timePatternBuilder.build());
         schedule.setRecycle(true);
+        schedule.setAutoDelete(null);
 
         Bridge bridge = BridgeHolder.get();
         schedule.setClipAction(clipActionBuilder.setUsername(KnownBridges.retrieveWhitelistEntry(
@@ -267,5 +296,36 @@ public class DefaultSchedules {
                 bridge.getBridgeConfiguration().getVersion()));
 
         bridge.createResource(schedule, BridgeConnectionType.LOCAL, bridgeResponseCallback);
+    }
+
+    private BridgeResponseCallback createScheduleDeleteCallback() {
+        return new BridgeResponseCallback() {
+            @Override
+            public void handleCallback(Bridge bridge, ReturnCode returnCode,
+                                       List<ClipResponse> responses,
+                                       List<HueError> errors) {
+                if (returnCode == ReturnCode.SUCCESS) {
+                    String responseMsg = responses.get(0).getStringValue();
+                    toDeleteSchedules--;
+                    LOG.info("{}. Remaining schedules: {}", responseMsg,
+                            toDeleteSchedules);
+                    if (toDeleteSchedules == 0) {
+                        createAndSetAllDefaultSchedules();
+                    }
+                } else {
+                    LOG.warn("Unable to delete default schedule. {} errors.", errors.size());
+                    if (errors.size() > 0) {
+                        LOG.warn("1. Error: {}", errors.get(0));
+                    }
+                }
+            }
+        };
+    }
+
+    private void createAndSetAllDefaultSchedules() {
+        LOG.info("Creating and setting all default schedules");
+        createDefaultWakeSchedule();
+        createDefaultWakeEndSchedule();
+        createDefaultSleepSchedule();
     }
 }

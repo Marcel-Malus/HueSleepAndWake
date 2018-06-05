@@ -152,5 +152,6 @@
     <string name="txt_time_hour_minute">%d:%d</string>
     <string name="btn_toggle_in">in</string>
     <string name="btn_toggle_at">at</string>
+    <string name="btn_reset_defaults">Reset Default Schedules</string>
 
 </resources>

@@ -21,11 +21,22 @@
             android:contentDescription="@string/txt_help_image" />
 
         <TextView
+            android:id="@+id/helpTextView"
             android:layout_below="@id/imageViewHelp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:text="@string/txt_help_description" />
+
+        <Button
+            android:id="@+id/resetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/helpTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:onClick="resetSchedules"
+            android:text="@string/btn_reset_defaults" />
 
     </RelativeLayout>
 

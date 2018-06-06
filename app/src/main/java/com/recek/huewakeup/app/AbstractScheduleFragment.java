@@ -76,6 +76,10 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
 
         schedule.setLocalTime(timePatternBuilder.build());
         schedule.setStatus(ScheduleStatus.ENABLED);
+        if (schedule.getAutoDelete() != null) {
+            LOG.info("Auto-delete not null.");
+            schedule.setAutoDelete(null);
+        }
 
         if (!BridgeHolder.hasBridge()) {
             LOG.warn("No bridge present.");

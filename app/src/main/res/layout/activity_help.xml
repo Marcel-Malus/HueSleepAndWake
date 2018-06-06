@@ -35,6 +35,7 @@
             android:layout_below="@id/helpTextView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:onClick="resetSchedules"
             android:text="@string/btn_reset_defaults" />
 

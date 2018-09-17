@@ -29,7 +29,9 @@ public class HueQuickStartApp extends Application {
         LOG.info("HueQuickStartApp OnCreate.");
 
         // Configure the storage location and log level for the Hue SDK
-        Persistence.setStorageLocation(getFilesDir().getAbsolutePath(), "HueQuickStart");
+        String absolutePath = getFilesDir().getAbsolutePath();
+        LOG.info("Storage Location: " + absolutePath);
+        Persistence.setStorageLocation(absolutePath, "HueQuickStart");
         HueLog.setConsoleLogLevel(INFO);
         HueLog.setFileLogLevel(DEBUG, NETWORK + CLIENT + WRAPPER);
 

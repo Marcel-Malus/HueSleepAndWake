@@ -53,11 +53,18 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
         return schedule;
     }
 
-    protected Date updateSchedule(Schedule schedule, AbsoluteTime absoluteTime,
+    /**
+     * @param schedule to update.
+     * @param offset   additional offset to startCal.
+     * @param startCal date-time to wakeup.
+     * @param before   offset before startCal?
+     * @return wakeTime (incl. offset) when success. Null else.
+     */
+    protected Date updateSchedule(Schedule schedule, AbsoluteTime offset,
                                   Calendar startCal, boolean before) {
         LOG.info("Updating schedule {} ({}).", schedule.getName(), schedule.getIdentifier());
 
-        Date wakeTime = MyDateUtils.calculateRelativeTimeTo(startCal, absoluteTime, before);
+        Date wakeTime = MyDateUtils.calculateRelativeTimeTo(startCal, offset, before);
         if (wakeTime == null) {
             notifyUser(R.string.txt_status_wrong_format);
             return null;

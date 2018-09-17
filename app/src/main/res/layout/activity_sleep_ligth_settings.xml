@@ -6,6 +6,43 @@
     android:orientation="vertical">
 
 
+    <!--SLEEP LIGHT TIME-->
+    <android.support.v7.widget.CardView
+        android:id="@+id/sleepLightTimeCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <TextView
+                android:id="@+id/sleepLightTimeTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="@string/txt_sleep_light_time" />
+
+            <SeekBar
+                android:id="@+id/sleepLightSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sleepLightTimeTxt"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:max="45"
+                android:progress="15" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
     <!--SLEEP LIGHT SCHEDULE-->
     <android.support.v7.widget.CardView
         android:id="@+id/sleepLightSettingsCV"

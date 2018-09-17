@@ -57,6 +57,7 @@
     <string name="txt_sleep_light_schedule">Select hue schedule to turn off lights for sleep</string>
     <string name="txt_light_sleep_settings">Light sleep settings</string>
     <string name="txt_hue_sleep_settings">Settings: Hue sleep light</string>
+    <string name="txt_sleep_light_time">Turn off lights in %d minutes after update (transition)</string>
 
     <!--Status-->
     <string name="txt_status">Status</string>

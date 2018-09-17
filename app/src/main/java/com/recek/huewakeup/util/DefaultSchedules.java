@@ -35,11 +35,9 @@ public class DefaultSchedules {
     public static final String DEFAULT_POST_SLEEP_SCHEDULE_NAME = DEFAULT_SCHEDULE_NAME + "Post_Sleep";
     // Brightness is a scale from 1 (the minimum) to 254 (the maximum). Note: a brightness of 1 is not off.
     private static final int WAKE_UP_BRIGHTNESS = 200;
-    // 100ms * 6000 = 600s = 10m
-    private static final int WAKE_UP_TRANSITION = 6000;
-    // 100ms * 9000 = 900s = 15m
-    public static final int SLEEP_TRANSITION_TIME_MNT = 15;
-    private static final int SLEEP_TRANSITION_TIME = 9000;
+    // 1m = 100ms * 60 = 600
+    public static final int MINUTE_TO_HUE_TIME_FACTOR = 600;
+    private static final int WAKE_UP_TRANSITION = 10 * MINUTE_TO_HUE_TIME_FACTOR;
 
     private int toDeleteSchedules = 0;
 
@@ -224,7 +222,7 @@ public class DefaultSchedules {
         // this screws up transition (thus post schedule needed, see below)
 //        lightState.setOn(false);
         lightState.setBrightness(1);
-        lightState.setTransitionTime(SLEEP_TRANSITION_TIME);
+        lightState.setTransitionTime(prefs.getSleepTransitionInHueFormat());
 
         setScheduleDefaultsAndUpload(schedule, lightState, new BridgeResponseCallback() {
             @Override

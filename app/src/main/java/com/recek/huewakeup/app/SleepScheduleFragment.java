@@ -10,8 +10,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
+import com.philips.lighting.hue.sdk.wrapper.domain.device.light.LightState;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.builder.ClipActionBuilder;
+import com.philips.lighting.hue.sdk.wrapper.knownbridges.KnownBridges;
 import com.philips.lighting.quickstart.BridgeHolder;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.settings.SleepLightSettingsActivity;
@@ -23,7 +26,6 @@ import java.util.List;
 
 import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_POST_SLEEP_SCHEDULE_NAME;
 import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_SLEEP_SCHEDULE_NAME;
-import static com.recek.huewakeup.util.DefaultSchedules.SLEEP_TRANSITION_TIME_MNT;
 
 /**
  * @since 2017-09-14.
@@ -114,7 +116,20 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
             return;
         }
 
-        Date sleepDate = updateSchedule(schedule, new AbsoluteTime(0, 1, 0), Calendar.getInstance(),
+        int sleepTransition = getPrefs().getSleepTransitionInHueFormat();
+        LightState lightState = schedule.getClipAction().getBodyObjectAsLightState();
+        if (lightState.getTransitionTime() == null || lightState
+                .getTransitionTime() != sleepTransition) {
+            lightState.setTransitionTime(sleepTransition);
+            ClipActionBuilder clipActionBuilder = new ClipActionBuilder();
+            clipActionBuilder.setGroupLightState("1", lightState);
+            schedule.setClipAction(
+                    clipActionBuilder.setUsername(KnownBridges.retrieveWhitelistEntry(
+                            BridgeHolder.get().getIdentifier())).buildSingle(
+                            BridgeHolder.get().getBridgeConfiguration().getVersion()));
+        }
+
+        Date sleepDate = updateSchedule(schedule, new AbsoluteTime(0, 0, 5), Calendar.getInstance(),
                 false);
         if (sleepDate != null) {
             if (schedule.getName().equals(DEFAULT_SLEEP_SCHEDULE_NAME)) {
@@ -146,7 +161,7 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
         if (postSleepSchedule == null) {
             return;
         }
-        AbsoluteTime absoluteTime = new AbsoluteTime(0, SLEEP_TRANSITION_TIME_MNT, 10);
+        AbsoluteTime absoluteTime = new AbsoluteTime(0, getPrefs().getSleepTransition(), 10);
         Calendar cal = Calendar.getInstance();
         cal.setTime(sleepDate);
 

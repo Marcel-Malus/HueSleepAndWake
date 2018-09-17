@@ -7,6 +7,8 @@ import android.content.SharedPreferences.Editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.recek.huewakeup.util.DefaultSchedules.MINUTE_TO_HUE_TIME_FACTOR;
+
 public class HueSharedPreferences {
     private static final String HUE_SHARED_PREFERENCES_STORE = "HueSharedPrefs";
     private static final String LAST_APP_VERSION_NAME = "AppVersionName";
@@ -33,6 +35,9 @@ public class HueSharedPreferences {
     private static final String SLEEP_SCHEDULE_ID = "SleepScheduleId";
     private static final String POST_SLEEP_SCHEDULE_ID = "PostSleepScheduleId";
     private static final String SLEEP_IS_ACTIVE = "SleepIsActive";
+    private static final String SLEEP_TRANSITION = "SleepTransition";
+    private static final int DEFAULT_SLEEP_TRANSITION = 15;
+    private static final int MIN_SLEEP_TRANSITION_IN_HUE_FORMAT = 50;
 
     private static final String ALARM_TIME = "AlarmTimeL";
     private static final String ALARM_TIME_OFFSET = "AlarmTimeOffset";
@@ -202,6 +207,20 @@ public class HueSharedPreferences {
     public boolean setSleepActive(boolean isSleepActive) {
         mSharedPreferencesEditor.putBoolean(SLEEP_IS_ACTIVE, isSleepActive);
         return (mSharedPreferencesEditor.commit());
+    }
+
+    public int getSleepTransition() {
+        return mSharedPreferences.getInt(SLEEP_TRANSITION, DEFAULT_SLEEP_TRANSITION);
+    }
+
+    public int getSleepTransitionInHueFormat() {
+        int sleepTransition = mSharedPreferences.getInt(SLEEP_TRANSITION, DEFAULT_SLEEP_TRANSITION);
+        return sleepTransition == 0 ? MIN_SLEEP_TRANSITION_IN_HUE_FORMAT : sleepTransition * MINUTE_TO_HUE_TIME_FACTOR;
+    }
+
+    public void setSleepTransition(int sleepTransition) {
+        mSharedPreferencesEditor.putInt(SLEEP_TRANSITION, sleepTransition);
+        mSharedPreferencesEditor.apply();
     }
 
     public long getAlarmTime() {

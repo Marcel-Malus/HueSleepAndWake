@@ -84,7 +84,8 @@ public class SleepScheduleFragment extends AbstractScheduleFragment {
         StringBuilder sb = new StringBuilder();
         if (schedule != null) {
             if (ScheduleStatus.ENABLED.equals(schedule.getStatus())) {
-                sb.append(getString(R.string.txt_status_alarm_on, "Now"));
+                String status = "Now, " + getPrefs().getSleepTransition() + " minutes";
+                sb.append(getString(R.string.txt_status_alarm_on, status));
             } else {
                 sb.append(getString(R.string.txt_status_alarm_off));
             }

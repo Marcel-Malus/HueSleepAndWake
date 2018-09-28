@@ -108,7 +108,7 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
                 sb.append(" - ");
                 sb.append(timeStr);
             }
-        } else {
+        } else if (sb.length() == 0) {
             sb.append(getString(R.string.txt_status_alarm_off));
             getPrefs().setWakeLightTime(-1);
         }

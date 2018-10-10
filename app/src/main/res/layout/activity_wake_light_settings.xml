@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--WAKE LIGHT TIME-->
+    <!--WAKE LIGHT OFFSET-->
     <android.support.v7.widget.CardView
         android:id="@+id/wakeLightTimeCV"
         android:layout_width="match_parent"
@@ -32,6 +32,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/wakeLightTimeTxt"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:max="30"
+                android:progress="0" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <!--WAKE LIGHT TRANSITION TIME-->
+    <android.support.v7.widget.CardView
+        android:id="@+id/wakeLightTransitionCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <TextView
+                android:id="@+id/wakeLightTransitionTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="@string/txt_set_light_transition" />
+
+            <SeekBar
+                android:id="@+id/wakeLightTransitionSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wakeLightTransitionTxt"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
@@ -153,7 +190,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp">
+        android:layout_marginTop="40dp">
 
         <Button
             android:id="@+id/lightSettingsOkBtn"

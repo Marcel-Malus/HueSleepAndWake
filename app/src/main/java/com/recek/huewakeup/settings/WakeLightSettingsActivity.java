@@ -16,10 +16,12 @@ import static com.recek.huewakeup.util.DefaultSchedules.DEFAULT_WAKE_UP_SCHEDULE
 public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
 
     private TextView wakeTimeTxt;
+    private TextView wakeTransitionTxt;
     private Spinner wakeScheduleSpinner;
     private TextView wakeEndTimeTxt;
     private Spinner wakeEndScheduleSpinner;
     private int currentWakeTimeOffset;
+    private int currentWakeTransition;
     private int currentWakeEndTimeOffset;
 
     @Override
@@ -39,6 +41,18 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         SeekBar wakeTimeSeekBar = findViewById(R.id.wakeLightSeekBar);
         wakeTimeSeekBar.setProgress(currentWakeTimeOffset);
         wakeTimeSeekBar.setOnSeekBarChangeListener(createWakeTimeSeekBarListener());
+
+        // WAKE UP TRANSITION
+
+        wakeTransitionTxt = findViewById(R.id.wakeLightTransitionTxt);
+        currentWakeTransition = getPrefs().getWakeLightTransition();
+        wakeTransitionTxt
+                .setText(getString(R.string.txt_set_light_transition, currentWakeTransition));
+
+        SeekBar wakeTransitionSeekBar = findViewById(R.id.wakeLightTransitionSeekBar);
+        wakeTransitionSeekBar.setProgress(currentWakeTransition);
+        wakeTransitionSeekBar.setOnSeekBarChangeListener(createWakeTransitionSeekBarListener());
+
 
         // WAKE END
         wakeEndScheduleSpinner = findViewById(R.id.wakeLightEndSpinner);
@@ -93,6 +107,27 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         };
     }
 
+    private SeekBar.OnSeekBarChangeListener createWakeTransitionSeekBarListener() {
+        return new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                currentWakeTransition = progress;
+                wakeTransitionTxt.setText(
+                        getString(R.string.txt_set_light_transition, currentWakeTransition));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        };
+    }
+
     private SeekBar.OnSeekBarChangeListener createWakeEndTimeSeekBarListener() {
         return new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -123,6 +158,8 @@ public class WakeLightSettingsActivity extends AbstractHueSettingsActivity {
         } else {
             getPrefs().setWakeScheduleId(null);
         }
+
+        getPrefs().setWakeLightTransition(currentWakeTransition);
 
         getPrefs().setWakeEndTimeOffset(currentWakeEndTimeOffset);
 

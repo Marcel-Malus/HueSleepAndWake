@@ -132,6 +132,8 @@ public class WakeUpScheduleFragment extends AbstractScheduleFragment {
             return;
         }
 
+        updateTransitionTime(wakeSchedule, getPrefs().getWakeLightTransitionInHueFormat());
+
         AbsoluteTime absoluteTime = new AbsoluteTime(0, getPrefs().getWakeLightTimeOffset(), 0);
         Calendar cal = Calendar.getInstance();
         cal.setTime(wakeTime);

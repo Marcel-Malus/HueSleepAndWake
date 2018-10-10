@@ -8,9 +8,12 @@ import com.philips.lighting.hue.sdk.wrapper.domain.Bridge;
 import com.philips.lighting.hue.sdk.wrapper.domain.HueError;
 import com.philips.lighting.hue.sdk.wrapper.domain.ReturnCode;
 import com.philips.lighting.hue.sdk.wrapper.domain.clip.ClipResponse;
+import com.philips.lighting.hue.sdk.wrapper.domain.device.light.LightState;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.Schedule;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.ScheduleStatus;
+import com.philips.lighting.hue.sdk.wrapper.domain.resource.builder.ClipActionBuilder;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.timepattern.TimePatternBuilder;
+import com.philips.lighting.hue.sdk.wrapper.knownbridges.KnownBridges;
 import com.philips.lighting.quickstart.BridgeHolder;
 import com.recek.huesleepwake.R;
 import com.recek.huewakeup.util.AbsoluteTime;
@@ -95,6 +98,20 @@ public abstract class AbstractScheduleFragment extends AbstractBasicFragment {
             BridgeHolder.get()
                     .updateResource(schedule, BridgeConnectionType.LOCAL, createUpdateCallback());
             return wakeTime;
+        }
+    }
+
+    public void updateTransitionTime(Schedule schedule, int newTransitionTime) {
+        LightState lightState = schedule.getClipAction().getBodyObjectAsLightState();
+        if (lightState.getTransitionTime() == null || lightState
+                .getTransitionTime() != newTransitionTime) {
+            lightState.setTransitionTime(newTransitionTime);
+            ClipActionBuilder clipActionBuilder = new ClipActionBuilder();
+            clipActionBuilder.setGroupLightState("1", lightState);
+            schedule.setClipAction(
+                    clipActionBuilder.setUsername(KnownBridges.retrieveWhitelistEntry(
+                            BridgeHolder.get().getIdentifier())).buildSingle(
+                            BridgeHolder.get().getBridgeConfiguration().getVersion()));
         }
     }
 

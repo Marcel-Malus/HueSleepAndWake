@@ -7,13 +7,14 @@ import android.content.SharedPreferences.Editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.recek.huewakeup.util.DefaultSchedules.MINUTE_TO_HUE_TIME_FACTOR;
-
 public class HueSharedPreferences {
     private static final String HUE_SHARED_PREFERENCES_STORE = "HueSharedPrefs";
     private static final String LAST_APP_VERSION_NAME = "AppVersionName";
 
     private static final String DEFAULT_SCHEDULE_ID = "-1";
+    // 1m = 100ms * 60 = 600
+    private static final int MINUTE_TO_HUE_TIME_FACTOR = 600;
+    private static final int MIN_TRANSITION_TIME_IN_HUE_FORMAT = 50;
 
     private static final String WAKE_TIME = "WakeTimeL";
     private static final String WAKE_TIME_RELATIVE = "WakeTimeRelative";
@@ -25,6 +26,8 @@ public class HueSharedPreferences {
     private static final String WAKE_LIGHT_TIME = "WakeLightTimeL";
     private static final String WAKE_LIGHT_TIME_OFFSET = "WakeLightTimeOffset";
     private static final int DEFAULT_WAKE_LIGHT_TIME = 5;
+    private static final String WAKE_LIGHT_TRANSITION_TIME = "WakeLightTransitionTime";
+    private static final int DEFAULT_WAKE_LIGHT_TRANSITION_TIME = 10;
 
     private static final String WAKE_END_SCHEDULE_ID = "WakeEndScheduleId";
     private static final String WAKE_END_TIME = "WakeEndTime";
@@ -37,7 +40,6 @@ public class HueSharedPreferences {
     private static final String SLEEP_IS_ACTIVE = "SleepIsActive";
     private static final String SLEEP_TRANSITION = "SleepTransition";
     private static final int DEFAULT_SLEEP_TRANSITION = 15;
-    private static final int MIN_SLEEP_TRANSITION_IN_HUE_FORMAT = 50;
 
     private static final String ALARM_TIME = "AlarmTimeL";
     private static final String ALARM_TIME_OFFSET = "AlarmTimeOffset";
@@ -155,6 +157,21 @@ public class HueSharedPreferences {
         mSharedPreferencesEditor.apply();
     }
 
+    public int getWakeLightTransition() {
+        return mSharedPreferences
+                .getInt(WAKE_LIGHT_TRANSITION_TIME, DEFAULT_WAKE_LIGHT_TRANSITION_TIME);
+    }
+
+    public int getWakeLightTransitionInHueFormat() {
+        int sleepTransition = getWakeLightTransition();
+        return sleepTransition == 0 ? MIN_TRANSITION_TIME_IN_HUE_FORMAT : sleepTransition * MINUTE_TO_HUE_TIME_FACTOR;
+    }
+
+    public void setWakeLightTransition(int wakeLightTransition) {
+        mSharedPreferencesEditor.putInt(WAKE_LIGHT_TRANSITION_TIME, wakeLightTransition);
+        mSharedPreferencesEditor.apply();
+    }
+
     public String getWakeEndScheduleId() {
         return mSharedPreferences.getString(WAKE_END_SCHEDULE_ID, DEFAULT_SCHEDULE_ID);
     }
@@ -215,7 +232,7 @@ public class HueSharedPreferences {
 
     public int getSleepTransitionInHueFormat() {
         int sleepTransition = mSharedPreferences.getInt(SLEEP_TRANSITION, DEFAULT_SLEEP_TRANSITION);
-        return sleepTransition == 0 ? MIN_SLEEP_TRANSITION_IN_HUE_FORMAT : sleepTransition * MINUTE_TO_HUE_TIME_FACTOR;
+        return sleepTransition == 0 ? MIN_TRANSITION_TIME_IN_HUE_FORMAT : sleepTransition * MINUTE_TO_HUE_TIME_FACTOR;
     }
 
     public void setSleepTransition(int sleepTransition) {
